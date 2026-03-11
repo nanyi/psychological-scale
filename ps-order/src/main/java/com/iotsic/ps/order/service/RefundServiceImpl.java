@@ -9,7 +9,9 @@ import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.order.entity.Order;
+import com.iotsic.ps.order.entity.OrderItem;
 import com.iotsic.ps.order.entity.Refund;
+import com.iotsic.ps.order.mapper.OrderItemMapper;
 import com.iotsic.ps.order.mapper.OrderMapper;
 import com.iotsic.ps.order.mapper.RefundMapper;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -27,11 +32,15 @@ public class RefundServiceImpl implements RefundService {
 
     private final RefundMapper refundMapper;
     private final OrderMapper orderMapper;
+    private final OrderItemMapper orderItemMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Refund createRefund(Long orderId, String reason) {
-        Order order = orderMapper.selectById(orderId);
+    public Refund createRefund(String orderNo, List<Long> orderItemIds, String reason) {
+        Order order = orderMapper.selectOne(
+            new LambdaQueryWrapper<Order>().eq(Order::getOrderNo, orderNo)
+        );
+        
         if (order == null || order.getDeleted() == 1) {
             throw BusinessException.of("ORDER_NOT_FOUND", "订单不存在");
         }
@@ -40,11 +49,20 @@ public class RefundServiceImpl implements RefundService {
             throw BusinessException.of("REFUND_NOT_ALLOWED", "只有已支付的订单才能退款");
         }
 
-        LambdaQueryWrapper<Refund> existWrapper = new LambdaQueryWrapper<>();
-        existWrapper.eq(Refund::getOrderId, orderId);
-        Refund existRefund = refundMapper.selectOne(existWrapper);
-        if (existRefund != null) {
-            throw BusinessException.of("REFUND_EXIST", "该订单已存在退款申请");
+        if (orderItemIds == null || orderItemIds.isEmpty()) {
+            throw BusinessException.of("REFUND_ITEM_EMPTY", "请选择要退款的量表");
+        }
+
+        BigDecimal refundAmount = BigDecimal.ZERO;
+        for (Long itemId : orderItemIds) {
+            OrderItem item = orderItemMapper.selectById(itemId);
+            if (item == null || !item.getOrderNo().equals(orderNo)) {
+                throw BusinessException.of("REFUND_ITEM_INVALID", "订单项不匹配");
+            }
+            if (item.getRefundStatus() != null && item.getRefundStatus() == 1) {
+                throw BusinessException.of("REFUND_ITEM_EXIST", "该量表已退款");
+            }
+            refundAmount = refundAmount.add(item.getAmount());
         }
 
         long daysSincePay = 0;
@@ -56,10 +74,10 @@ public class RefundServiceImpl implements RefundService {
         }
 
         Refund refund = new Refund();
-        refund.setOrderId(orderId);
+        refund.setOrderNo(orderNo);
         refund.setRefundNo(EncryptUtils.generateUUID().substring(0, 16));
         refund.setUserId(order.getUserId());
-        refund.setRefundAmount(order.getActualAmount());
+        refund.setRefundAmount(refundAmount);
         refund.setRefundStatus(0);
         refund.setRefundReason(reason);
         refund.setRefundMethod(order.getPayMethod());
@@ -68,38 +86,68 @@ public class RefundServiceImpl implements RefundService {
 
         refundMapper.insert(refund);
 
-        order.setOrderStatus(3);
-        order.setUpdateTime(LocalDateTime.now());
-        orderMapper.updateById(order);
+        for (Long itemId : orderItemIds) {
+            OrderItem item = orderItemMapper.selectById(itemId);
+            item.setRefundStatus(2);
+            item.setRefundAmount(item.getAmount());
+            item.setUpdateTime(LocalDateTime.now());
+            orderItemMapper.updateById(item);
+        }
 
-        log.info("创建退款申请: orderId={}, refundNo={}, amount={}", orderId, refund.getRefundNo(), refund.getRefundAmount());
+        checkAndUpdateOrderStatus(orderNo);
+
+        log.info("创建部分退款申请: orderNo={}, refundNo={}, amount={}, items={}", 
+            orderNo, refund.getRefundNo(), refundAmount, orderItemIds);
 
         return refund;
+    }
+
+    private void checkAndUpdateOrderStatus(String orderNo) {
+        List<OrderItem> items = orderItemMapper.selectList(
+            new LambdaQueryWrapper<OrderItem>().eq(OrderItem::getOrderNo, orderNo)
+        );
+        
+        boolean allRefunded = items.stream()
+            .allMatch(item -> item.getRefundStatus() != null && item.getRefundStatus() == 1);
+        
+        boolean partialRefunded = items.stream()
+            .anyMatch(item -> item.getRefundStatus() != null && item.getRefundStatus() == 2);
+
+        Order order = orderMapper.selectOne(
+            new LambdaQueryWrapper<Order>().eq(Order::getOrderNo, orderNo)
+        );
+        
+        if (allRefunded) {
+            order.setOrderStatus(3);
+        } else if (partialRefunded) {
+            order.setOrderStatus(4);
+        }
+        order.setUpdateTime(LocalDateTime.now());
+        orderMapper.updateById(order);
     }
 
     @Override
     public Refund getRefundById(Long id) {
-        Refund refund = refundMapper.selectById(id);
-        if (refund == null || refund.getDeleted() == 1) {
-            throw BusinessException.of("REFUND_NOT_FOUND", "退款记录不存在");
-        }
-        return refund;
+        return refundMapper.selectById(id);
     }
 
     @Override
-    public Refund getRefundByOrderId(Long orderId) {
-        LambdaQueryWrapper<Refund> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Refund::getOrderId, orderId);
-        return refundMapper.selectOne(wrapper);
+    public Refund getRefundByOrderNo(String orderNo) {
+        return refundMapper.selectOne(
+            new LambdaQueryWrapper<Refund>().eq(Refund::getOrderNo, orderNo)
+        );
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void approveRefund(Long refundId) {
-        Refund refund = getRefundById(refundId);
+        Refund refund = refundMapper.selectById(refundId);
+        if (refund == null) {
+            throw BusinessException.of("REFUND_NOT_FOUND", "退款记录不存在");
+        }
 
         if (refund.getRefundStatus() != 0) {
-            throw BusinessException.of("REFUND_STATUS_ERROR", "退款状态不允许审批");
+            throw BusinessException.of("REFUND_STATUS_ERROR", "退款状态不正确");
         }
 
         refund.setRefundStatus(1);
@@ -107,84 +155,97 @@ public class RefundServiceImpl implements RefundService {
         refund.setUpdateTime(LocalDateTime.now());
         refundMapper.updateById(refund);
 
-        Order order = orderMapper.selectById(refund.getOrderId());
-        if (order != null) {
-            order.setOrderStatus(3);
-            order.setUpdateTime(LocalDateTime.now());
-            orderMapper.updateById(order);
+        if (refund.getOrderItemId() != null) {
+            OrderItem item = orderItemMapper.selectById(refund.getOrderItemId());
+            item.setRefundStatus(1);
+            item.setUpdateTime(LocalDateTime.now());
+            orderItemMapper.updateById(item);
         }
 
-        log.info("退款审批通过: refundId={}, refundNo={}", refundId, refund.getRefundNo());
+        checkAndUpdateOrderStatus(refund.getOrderNo());
+
+        log.info("退款审批通过: refundNo={}", refund.getRefundNo());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void rejectRefund(Long refundId, String reason) {
-        Refund refund = getRefundById(refundId);
-
-        if (refund.getRefundStatus() != 0) {
-            throw BusinessException.of("REFUND_STATUS_ERROR", "退款状态不允许拒绝");
+        Refund refund = refundMapper.selectById(refundId);
+        if (refund == null) {
+            throw BusinessException.of("REFUND_NOT_FOUND", "退款记录不存在");
         }
 
-        refund.setRefundStatus(2);
+        refund.setRefundStatus(3);
         refund.setRejectReason(reason);
         refund.setUpdateTime(LocalDateTime.now());
         refundMapper.updateById(refund);
 
-        Order order = orderMapper.selectById(refund.getOrderId());
-        if (order != null) {
-            order.setOrderStatus(1);
-            order.setUpdateTime(LocalDateTime.now());
-            orderMapper.updateById(order);
+        if (refund.getOrderItemId() != null) {
+            OrderItem item = orderItemMapper.selectById(refund.getOrderItemId());
+            item.setRefundStatus(0);
+            item.setRefundAmount(BigDecimal.ZERO);
+            item.setUpdateTime(LocalDateTime.now());
+            orderItemMapper.updateById(item);
         }
 
-        log.info("退款申请被拒绝: refundId={}, reason={}", refundId, reason);
+        checkAndUpdateOrderStatus(refund.getOrderNo());
+
+        log.info("退款审批拒绝: refundNo={}, reason={}", refund.getRefundNo(), reason);
     }
 
     @Override
     public PageResult<Refund> getRefundList(PageRequest request, Map<String, Object> params) {
-        Page<Refund> page = new Page<>(request.getPageNum(), request.getPageSize());
         LambdaQueryWrapper<Refund> wrapper = new LambdaQueryWrapper<>();
-
+        
         if (params != null) {
-            if (params.containsKey("userId") && params.get("userId") != null) {
+            if (params.get("orderNo") != null) {
+                wrapper.eq(Refund::getOrderNo, params.get("orderNo"));
+            }
+            if (params.get("userId") != null) {
                 wrapper.eq(Refund::getUserId, params.get("userId"));
             }
-            if (params.containsKey("refundStatus") && params.get("refundStatus") != null) {
+            if (params.get("refundStatus") != null) {
                 wrapper.eq(Refund::getRefundStatus, params.get("refundStatus"));
             }
         }
-
+        
         wrapper.orderByDesc(Refund::getCreateTime);
-        IPage<Refund> result = refundMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal(), request.getPageNum(), request.getPageSize());
+        
+        IPage<Refund> page = refundMapper.selectPage(
+            new Page<>(request.getPageNum(), request.getPageSize()),
+            wrapper
+        );
+        
+        return new PageResult<>(page.getRecords(), page.getTotal(), request.getPageNum(), request.getPageSize());
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void processRefundCallback(Map<String, Object> params) {
         String refundNo = (String) params.get("refundNo");
-        String transactionId = (String) params.get("transactionId");
-
-        LambdaQueryWrapper<Refund> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(Refund::getRefundNo, refundNo);
-        Refund refund = refundMapper.selectOne(wrapper);
-
+        String refundStatus = (String) params.get("refundStatus");
+        
+        Refund refund = refundMapper.selectOne(
+            new LambdaQueryWrapper<Refund>().eq(Refund::getRefundNo, refundNo)
+        );
+        
         if (refund == null) {
-            log.error("退款回调订单不存在: refundNo={}", refundNo);
+            log.error("退款回调处理失败: 退款记录不存在, refundNo={}", refundNo);
             return;
         }
 
-        if (refund.getRefundStatus() != 1) {
-            log.info("退款已完成: refundNo={}, status={}", refundNo, refund.getRefundStatus());
-            return;
+        if ("SUCCESS".equals(refundStatus)) {
+            refund.setRefundStatus(1);
+            refund.setTransactionId((String) params.get("transactionId"));
+            refund.setRefundTime(LocalDateTime.now());
+        } else {
+            refund.setRefundStatus(2);
+            refund.setRejectReason((String) params.get("failReason"));
         }
-
-        refund.setTransactionId(transactionId);
-        refund.setRefundStatus(3);
+        
         refund.setUpdateTime(LocalDateTime.now());
         refundMapper.updateById(refund);
-
-        log.info("退款成功: refundNo={}, transactionId={}", refundNo, transactionId);
+        
+        log.info("退款回调处理完成: refundNo={}, status={}", refundNo, refundStatus);
     }
 }

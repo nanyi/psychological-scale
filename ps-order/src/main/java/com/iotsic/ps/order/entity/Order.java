@@ -16,17 +16,13 @@ public class Order extends BaseEntity {
 
     private Long userId;
 
-    private Long scaleId;
+    private Integer orderType;
 
-    private String scaleName;
-
-    private BigDecimal amount;
+    private BigDecimal totalAmount;
 
     private BigDecimal discountAmount;
 
     private BigDecimal actualAmount;
-
-    private Integer orderType;
 
     private Integer orderStatus;
 

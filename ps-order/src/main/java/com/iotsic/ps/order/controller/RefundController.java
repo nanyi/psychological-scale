@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @Slf4j
@@ -21,10 +22,11 @@ public class RefundController {
 
     @PostMapping("/create")
     public RestResult<Refund> createRefund(@RequestBody Map<String, Object> params) {
-        Long orderId = Long.valueOf(params.get("orderId").toString());
+        String orderNo = (String) params.get("orderNo");
+        List<Long> orderItemIds = (List<Long>) params.get("orderItemIds");
         String reason = (String) params.getOrDefault("reason", "用户申请退款");
 
-        Refund refund = refundService.createRefund(orderId, reason);
+        Refund refund = refundService.createRefund(orderNo, orderItemIds, reason);
         return RestResult.success("退款申请已提交", refund);
     }
 
@@ -33,9 +35,9 @@ public class RefundController {
         return RestResult.success(refundService.getRefundById(id));
     }
 
-    @GetMapping("/order/{orderId}")
-    public RestResult<Refund> getRefundByOrderId(@PathVariable Long orderId) {
-        return RestResult.success(refundService.getRefundByOrderId(orderId));
+    @GetMapping("/order/{orderNo}")
+    public RestResult<Refund> getRefundByOrderNo(@PathVariable String orderNo) {
+        return RestResult.success(refundService.getRefundByOrderNo(orderNo));
     }
 
     @PostMapping("/approve")

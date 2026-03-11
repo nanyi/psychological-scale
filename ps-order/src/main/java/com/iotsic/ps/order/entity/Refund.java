@@ -12,7 +12,11 @@ import java.time.LocalDateTime;
 @TableName("order_refund")
 public class Refund extends BaseEntity {
 
-    private Long orderId;
+    private String orderNo;
+
+    private Long orderItemId;
+
+    private Long scaleId;
 
     private String refundNo;
 

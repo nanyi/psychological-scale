@@ -4,15 +4,16 @@ import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.order.entity.Refund;
 
+import java.util.List;
 import java.util.Map;
 
 public interface RefundService {
 
-    Refund createRefund(Long orderId, String reason);
+    Refund createRefund(String orderNo, List<Long> orderItemIds, String reason);
 
     Refund getRefundById(Long id);
 
-    Refund getRefundByOrderId(Long orderId);
+    Refund getRefundByOrderNo(String orderNo);
 
     void approveRefund(Long refundId);
 
