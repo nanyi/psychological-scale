@@ -3,15 +3,23 @@ package com.iotsic.ps.report.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.report.dto.ReportExportRequest;
+import com.iotsic.ps.report.dto.ReportExportResponse;
+import com.iotsic.ps.report.dto.ReportGenerateRequest;
+import com.iotsic.ps.report.dto.ReportGenerateResponse;
 import com.iotsic.ps.report.entity.Report;
 import com.iotsic.ps.report.service.ReportService;
 import com.iotsic.ps.report.service.ExportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.Map;
-
+/**
+ * 报告控制器
+ * 负责报告生成、查看、导出等请求
+ * 
+ * @author Ryan
+ * @since 2026-03-11
+ */
 @RestController
 @RequestMapping("/api/report")
 @RequiredArgsConstructor
@@ -20,21 +28,31 @@ public class ReportController {
     private final ReportService reportService;
     private final ExportService exportService;
 
+    /**
+     * 生成测评报告
+     * 
+     * @param request 报告生成请求
+     * @return 报告生成结果
+     */
     @PostMapping("/generate")
-    public RestResult<Map<String, Object>> generateReport(@RequestBody Map<String, Long> params) {
-        Long taskId = params.get("taskId");
-        Long templateId = params.get("templateId");
+    public RestResult<ReportGenerateResponse> generateReport(@RequestBody ReportGenerateRequest request) {
+        Report report = reportService.generateReport(request.getTaskId(), request.getTemplateId());
 
-        Report report = reportService.generateReport(taskId, templateId);
+        ReportGenerateResponse response = new ReportGenerateResponse();
+        response.setReportId(report.getId());
+        response.setReportNo(report.getReportNo());
+        response.setStatus(report.getStatus());
 
-        Map<String, Object> data = new HashMap<>();
-        data.put("reportId", report.getId());
-        data.put("reportNo", report.getReportNo());
-        data.put("status", report.getStatus());
-
-        return RestResult.success(data);
+        return RestResult.success(response);
     }
 
+    /**
+     * 获取报告详情
+     * 
+     * @param reportId 报告ID
+     * @param taskId 任务ID（二选一）
+     * @return 报告详情
+     */
     @GetMapping("/detail")
     public RestResult<Report> getReportDetail(
             @RequestParam(required = false) Long reportId,
@@ -52,6 +70,16 @@ public class ReportController {
         return RestResult.success(report);
     }
 
+    /**
+     * 获取报告列表
+     * 
+     * @param pageNum 页码
+     * @param pageSize 每页数量
+     * @param userId 用户ID
+     * @param scaleId 量表ID
+     * @param status 状态
+     * @return 报告分页列表
+     */
     @GetMapping("/list")
     public RestResult<IPage<Report>> getReportList(
             @RequestParam(defaultValue = "1") Integer pageNum,
@@ -66,28 +94,59 @@ public class ReportController {
         return RestResult.success(result);
     }
 
+    /**
+     * 导出Word报告
+     * 
+     * @param request 导出请求参数
+     * @return 导出结果
+     */
     @PostMapping("/export/word")
-    public RestResult<Map<String, Object>> exportWord(@RequestBody Map<String, Object> params) {
-        Long reportId = ((Number) params.get("reportId")).longValue();
-        Long templateId = params.get("templateId") != null ? ((Number) params.get("templateId")).longValue() : null;
-        String watermark = (String) params.get("watermark");
-
-        Map<String, Object> result = exportService.exportWord(reportId, templateId, watermark);
-        return RestResult.success(result);
+    public RestResult<ReportExportResponse> exportWord(@RequestBody ReportExportRequest request) {
+        Map<String, Object> result = exportService.exportWord(
+                request.getReportId(), 
+                request.getTemplateId(), 
+                request.getWatermark()
+        );
+        
+        ReportExportResponse response = new ReportExportResponse();
+        response.setDownloadUrl((String) result.get("downloadUrl"));
+        response.setFileName((String) result.get("fileName"));
+        response.setExpireTime((java.time.LocalDateTime) result.get("expireTime"));
+        
+        return RestResult.success(response);
     }
 
+    /**
+     * 导出PDF报告
+     * 
+     * @param request 导出请求参数
+     * @return 导出结果
+     */
     @PostMapping("/export/pdf")
-    public RestResult<Map<String, Object>> exportPdf(@RequestBody Map<String, Object> params) {
-        Long reportId = ((Number) params.get("reportId")).longValue();
-        Long templateId = params.get("templateId") != null ? ((Number) params.get("templateId")).longValue() : null;
-        String pageSize = (String) params.getOrDefault("pageSize", "A4");
-        String orientation = (String) params.getOrDefault("orientation", "portrait");
-        String watermark = (String) params.get("watermark");
-
-        Map<String, Object> result = exportService.exportPdf(reportId, templateId, pageSize, orientation, watermark);
-        return RestResult.success(result);
+    public RestResult<ReportExportResponse> exportPdf(@RequestBody ReportExportRequest request) {
+        Map<String, Object> result = exportService.exportPdf(
+                request.getReportId(), 
+                request.getTemplateId(), 
+                request.getPageSize(), 
+                request.getOrientation(), 
+                request.getWatermark()
+        );
+        
+        ReportExportResponse response = new ReportExportResponse();
+        response.setDownloadUrl((String) result.get("downloadUrl"));
+        response.setFileName((String) result.get("fileName"));
+        response.setExpireTime((java.time.LocalDateTime) result.get("expireTime"));
+        
+        return RestResult.success(response);
     }
 
+    /**
+     * 下载报告
+     * 
+     * @param filePath 文件路径
+     * @param userId 用户ID
+     * @return 下载链接
+     */
     @GetMapping("/download")
     public RestResult<Map<String, String>> downloadReport(
             @RequestParam String filePath,

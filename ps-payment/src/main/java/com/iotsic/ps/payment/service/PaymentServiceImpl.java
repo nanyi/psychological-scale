@@ -1,9 +1,9 @@
 package com.iotsic.ps.payment.service;
 
 import com.github.wxpay.sdk.WXPay;
-import com.github.wxpay.sdk.WXPayUtil;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.payment.config.WxPayConfig;
+import com.iotsic.ps.payment.dto.PaymentCreateResponse;
 import com.iotsic.ps.payment.entity.Payment;
 import com.iotsic.ps.payment.mapper.PaymentMapper;
 import lombok.RequiredArgsConstructor;
@@ -16,6 +16,12 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 支付服务实现类
+ * 
+ * @author Ryan
+ * @since 2026-03-11
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -26,7 +32,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> createWxPayOrder(Long orderId, String orderNo, BigDecimal amount, String description) {
+    public PaymentCreateResponse createWxPayOrder(Long orderId, String orderNo, BigDecimal amount, String description) {
         try {
             WXPay wxPay = new WXPay(wxPayConfig);
 
@@ -53,10 +59,10 @@ public class PaymentServiceImpl implements PaymentService {
                 payment.setUpdateTime(LocalDateTime.now());
                 paymentMapper.insert(payment);
 
-                Map<String, Object> result = new HashMap<>();
-                result.put("paymentId", payment.getId());
-                result.put("codeUrl", codeUrl);
-                result.put("orderNo", orderNo);
+                PaymentCreateResponse result = new PaymentCreateResponse();
+                result.setPaymentId(payment.getId());
+                result.setCodeUrl(codeUrl);
+                result.setOrderNo(orderNo);
                 return result;
             } else {
                 log.error("微信支付下单失败: {}", response);
@@ -70,7 +76,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> createAliPayOrder(Long orderId, String orderNo, BigDecimal amount, String description) {
+    public PaymentCreateResponse createAliPayOrder(Long orderId, String orderNo, BigDecimal amount, String description) {
         return null;
     }
 

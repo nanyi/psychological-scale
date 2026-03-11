@@ -142,7 +142,7 @@ public class ExportServiceImpl extends ServiceImpl<ReportExportMapper, ReportExp
             suggestions.createRun().setText("【建议指导】");
             suggestions.createRun().addBreak();
             
-            List<String> suggestionList = JsonUtils.parseObject(report.getSuggestions(), List.class);
+            List<String> suggestionList = JsonUtils.fromJsonToList(report.getSuggestions(), String.class);
             if (suggestionList != null) {
                 int i = 1;
                 for (String suggestion : suggestionList) {

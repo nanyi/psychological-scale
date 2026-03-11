@@ -3,6 +3,7 @@ package com.iotsic.ps.payment.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.payment.config.WxPayConfig;
+import com.iotsic.ps.payment.dto.RefundCreateResponse;
 import com.iotsic.ps.payment.entity.Payment;
 import com.iotsic.ps.payment.entity.RefundRecord;
 import com.iotsic.ps.payment.mapper.PaymentMapper;
@@ -14,10 +15,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * 退款服务实现类
+ * 
+ * @author Ryan
+ * @since 2026-03-11
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -29,7 +35,7 @@ public class RefundServiceImpl implements RefundService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> createRefund(Long paymentId, BigDecimal refundAmount, String refundReason) {
+    public RefundCreateResponse createRefund(Long paymentId, BigDecimal refundAmount, String refundReason) {
         Payment payment = paymentMapper.selectById(paymentId);
         if (payment == null) {
             throw new BusinessException("支付记录不存在");
@@ -73,9 +79,9 @@ public class RefundServiceImpl implements RefundService {
             throw new BusinessException("退款处理异常: " + e.getMessage());
         }
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("refundId", refundRecord.getId());
-        result.put("refundNo", refundNo);
+        RefundCreateResponse result = new RefundCreateResponse();
+        result.setRefundId(refundRecord.getId());
+        result.setRefundNo(refundNo);
         return result;
     }
 
