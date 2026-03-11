@@ -3,6 +3,10 @@ package com.iotsic.ps.order.controller;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.order.dto.RefundApproveRequest;
+import com.iotsic.ps.order.dto.RefundCreateRequest;
+import com.iotsic.ps.order.dto.RefundListRequest;
+import com.iotsic.ps.order.dto.RefundRejectRequest;
 import com.iotsic.ps.order.entity.Refund;
 import com.iotsic.ps.order.service.RefundService;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +16,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 退款控制器
+ * 负责退款申请、审批、查询等请求
+ * 
+ * @author Ryan
+ * @since 2026-03-12
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/refund")
@@ -20,48 +31,88 @@ public class RefundController {
 
     private final RefundService refundService;
 
+    /**
+     * 创建退款申请
+     * 
+     * @param request 退款创建请求
+     * @return 退款信息
+     */
     @PostMapping("/create")
-    public RestResult<Refund> createRefund(@RequestBody Map<String, Object> params) {
-        String orderNo = (String) params.get("orderNo");
-        List<Long> orderItemIds = (List<Long>) params.get("orderItemIds");
-        String reason = (String) params.getOrDefault("reason", "用户申请退款");
-
-        Refund refund = refundService.createRefund(orderNo, orderItemIds, reason);
+    public RestResult<Refund> createRefund(@RequestBody RefundCreateRequest request) {
+        Refund refund = refundService.createRefund(
+                request.getOrderNo(),
+                request.getOrderItemIds(),
+                request.getReason()
+        );
         return RestResult.success("退款申请已提交", refund);
     }
 
-    @GetMapping("/{id}")
+    /**
+     * 根据ID获取退款信息
+     * 
+     * @param id 退款ID
+     * @return 退款信息
+     */
+    @GetMapping("/detail/{id}")
     public RestResult<Refund> getRefundById(@PathVariable Long id) {
         return RestResult.success(refundService.getRefundById(id));
     }
 
-    @GetMapping("/order/{orderNo}")
+    /**
+     * 根据订单编号获取退款信息
+     * 
+     * @param orderNo 订单编号
+     * @return 退款信息
+     */
+    @GetMapping("/by-order/{orderNo}")
     public RestResult<Refund> getRefundByOrderNo(@PathVariable String orderNo) {
         return RestResult.success(refundService.getRefundByOrderNo(orderNo));
     }
 
+    /**
+     * 审批退款
+     * 
+     * @param request 退款审批请求
+     * @return 操作结果
+     */
     @PostMapping("/approve")
-    public RestResult<Void> approveRefund(@RequestBody Map<String, Object> params) {
-        Long refundId = Long.valueOf(params.get("refundId").toString());
-        refundService.approveRefund(refundId);
+    public RestResult<Void> approveRefund(@RequestBody RefundApproveRequest request) {
+        refundService.approveRefund(request.getRefundId());
         return RestResult.success();
     }
 
+    /**
+     * 拒绝退款
+     * 
+     * @param request 退款拒绝请求
+     * @return 操作结果
+     */
     @PostMapping("/reject")
-    public RestResult<Void> rejectRefund(@RequestBody Map<String, Object> params) {
-        Long refundId = Long.valueOf(params.get("refundId").toString());
-        String reason = (String) params.getOrDefault("reason", "退款申请被拒绝");
-        refundService.rejectRefund(refundId, reason);
+    public RestResult<Void> rejectRefund(@RequestBody RefundRejectRequest request) {
+        refundService.rejectRefund(request.getRefundId(), request.getReason());
         return RestResult.success();
     }
 
+    /**
+     * 获取退款列表
+     * 
+     * @param request 分页请求
+     * @param refundListRequest 查询参数
+     * @return 退款分页列表
+     */
     @GetMapping("/list")
     public RestResult<PageResult<Refund>> getRefundList(
             PageRequest request,
-            @RequestParam(required = false) Map<String, Object> params) {
-        return RestResult.success(refundService.getRefundList(request, params));
+            RefundListRequest refundListRequest) {
+        return RestResult.success(refundService.getRefundList(request, refundListRequest));
     }
 
+    /**
+     * 处理退款回调
+     * 
+     * @param params 回调参数
+     * @return 处理结果
+     */
     @PostMapping("/callback")
     public RestResult<String> handleRefundCallback(@RequestBody Map<String, Object> params) {
         log.info("收到退款回调: {}", params);
