@@ -3,6 +3,9 @@ package com.iotsic.ps.scale.controller;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.scale.dto.ExamRecordDetailResponse;
+import com.iotsic.ps.scale.dto.ExamRecordListRequest;
+import com.iotsic.ps.scale.dto.ExamRecordStatisticsResponse;
 import com.iotsic.ps.core.entity.ExamAnswer;
 import com.iotsic.ps.core.entity.ExamRecord;
 import com.iotsic.ps.scale.service.ExamRecordService;
@@ -13,6 +16,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 测评记录控制器
+ * 负责测评记录的查询、统计等请求
+ * 
+ * @author Ryan
+ * @since 2026-03-12
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/exam-record")
@@ -21,40 +31,101 @@ public class ExamRecordController {
 
     private final ExamRecordService examRecordService;
 
-    @GetMapping("/{id}")
+    /**
+     * 根据ID获取测评记录
+     * 
+     * @param id 记录ID
+     * @return 测评记录
+     */
+    @GetMapping("/detail/{id}")
     public RestResult<ExamRecord> getRecordById(@PathVariable Long id) {
         return RestResult.success(examRecordService.getRecordById(id));
     }
 
-    @GetMapping("/{id}/answers")
+    /**
+     * 获取记录的所有答案
+     * 
+     * @param id 记录ID
+     * @return 答案列表
+     */
+    @GetMapping("/answers/{id}")
     public RestResult<List<ExamAnswer>> getRecordAnswers(@PathVariable Long id) {
         return RestResult.success(examRecordService.getRecordAnswers(id));
     }
 
-    @GetMapping("/{id}/detail")
-    public RestResult<Map<String, Object>> getRecordDetail(@PathVariable Long id) {
-        return RestResult.success(examRecordService.getRecordDetail(id));
+    /**
+     * 获取记录详情
+     * 
+     * @param id 记录ID
+     * @return 记录详情
+     */
+    @GetMapping("/info/{id}")
+    public RestResult<ExamRecordDetailResponse> getRecordDetail(@PathVariable Long id) {
+        Map<String, Object> result = examRecordService.getRecordDetail(id);
+        
+        ExamRecordDetailResponse response = new ExamRecordDetailResponse();
+        response.setRecordId((Long) result.get("recordId"));
+        response.setScaleId((Long) result.get("scaleId"));
+        response.setScaleName((String) result.get("scaleName"));
+        response.setUserId((Long) result.get("userId"));
+        response.setStatus((Integer) result.get("status"));
+        // 设置其他字段...
+        
+        return RestResult.success(response);
     }
 
+    /**
+     * 获取记录列表
+     * 
+     * @param request 分页请求
+     * @param examRecordListRequest 查询参数
+     * @return 记录分页列表
+     */
     @GetMapping("/list")
     public RestResult<PageResult<ExamRecord>> getRecordList(
             PageRequest request,
-            @RequestParam(required = false) Map<String, Object> params) {
-        return RestResult.success(examRecordService.getRecordList(request, params));
+            ExamRecordListRequest examRecordListRequest) {
+        return RestResult.success(examRecordService.getRecordList(request, examRecordListRequest));
     }
 
+    /**
+     * 获取记录统计
+     * 
+     * @param userId 用户ID
+     * @return 统计数据
+     */
     @GetMapping("/statistics")
-    public RestResult<Map<String, Object>> getRecordStatistics(@RequestParam Long userId) {
-        return RestResult.success(examRecordService.getRecordStatistics(userId));
+    public RestResult<ExamRecordStatisticsResponse> getRecordStatistics(@RequestParam Long userId) {
+        Map<String, Object> result = examRecordService.getRecordStatistics(userId);
+        
+        ExamRecordStatisticsResponse response = new ExamRecordStatisticsResponse();
+        response.setTotalCount((Long) result.get("totalCount"));
+        response.setCompletedCount((Long) result.get("completedCount"));
+        response.setInProgressCount((Long) result.get("inProgressCount"));
+        response.setAbandonedCount((Long) result.get("abandonedCount"));
+        
+        return RestResult.success(response);
     }
 
-    @DeleteMapping("/{id}")
+    /**
+     * 删除记录
+     * 
+     * @param id 记录ID
+     * @return 操作结果
+     */
+    @DeleteMapping("/delete/{id}")
     public RestResult<Void> deleteRecord(@PathVariable Long id) {
         examRecordService.deleteRecord(id);
         return RestResult.success();
     }
 
-    @GetMapping("/{id}/export")
+    /**
+     * 导出记录
+     * 
+     * @param id 记录ID
+     * @return 操作结果
+     */
+    @GetMapping("/export/{id}")
     public RestResult<Void> exportRecord(@PathVariable Long id) {
         examRecordService.exportRecord(id);
         return RestResult.success();
