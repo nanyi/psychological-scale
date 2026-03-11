@@ -4,9 +4,15 @@
 2. **代码除外**：代码本身和特殊专有名词（如类名、方法名、API 名称）使用英文
 3. **展示思考过程**：在回答问题时，需要展示分析和推理过程
 
+## 补充强化（必须遵守）
+
+1. **不得直接粘贴英文原始输出**：包括但不限于后台 Agent、外部文档、命令行输出等；如包含英文内容，必须先用中文进行归纳/翻译后再输出。
+2. **面向用户的最终输出必须中文**：允许在代码块、类名/方法名/API 名称、URL、HTTP Header 等专有名词处使用英文。
+3. **“展示思考过程”的边界**：以“结论 → 证据 → 推理 → 验证步骤 → 规避方案”的结构化方式说明；避免输出无关的内部草稿或逐字推演。
+
 ---
 
-# AGENTS - 心理测评系统开发指南
+# AGENTS.md - 心理测评系统开发指南
 
 ## 1. 项目概述
 
@@ -77,33 +83,262 @@ Psychological Scale 是一套功能全面、专业可靠、开箱即用的心理
 
 ---
 
-## 2. 代码规范
+## 2. 构建与运行命令
+
+### Backend (Java/Maven)
+
+工作目录：`backend`
+
+```bash
+# 启动应用 (Spring Boot)
+mvn spring-boot:run
+
+# 构建打包 (跳过测试)
+mvn clean package -DskipTests
+
+# 编译代码
+mvn compile
+```
+
+### Frontend (Vue/Vite)
+
+工作目录：`frontend`
+
+```bash
+# 安装依赖
+npm install
+
+# 启动开发服务器
+npm run dev
+
+# 构建生产版本
+npm run build
+
+# 代码检查 (Lint)
+npm run lint
+```
+
+## 3. 代码规范
 
 ### Java (Backend)
 
 - **Java 版本**: 21 (Spring Boot 3.2.2)
-- **命名规范**:
-  - 类/方法：CamelCase
-  - 常量：UPPER_SNAKE_CASE
+- **风格**:
+  - 类名 `PascalCase`，方法/变量`CamelCase`，常量`UPPER_SNAKE_CASE`
   - 包名：全小写
-- **Lombok**: `@Data`, `@Slf4j`, `@RequiredArgsConstructor`
-- **导入规则**:
+  - 使用 Lombok (`@Data`, `@Slf4j`, `@RequiredArgsConstructor`) 简化代码。
+  - Controller 返回统一泛型对象 `RestResult<T>`
+- **import导入规则**:
   - 禁止通配符导入
   - 静态导入放最后
   - 按组组织（标准库、第三方、项目内部）
+- **分包策略**：按业务领域分包（`dataCollector`，`modelService`等），而非按层分包。
 - **错误处理**:
-  - 统一使用 `@ControllerAdvice` + `RestResult<T>` 封装
+  - 使用全局异常处理 `@ControllerAdvice` + `RestResult<T>` 封装，禁止吞掉异常。
   - 记录详细日志，返回友好错误信息
-- **API 设计**:
-  - RESTful 风格，与前端交互使用蛇形风格
-  - POST/PUT 使用 `@RequestBody`
 - **测试**: JUnit 5 + Mockito
 - **ORM**: MyBatis-Plus (自动建库建表，无需 SQL 脚本)
+
+#### 接口入参与返回值规范（强制）
+
+1. **统一使用 DTO类 封装**：
+   - 所有 `@RestController` 方法的请求体入参和响应体返回值必须使用明确的 DTO/VO 类进行封装；
+   - **禁止**在接口层直接使用 `Map`、`List<Map>`、原始 `Object` 作为入参或返回值类型（包括 `ResponseEntity<Map<...>>`、`@RequestBody Map` 等）。
+2. **请求参数规范**：
+   - 复杂请求体必须定义独立的 `*Request` / `*Param` DTO 类（如 `OrderRequest`）；
+   - 简单查询参数可继续使用 `@RequestParam` 标量类型（如 `String keyword`、`int page`），但一旦参数超过3个，需要将参数封装为请求 DTO 类。
+3. **响应结果规范**：
+   - 统一使用封装的响应泛型（如 `RestResult<T>`），泛型 `T` 必须是具体的 DTO/VO 类；
+   - 对于列表、分页等结构，DTO类内部再包含集合字段，而不是在 Controller 中返回原始 `Map` 拼装结构。
+4. **Agent 约束**：
+   - 后续新增或修改任何接口时，如果发现使用了 `Map` 作为接口层入参/出参，必须先补齐/重构为对应的 DTO，再进行业务实现；
+   - 如需在内部使用 `Map` 做临时计算，必须限制在 Service 层或更下游，且最终对外接口仍然是 DTO。
+5. **前端交互或开放接口风格**：
+   - 参数属性字段需转为**小写蛇形风格**，如`OrderVO`中的`totalAmount`属性需要转换为`total_amount`。
+
+#### 接口路径规范（强制）
+
+1. **路径命名风格**：
+   - 统一使用**小写蛇形式单词组合**（lower snake words），单词之间采用连字符 `-` 分隔，例如：
+     - `/api/orderData`、`/api/order-data` 统一收敛为：`/api/order-data`，全项目保持一致；
+     - 推荐对资源名使用小写+连字符（RESTful 风格），如：`/api/order-refund-records`、`/api/order-data`。
+2. **版本化与前缀**：
+   - 所有业务接口必须以 `/api/` 为统一前缀，后续如需版本化可扩展为 `/api/v1/...`。
+3. **避免混用风格**：
+   - 禁止在同一项目中同时存在 `/api/stockInfo` 与 `/api/stock-info` 这种混用情况；
+   - 新增接口时必须对齐已有约定的命名风格，若需调整旧路径，须保留一段时间的兼容映射。
+
+#### 接口路径参数位置规范（强制）
+
+1. **路径参数放在末尾**：
+   - 所有包含路径参数的接口，必须将路径参数段放在 URL 的最后位置；
+   - 例如：`/api/jobs/{id}/status` 必须重构为 `/api/jobs/status/{id}`，`/api/model-info/{code}/details` 必须重构为 `/api/model-info/details/{code}`。
+2. **Agent 约束**：
+   - 后续新增任何带路径参数的接口时，禁止在参数段后再追加其它路径片段；
+   - 如发现旧接口不符合约定，需在不破坏前端的前提下，通过增加新路径 + 兼容映射的方式逐步迁移。
+
+#### DTO 字段注释规范（强制）
+
+1. **字段级别注释必填**：
+   - 所有 DTO/VO 类中的每一个字段，必须在字段声明前添加 Javadoc 或行级注释，清晰说明字段含义、单位、取值范围（如适用）；
+   - 示例：
+     ```java
+     /**
+      * 订单类型，如 VIP会员
+      */
+     private String orderType;
+     ```
+2. **适用范围**：
+   - 新增 DTO 必须严格按照规范编写字段注释；
+   - 修改已有 DTO 时，如发现缺失字段注释，需一并补齐。
+
+#### 类注释与作者信息规范（强制）
+
+1. **统一作者信息**：
+   - 所有新建或修改的 Java 类，类级 Javadoc 注释中的作者统一使用 `@author Ryan`
+   - 不再使用其他作者标识。
+2. **创建时间必填**：
+   - 类级 Javadoc 必须包含创建时间字段，例如：
+     ```java
+     /**
+      * 股票数据服务类
+      *
+      * @author Ryan
+      * @since 2026-03-10
+      */
+     ```
+3. **Agent 约束**：
+   - 新增类时必须按照上述模板补充类注释；
+   - 修改已有类时，如原有注释不符合规范，应在不破坏历史信息的前提下补充或更正作者与时间信息。
+
+### Java 代码注释规范 (强制)
+
+生成 Java 代码时，必须遵循以下注释规范：
+
+#### 1. 类注释
+
+每个类必须添加类级文档注释，说明类的业务职责。
+
+```java
+/**
+ * 订单服务类
+ * 负责订单的创建、取消和数据查询
+ * 
+ * @author AI Assistant
+ * @since 1.0
+ */
+public class OrderService {
+    // ...
+}
+```
+
+#### 2. 方法注释
+
+**每个public/protected方法必须添加 Javadoc 注释**，包含以下要素：
+
+```java
+/**
+ * 获取企业配额
+ * 
+ * 根据订单ID获取企业配额。
+ *
+ * @param orderId 订单ID，如 "600519"
+ * @return 企业配额
+ * @throws BusinessException 当外部API调用失败或数据解析异常
+ * @see #getEnterpriseQuotas(Long, SortablePageRequest)
+ * @see StockPriceEntity
+ */
+public EnterpriseQuota getQuotaByOrderId(Long orderId) {
+    // 业务逻辑
+}
+```
+
+
+#### 3. 业务注释
+
+在方法内部的业务逻辑关键节点，必须添加业务说明注释：
+
+```java
+/**
+ * 停用企业配额
+ *
+ * @param id 配额ID
+ */
+@Transactional(rollbackFor = Exception.class)
+public void expireQuota(Long id) {
+    EnterpriseQuota quota = getQuotaById(id);
+
+    // 判断是否已过期, 过期时间小于当前时间则停用
+    if (quota.getExpireTime() != null && quota.getExpireTime().isBefore(LocalDateTime.now())) {
+        // 停用
+        quota.setStatus(0);
+        quota.setUpdateTime(LocalDateTime.now());
+        enterpriseQuotaMapper.updateById(quota);
+        
+        log.info("企业配额已过期: id={}", id);
+    }
+}
+```
+
+#### 4. 注释禁用规则
+
+- **禁止**添加无意义的注释，如：
+
+```java
+  // 定义变量 (BAD)
+  int count = 0;
+  
+  // 返回结果 (BAD)
+  return result;
+```
+
+- **禁止**用注释解释简单逻辑：
+
+```java
+  // 如果列表不为空，遍历列表 (BAD - 冗余)
+  for (Order order : orders) {
+      process(order);
+  }
+```
+
+#### 5. 注释要点总结
+
+| 位置 | 注释类型 | 必须包含内容 |
+|------|----------|--------------|
+| 类声明前 | Javadoc | 类职责、业务场景、版本 |
+| public/protected方法 | Javadoc | 功能说明、参数含义、返回值、异常、关联方法 |
+| private方法 | 行内注释 | 仅当业务逻辑复杂或非自明时添加 |
+| 关键业务节点 | 行内注释 | 业务判断逻辑、数据流转、状态变更 |
+| 复杂算法 | 行内注释 | 算法思路、关键变量含义 |
+
+#### 6. 快速模板
+
+生成代码时可使用以下快速模板：
+
+```java
+/**
+ * [方法简短描述]
+ * 
+ * [详细业务说明，包括业务场景、调用时机、预期效果]
+ *
+ * @param [参数名] [参数含义]
+ * @return [返回值含义]
+ * @throws [可能抛出的业务异常]
+ */
+public [返回值类型] [methodName]([参数列表]) {
+    // 1. [业务步骤1说明]
+    // 2. [业务步骤2说明]
+    // 3. [关键判断/计算说明]
+    return [结果];
+}
+```
+
+**Agent 强制要求**：后续生成的所有 Java 代码必须严格遵循此注释规范，类注释和方法 Javadoc 注释为必填项。
 
 ### Vue 3 / TypeScript (Frontend)
 
 - **框架**: Vue 3.4 + ElementUI 2.5 + TypeScript
-- **命名规范**:
+- **风格**:
   - 组件：PascalCase
   - Hooks：camelCase, use* 前缀
   - 类型接口：PascalCase, 禁止使用 `any`
@@ -225,7 +460,7 @@ ps-api/
 #### 公共类设计规范
 
 - **统一响应**: 使用`RestResult<T>`封装响应结果
-- **分页对象**: 使用`PageRequest`、`SortablePageRequest`和`PageResult`。`SortablePageRequest`继承`PageRequest`，并添加多条件排序功能
+- **分页对象**: 使用`PageRequest`、`SortablePageRequest`和`PageResult`。`SortablePageRequest`继承`PageRequest`，并添加多条件排序功能。
 - **基础实体**: 所有实体类继承`BaseEntity`
 - **DTO规范**: 请求DTO以`Request`结尾，响应DTO以`Response`结尾
 
@@ -260,7 +495,7 @@ ps-api/
 
 ---
 
-## 3. Git 工作规范
+## 4. Git 工作规范
 
 ### 代码提交要求
 
@@ -313,7 +548,7 @@ ps-api/
 
 ---
 
-## 4. 文档规范
+## 5. 文档规范
 
 ### 文档结构
 
@@ -362,7 +597,7 @@ documents/
 
 ---
 
-## 5. 测试规范
+## 6. 测试规范
 
 ### 测试数据要求
 
@@ -425,3 +660,17 @@ private ScaleRepository mockRepository; // 禁止！
 - 确保团队成员可以获取最新代码
 - 避免因本地提交未推送导致的代码丢失风险
 
+
+## 7.思考与行动指南 (For Agents)
+
+当接到任务时，请遵循：
+
+1.  **Context (读取)**: 先阅读相关代码，不要臆测。使用 `ls`, `read` 确认文件位置。
+2.  **Think (思考)**: 分析影响范围，确定修改方案。
+    - "如果是修改后端 API，是否需要同步更新前端 Type 定义？"
+    - "如果是修改数据库实体，是否需要数据库迁移？"
+3.  **Act (执行)**:
+    - 修改代码。
+    - **必须**运行编译命令验证修改（后端 `mvn compile` 或 `mvn package -DskipTests`，前端 `npm run build`）。
+4.  **Verify (验证)**: 检查 `lsp_diagnostics` 确保无语法错误。
+5.  **Build Check (编译检查)**: 每次修改前端代码后，**必须**在 `frontend` 目录下运行 `npm run tsc` (或 `npm run build`) 以确保无编译错误。这是强制约定。

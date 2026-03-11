@@ -117,6 +117,11 @@ public class EnterpriseQuotaServiceImpl implements EnterpriseQuotaService {
         log.info("充值企业配额: id={}, quantity={}", id, quantity);
     }
 
+    /**
+     * 根据订单ID获取企业配额
+     * @param orderId 订单ID
+     * @return 企业配额
+     */
     @Override
     public EnterpriseQuota getQuotaByOrderId(Long orderId) {
         return null;
@@ -135,13 +140,18 @@ public class EnterpriseQuotaServiceImpl implements EnterpriseQuotaService {
         IPage<EnterpriseQuota> result = enterpriseQuotaMapper.selectPage(page, wrapper);
         return PageResult.of(result.getRecords(), result.getTotal(), request.getPageNum(), request.getPageSize());
     }
-
+    /**
+     * 停用企业配额
+     * @param id 配额ID
+     */
     @Override
     @Transactional(rollbackFor = Exception.class)
     public void expireQuota(Long id) {
         EnterpriseQuota quota = getQuotaById(id);
-        
+
+        // 判断是否已过期, 过期时间小于当前时间则停用
         if (quota.getExpireTime() != null && quota.getExpireTime().isBefore(LocalDateTime.now())) {
+            // 停用
             quota.setStatus(0);
             quota.setUpdateTime(LocalDateTime.now());
             enterpriseQuotaMapper.updateById(quota);
