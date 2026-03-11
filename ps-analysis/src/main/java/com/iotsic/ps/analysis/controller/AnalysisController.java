@@ -1,7 +1,13 @@
 package com.iotsic.ps.analysis.controller;
 
 import com.iotsic.ps.analysis.dto.DashboardDTO;
+import com.iotsic.ps.analysis.dto.EnterpriseUsageResponse;
+import com.iotsic.ps.analysis.dto.IncomeReportResponse;
 import com.iotsic.ps.analysis.dto.NormCompareDTO;
+import com.iotsic.ps.analysis.dto.ReportExportRequest;
+import com.iotsic.ps.analysis.dto.ResultDistributionResponse;
+import com.iotsic.ps.analysis.dto.ScaleUsageReportResponse;
+import com.iotsic.ps.analysis.dto.UserExamReportResponse;
 import com.iotsic.ps.analysis.service.AnalysisService;
 import com.iotsic.ps.common.result.RestResult;
 import lombok.RequiredArgsConstructor;
@@ -47,10 +53,10 @@ public class AnalysisController {
      * @return 量表使用统计数据
      */
     @GetMapping("/report/scale")
-    public RestResult<Map<String, Object>> getScaleUsageReport(
+    public RestResult<List<ScaleUsageReportResponse>> getScaleUsageReport(
             @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
             @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
-        Map<String, Object> data = analysisService.getScaleUsageReport(startDate, endDate);
+        List<ScaleUsageReportResponse> data = analysisService.getScaleUsageReport(startDate, endDate);
         return RestResult.success(data);
     }
 
@@ -62,10 +68,10 @@ public class AnalysisController {
      * @return 用户测评统计数据
      */
     @GetMapping("/report/user")
-    public RestResult<Map<String, Object>> getUserExamReport(
+    public RestResult<List<UserExamReportResponse>> getUserExamReport(
             @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
             @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
-        Map<String, Object> data = analysisService.getUserExamReport(startDate, endDate);
+        List<UserExamReportResponse> data = analysisService.getUserExamReport(startDate, endDate);
         return RestResult.success(data);
     }
 
@@ -77,25 +83,27 @@ public class AnalysisController {
      * @return 收入统计数据
      */
     @GetMapping("/report/income")
-    public RestResult<Map<String, Object>> getIncomeReport(
+    public RestResult<IncomeReportResponse> getIncomeReport(
             @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
             @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
-        Map<String, Object> data = analysisService.getIncomeReport(startDate, endDate);
+        IncomeReportResponse data = analysisService.getIncomeReport(startDate, endDate);
         return RestResult.success(data);
     }
 
     /**
      * 获取测评结果分布报表
      * 
+     * @param scaleId 量表ID
      * @param startDate 开始日期
      * @param endDate 结束日期
      * @return 结果分布数据
      */
     @GetMapping("/report/result")
-    public RestResult<Map<String, Object>> getResultDistributionReport(
+    public RestResult<ResultDistributionResponse> getResultDistributionReport(
+            @RequestParam Long scaleId,
             @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
             @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
-        Map<String, Object> data = analysisService.getResultDistributionReport(startDate, endDate);
+        ResultDistributionResponse data = analysisService.getResultDistributionReport(scaleId, startDate, endDate);
         return RestResult.success(data);
     }
 
@@ -107,10 +115,10 @@ public class AnalysisController {
      * @return 企业使用统计数据
      */
     @GetMapping("/report/enterprise")
-    public RestResult<Map<String, Object>> getEnterpriseUsageReport(
+    public RestResult<List<EnterpriseUsageResponse>> getEnterpriseUsageReport(
             @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
             @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
-        Map<String, Object> data = analysisService.getEnterpriseUsageReport(startDate, endDate);
+        List<EnterpriseUsageResponse> data = analysisService.getEnterpriseUsageReport(startDate, endDate);
         return RestResult.success(data);
     }
 
@@ -150,14 +158,14 @@ public class AnalysisController {
      * 导出报表数据
      * 
      * @param reportType 报表类型
-     * @param params 导出参数
+     * @param request 导出参数
      * @return 导出结果
      */
     @PostMapping("/export")
     public RestResult<Map<String, Object>> exportReportData(
             @RequestParam String reportType,
-            @RequestBody Map<String, Object> params) {
-        Map<String, Object> data = analysisService.exportReportData(reportType, params);
+            @RequestBody ReportExportRequest request) {
+        Map<String, Object> data = analysisService.exportReportData(reportType, request);
         return RestResult.success(data);
     }
 }
