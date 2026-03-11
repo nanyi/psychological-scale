@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.List;
+
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_permission")
@@ -28,4 +30,6 @@ public class Permission extends BaseEntity {
     private String icon;
 
     private String path;
+
+    private transient List<Permission> children;
 }
