@@ -1,6 +1,7 @@
 package com.iotsic.ps.user.controller;
 
 import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.user.dto.TokenRefreshResponse;
 import com.iotsic.ps.user.dto.UserLoginRequest;
 import com.iotsic.ps.user.dto.UserLoginResponse;
 import com.iotsic.ps.user.dto.UserRegisterRequest;
@@ -125,9 +126,15 @@ public class UserController {
      * @return 新Token
      */
     @PostMapping("/refresh-token")
-    public RestResult<Map<String, Object>> refreshToken(@RequestParam String refreshToken) {
+    public RestResult<TokenRefreshResponse> refreshToken(@RequestParam String refreshToken) {
         Map<String, Object> result = userService.refreshToken(refreshToken);
-        return RestResult.success(result);
+        
+        TokenRefreshResponse response = new TokenRefreshResponse();
+        response.setAccessToken((String) result.get("accessToken"));
+        response.setRefreshToken((String) result.get("refreshToken"));
+        response.setExpiresIn((Long) result.get("expiresIn"));
+        
+        return RestResult.success(response);
     }
 
     /**
