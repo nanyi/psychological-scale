@@ -8,6 +8,8 @@ import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.core.entity.Scale;
+import com.iotsic.ps.scale.dto.ScaleCreateRequest;
+import com.iotsic.ps.scale.dto.ScaleUpdateRequest;
 import com.iotsic.ps.scale.mapper.ScaleMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -47,38 +48,27 @@ public class ScaleServiceImpl implements ScaleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Scale createScale(Map<String, Object> params) {
+    public Scale createScale(ScaleCreateRequest request) {
         String scaleCode = EncryptUtils.generateUUID().substring(0, 12);
 
         Scale scale = new Scale();
         scale.setScaleCode(scaleCode);
-        scale.setScaleName((String) params.get("scaleName"));
-        scale.setScaleDesc((String) params.get("scaleDesc"));
-        scale.setCategory((Integer) params.get("category"));
-        scale.setCover((String) params.get("cover"));
-        scale.setEstimatedTime((Integer) params.get("estimatedTime"));
+        scale.setScaleName(request.getName());
+        scale.setScaleDesc(request.getDescription());
+        scale.setCategory(request.getCategory());
+        scale.setCover(request.getCoverImage());
+        scale.setEstimatedTime(request.getDuration());
         
-        Object priceObj = params.get("price");
-        if (priceObj != null) {
-            scale.setPrice(new BigDecimal(priceObj.toString()));
+        if (request.getPrice() != null) {
+            scale.setPrice(request.getPrice());
         } else {
             scale.setPrice(BigDecimal.ZERO);
         }
 
-        Object ageMin = params.get("ageRangeMin");
-        if (ageMin != null) {
-            scale.setAgeRangeMin(Integer.valueOf(ageMin.toString()));
-        }
-
-        Object ageMax = params.get("ageRangeMax");
-        if (ageMax != null) {
-            scale.setAgeRangeMax(Integer.valueOf(ageMax.toString()));
-        }
-
-        scale.setInstructions((String) params.get("instructions"));
-        scale.setAttention((String) params.get("attention"));
+        scale.setInstructions(request.getInstruction());
+        scale.setAttention(null);
         scale.setStatus(0);
-        scale.setIsFree(priceObj == null || scale.getPrice().compareTo(BigDecimal.ZERO) == 0 ? 1 : 0);
+        scale.setIsFree(request.getPrice() == null || request.getPrice().compareTo(BigDecimal.ZERO) == 0 ? 1 : 0);
         scale.setViewCount(0);
         scale.setUseCount(0);
         scale.setCreateTime(LocalDateTime.now());
@@ -90,12 +80,38 @@ public class ScaleServiceImpl implements ScaleService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateScale(Long id, Map<String, Object> params) {
+    public void updateScale(Long id, ScaleUpdateRequest request) {
         Scale scale = getScaleById(id);
 
-        if (params.containsKey("scaleName")) {
-            scale.setScaleName((String) params.get("scaleName"));
+        if (request.getName() != null) {
+            scale.setScaleName(request.getName());
         }
+        if (request.getDescription() != null) {
+            scale.setScaleDesc(request.getDescription());
+        }
+        if (request.getCategory() != null) {
+            scale.setCategory(request.getCategory());
+        }
+        if (request.getCoverImage() != null) {
+            scale.setCover(request.getCoverImage());
+        }
+        if (request.getDuration() != null) {
+            scale.setEstimatedTime(request.getDuration());
+        }
+        if (request.getPrice() != null) {
+            scale.setPrice(request.getPrice());
+            scale.setIsFree(request.getPrice().compareTo(BigDecimal.ZERO) == 0 ? 1 : 0);
+        }
+        if (request.getInstruction() != null) {
+            scale.setInstructions(request.getInstruction());
+        }
+        if (request.getStatus() != null) {
+            scale.setStatus(request.getStatus());
+        }
+
+        scale.setUpdateTime(LocalDateTime.now());
+        scaleMapper.updateById(scale);
+    }
         if (params.containsKey("scaleDesc")) {
             scale.setScaleDesc((String) params.get("scaleDesc"));
         }
