@@ -4,8 +4,6 @@ import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.order.entity.EnterpriseQuota;
 
-import java.util.Map;
-
 public interface EnterpriseQuotaService {
 
     EnterpriseQuota createQuota(Long enterpriseId, Long scaleId, Integer quota, java.math.BigDecimal price);
