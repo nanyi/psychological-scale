@@ -1,0 +1,48 @@
+package com.iotsic.ps.report.controller;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.report.entity.ReportTemplate;
+import com.iotsic.ps.report.service.ReportTemplateService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/api/report/template")
+@RequiredArgsConstructor
+public class ReportTemplateController {
+
+    private final ReportTemplateService reportTemplateService;
+
+    @PostMapping("/create")
+    public RestResult<ReportTemplate> createTemplate(@RequestBody ReportTemplate template) {
+        ReportTemplate result = reportTemplateService.createTemplate(template);
+        return RestResult.success(result);
+    }
+
+    @PutMapping("/update")
+    public RestResult<ReportTemplate> updateTemplate(@RequestBody ReportTemplate template) {
+        ReportTemplate result = reportTemplateService.updateTemplate(template);
+        return RestResult.success(result);
+    }
+
+    @GetMapping("/list")
+    public RestResult<IPage<ReportTemplate>> getTemplateList(
+            @RequestParam(defaultValue = "1") Integer pageNum,
+            @RequestParam(defaultValue = "10") Integer pageSize,
+            @RequestParam(required = false) Long scaleId,
+            @RequestParam(required = false) Integer status) {
+        
+        Page<ReportTemplate> page = new Page<>(pageNum, pageSize);
+        IPage<ReportTemplate> result = reportTemplateService.getTemplateList(page, scaleId, status);
+        
+        return RestResult.success(result);
+    }
+
+    @GetMapping("/detail")
+    public RestResult<ReportTemplate> getTemplateDetail(@RequestParam Long templateId) {
+        ReportTemplate template = reportTemplateService.getTemplateById(templateId);
+        return RestResult.success(template);
+    }
+}
