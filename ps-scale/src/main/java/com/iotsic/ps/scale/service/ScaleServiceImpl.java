@@ -112,32 +112,6 @@ public class ScaleServiceImpl implements ScaleService {
         scale.setUpdateTime(LocalDateTime.now());
         scaleMapper.updateById(scale);
     }
-        if (params.containsKey("scaleDesc")) {
-            scale.setScaleDesc((String) params.get("scaleDesc"));
-        }
-        if (params.containsKey("category")) {
-            scale.setCategory((Integer) params.get("category"));
-        }
-        if (params.containsKey("cover")) {
-            scale.setCover((String) params.get("cover"));
-        }
-        if (params.containsKey("estimatedTime")) {
-            scale.setEstimatedTime((Integer) params.get("estimatedTime"));
-        }
-        if (params.containsKey("price")) {
-            scale.setPrice(new BigDecimal(params.get("price").toString()));
-            scale.setIsFree(scale.getPrice().compareTo(BigDecimal.ZERO) == 0 ? 1 : 0);
-        }
-        if (params.containsKey("instructions")) {
-            scale.setInstructions((String) params.get("instructions"));
-        }
-        if (params.containsKey("attention")) {
-            scale.setAttention((String) params.get("attention"));
-        }
-
-        scale.setUpdateTime(LocalDateTime.now());
-        scaleMapper.updateById(scale);
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
