@@ -5,6 +5,8 @@ import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.order.dto.OrderCreateRequest;
 import com.iotsic.ps.order.dto.OrderCreateResponse;
+import com.iotsic.ps.order.dto.OrderListRequest;
+import com.iotsic.ps.order.dto.OrderStatisticsResponse;
 import com.iotsic.ps.order.entity.Order;
 import com.iotsic.ps.order.service.OrderService;
 import lombok.RequiredArgsConstructor;
@@ -98,14 +100,14 @@ public class OrderController {
      * 获取订单列表
      * 
      * @param request 分页请求
-     * @param params 查询参数
+     * @param orderListRequest 查询参数
      * @return 订单分页列表
      */
     @GetMapping("/list")
     public RestResult<PageResult<Order>> getOrderList(
             PageRequest request,
-            @RequestParam(required = false) Map<String, Object> params) {
-        return RestResult.success(orderService.getOrderList(request, params));
+            OrderListRequest orderListRequest) {
+        return RestResult.success(orderService.getOrderList(request, orderListRequest));
     }
 
     /**
@@ -115,7 +117,7 @@ public class OrderController {
      * @return 统计数据
      */
     @GetMapping("/statistics")
-    public RestResult<Map<String, Object>> getOrderStatistics(@RequestParam Long userId) {
+    public RestResult<OrderStatisticsResponse> getOrderStatistics(@RequestParam Long userId) {
         return RestResult.success(orderService.getOrderStatistics(userId));
     }
 }
