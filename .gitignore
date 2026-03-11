@@ -1,5 +1,7 @@
 # Git ignore
 
+.worktrees/
+worktrees/
 .idea/
 .vscode/
 *.iml
