@@ -16,7 +16,8 @@
         <module>ps-common</module>
         <module>ps-core</module>
         <module>ps-security</module>
-        <module>ps-api<module>ps-user</module>
+        <module>ps-api</module>
+        <module>ps-user</module>
         </module>
         <module>ps-scale</module>
         <module>ps-order</module>
