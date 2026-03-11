@@ -1,0 +1,127 @@
+package com.ps.common.exception;
+
+import com.ps.common.utils.JsonUtils;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.NoHandlerFoundException;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@Slf4j
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(BaseException.class)
+    public ResponseEntity<Map<String, Object>> handleBaseException(BaseException e, HttpServletRequest request) {
+        log.error("BaseException: {} - {}", e.getCode(), e.getMessage(), e);
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", e.getCode());
+        result.put("message", e.getMessage());
+        result.put("path", request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.OK).body(result);
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<Map<String, Object>> handleBusinessException(BusinessException e, HttpServletRequest request) {
+        log.error("BusinessException: {} - {}", e.getCode(), e.getMessage(), e);
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", e.getCode());
+        result.put("message", e.getMessage());
+        result.put("path", request.getRequestURI());
+        return ResponseEntity.status(e.getHttpStatus() != null ? e.getHttpStatus() : HttpStatus.BAD_REQUEST).body(result);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException e) {
+        Map<String, Object> result = new HashMap<>();
+        StringBuilder message = new StringBuilder();
+        for (FieldError error : e.getBindingResult().getFieldErrors()) {
+            message.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("; ");
+        }
+        result.put("code", "VALIDATION_ERROR");
+        result.put("message", message.toString());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, Object>> handleConstraintViolationException(ConstraintViolationException e) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", "VALIDATION_ERROR");
+        result.put("message", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+    }
+
+    @ExceptionHandler(BindException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, Object>> handleBindException(BindException e) {
+        Map<String, Object> result = new HashMap<>();
+        StringBuilder message = new StringBuilder();
+        for (FieldError error : e.getBindingResult().getFieldErrors()) {
+            message.append(error.getField()).append(": ").append(error.getDefaultMessage()).append("; ");
+        }
+        result.put("code", "VALIDATION_ERROR");
+        result.put("message", message.toString());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, Object>> handleMissingParameterException(MissingServletRequestParameterException e) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", "MISSING_PARAMETER");
+        result.put("message", "Missing parameter: " + e.getParameterName());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ResponseEntity<Map<String, Object>> handleTypeMismatchException(MethodArgumentTypeMismatchException e) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", "TYPE_MISMATCH");
+        result.put("message", "Parameter type mismatch: " + e.getName());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public ResponseEntity<Map<String, Object>> handleMethodNotSupportedException(HttpRequestMethodNotSupportedException e) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", "METHOD_NOT_ALLOWED");
+        result.put("message", "HTTP method not supported: " + e.getMethod());
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(result);
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<Map<String, Object>> handleNoHandlerFoundException(NoHandlerFoundException e) {
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", "NOT_FOUND");
+        result.put("message", "API not found: " + e.getRequestURL());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(result);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Map<String, Object>> handleException(Exception e, HttpServletRequest request) {
+        log.error("Internal server error: {}", e.getMessage(), e);
+        Map<String, Object> result = new HashMap<>();
+        result.put("code", "INTERNAL_ERROR");
+        result.put("message", "Internal server error");
+        result.put("path", request.getRequestURI());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(result);
+    }
+}
