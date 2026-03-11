@@ -1,4 +1,4 @@
-package com.ps.common.constant;
+package com.iotsic.ps.common.constant;
 
 public class BusinessConstant {
 

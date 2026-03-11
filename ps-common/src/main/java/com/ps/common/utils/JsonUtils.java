@@ -1,4 +1,4 @@
-package com.ps.common.utils;
+package com.iotsic.ps.common.utils;
 
 import cn.hutool.core.util.StrUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;

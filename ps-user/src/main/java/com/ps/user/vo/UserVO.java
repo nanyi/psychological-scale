@@ -1,4 +1,4 @@
-package com.ps.core.vo;
+package com.iotsic.ps.core.vo;
 
 import lombok.Data;
 

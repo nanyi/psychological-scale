@@ -1,8 +1,8 @@
-package com.ps.security.aspect;
+package com.iotsic.ps.security.aspect;
 
-import com.ps.security.annotation.RequireLogin;
-import com.ps.security.annotation.RequirePermission;
-import com.ps.security.service.UserDetailsImpl;
+import com.iotsic.ps.security.annotation.RequireLogin;
+import com.iotsic.ps.security.annotation.RequirePermission;
+import com.iotsic.ps.security.service.UserDetailsImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -20,7 +20,7 @@ import java.util.Arrays;
 @Component
 public class PermissionAspect {
 
-    @Around("@annotation(com.ps.security.annotation.RequireLogin) || @within(com.ps.security.annotation.RequireLogin)")
+    @Around("@annotation(com.iotsic.ps.security.annotation.RequireLogin) || @within(com.iotsic.ps.security.annotation.RequireLogin)")
     public Object checkLogin(ProceedingJoinPoint joinPoint) throws Throwable {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
@@ -29,7 +29,7 @@ public class PermissionAspect {
         return joinPoint.proceed();
     }
 
-    @Around("@annotation(com.ps.security.annotation.RequirePermission)")
+    @Around("@annotation(com.iotsic.ps.security.annotation.RequirePermission)")
     public Object checkPermission(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();

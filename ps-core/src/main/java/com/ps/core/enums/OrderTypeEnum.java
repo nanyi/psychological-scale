@@ -1,4 +1,4 @@
-package com.ps.core.enums;
+package com.iotsic.ps.core.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

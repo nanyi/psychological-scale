@@ -1,6 +1,6 @@
-package com.ps.security.service;
+package com.iotsic.ps.security.service;
 
-import com.ps.core.entity.User;
+import com.iotsic.ps.core.entity.User;
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

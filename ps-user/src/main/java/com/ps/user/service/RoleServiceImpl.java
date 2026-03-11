@@ -1,9 +1,9 @@
-package com.ps.user.service;
+package com.iotsic.ps.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.ps.common.exception.BusinessException;
-import com.ps.core.entity.*;
-import com.ps.user.mapper.*;
+import com.iotsic.ps.common.exception.BusinessException;
+import com.iotsic.ps.core.entity.*;
+import com.iotsic.ps.user.mapper.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

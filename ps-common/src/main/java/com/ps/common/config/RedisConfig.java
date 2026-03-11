@@ -1,4 +1,4 @@
-package com.ps.common.config;
+package com.iotsic.ps.common.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;

@@ -1,7 +1,7 @@
-package com.ps.scale.service;
+package com.iotsic.ps.scale.service;
 
-import com.ps.core.entity.Question;
-import com.ps.core.entity.Dimension;
+import com.iotsic.ps.core.entity.Question;
+import com.iotsic.ps.core.entity.Dimension;
 
 import java.util.List;
 import java.util.Map;

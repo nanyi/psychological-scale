@@ -1,7 +1,7 @@
-package com.ps.user.service;
+package com.iotsic.ps.user.service;
 
-import com.ps.core.entity.Role;
-import com.ps.core.entity.UserRole;
+import com.iotsic.ps.core.entity.Role;
+import com.iotsic.ps.core.entity.UserRole;
 
 import java.util.List;
 

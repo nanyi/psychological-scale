@@ -1,4 +1,4 @@
-package com.ps.common.result;
+package com.iotsic.ps.common.result;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;

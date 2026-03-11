@@ -1,4 +1,4 @@
-package com.ps.user;
+package com.iotsic.ps.user;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -8,8 +8,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = {"com.ps.api"})
-@MapperScan("com.ps.user.mapper")
+@EnableFeignClients(basePackages = {"com.iotsic.ps.api"})
+@MapperScan("com.iotsic.ps.user.mapper")
 public class PsUserApplication {
 
     public static void main(String[] args) {

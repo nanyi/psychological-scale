@@ -1,4 +1,4 @@
-package com.ps.api.config;
+package com.iotsic.ps.api.config;
 
 import feign.Request;
 import feign.RequestInterceptor;

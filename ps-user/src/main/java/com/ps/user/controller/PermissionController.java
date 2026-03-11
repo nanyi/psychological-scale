@@ -1,8 +1,8 @@
-package com.ps.user.controller;
+package com.iotsic.ps.user.controller;
 
-import com.ps.common.result.RestResult;
-import com.ps.core.entity.Permission;
-import com.ps.user.mapper.PermissionMapper;
+import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.core.entity.Permission;
+import com.iotsic.ps.user.mapper.PermissionMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

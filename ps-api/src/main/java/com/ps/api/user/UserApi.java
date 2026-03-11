@@ -1,7 +1,7 @@
-package com.ps.api.user;
+package com.iotsic.ps.api.user;
 
-import com.ps.api.config.FeignConfig;
-import com.ps.common.result.RestResult;
+import com.iotsic.ps.api.config.FeignConfig;
+import com.iotsic.ps.common.result.RestResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

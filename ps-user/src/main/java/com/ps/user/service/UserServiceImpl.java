@@ -1,15 +1,15 @@
-package com.ps.user.service;
+package com.iotsic.ps.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.ps.common.constant.SystemConstant;
-import com.ps.common.exception.BusinessException;
-import com.ps.common.result.RestResult;
-import com.ps.common.utils.EncryptUtils;
-import com.ps.core.entity.User;
-import com.ps.core.enums.UserTypeEnum;
-import com.ps.core.vo.UserVO;
-import com.ps.security.service.JwtService;
-import com.ps.user.mapper.UserMapper;
+import com.iotsic.ps.common.constant.SystemConstant;
+import com.iotsic.ps.common.exception.BusinessException;
+import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.common.utils.EncryptUtils;
+import com.iotsic.ps.core.entity.User;
+import com.iotsic.ps.core.enums.UserTypeEnum;
+import com.iotsic.ps.core.vo.UserVO;
+import com.iotsic.ps.security.service.JwtService;
+import com.iotsic.ps.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;

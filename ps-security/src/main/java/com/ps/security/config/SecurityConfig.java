@@ -1,6 +1,6 @@
-package com.ps.security.config;
+package com.iotsic.ps.security.config;
 
-import com.ps.security.filter.JwtFilter;
+import com.iotsic.ps.security.filter.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

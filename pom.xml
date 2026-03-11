@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ps</groupId>
+    <groupId>com.iotsic.ps</groupId>
     <artifactId>psychological-scale</artifactId>
     <version>1.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -107,22 +107,22 @@
                 <version>${poi.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.ps</groupId>
+                <groupId>com.iotsic.ps</groupId>
                 <artifactId>ps-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.ps</groupId>
+                <groupId>com.iotsic.ps</groupId>
                 <artifactId>ps-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.ps</groupId>
+                <groupId>com.iotsic.ps</groupId>
                 <artifactId>ps-security</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.ps</groupId>
+                <groupId>com.iotsic.ps</groupId>
                 <artifactId>ps-api</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -1,4 +1,4 @@
-package com.ps.api.dto;
+package com.iotsic.ps.api.dto;
 
 import lombok.Data;
 

@@ -1,7 +1,7 @@
-package com.ps.user.mapper;
+package com.iotsic.ps.user.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ps.core.entity.UserGroupMember;
+import com.iotsic.ps.core.entity.UserGroupMember;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

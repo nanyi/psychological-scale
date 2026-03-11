@@ -95,7 +95,7 @@ Psychological Scale 是一套功能全面、专业可靠、开箱即用的心理
   - 统一使用 `@ControllerAdvice` + `RestResult<T>` 封装
   - 记录详细日志，返回友好错误信息
 - **API 设计**:
-  - RESTful 风格
+  - RESTful 风格，与前端交互使用蛇形风格
   - POST/PUT 使用 `@RequestBody`
 - **测试**: JUnit 5 + Mockito
 - **ORM**: MyBatis-Plus (自动建库建表，无需 SQL 脚本)
@@ -140,7 +140,7 @@ Psychological Scale 是一套功能全面、专业可靠、开箱即用的心理
 
 ```
 ps-common/
-├── src/main/java/com/ps/common/
+├── src/main/java/com/iotsic/ps/common/
 │   ├── constant/          # 常量定义
 │   │   ├── SystemConstant  # 系统常量
 │   │   └── BusinessConstant # 业务常量
@@ -165,7 +165,7 @@ ps-common/
 
 ```
 ps-core/
-├── src/main/java/com/ps/core/
+├── src/main/java/com/iotsic/ps/core/
 │   ├── entity/           # 实体类
 │   │   ├── User          # 用户实体
 │   │   ├── Scale         # 量表实体
@@ -174,7 +174,7 @@ ps-core/
 │   │   ├── request/      # 请求DTO
 │   │   └── response/     # 响应DTO
 │   ├── vo/               # 视图对象
-│   │   └── PageVO       # 分页视图
+│   │   └── RestResult    # 响应结果
 │   └── enums/            # 核心枚举
 │       ├── ScaleCategoryEnum # 量表分类
 │       └── OrderTypeEnum  # 订单类型
@@ -184,7 +184,7 @@ ps-core/
 
 ```
 ps-security/
-├── src/main/java/com/ps/security/
+├── src/main/java/com/iotsic/ps/security/
 │   ├── aspect/           # 安全切面
 │   │   └── PermissionAspect # 权限切面
 │   ├── annotation/       # 安全注解
@@ -203,7 +203,7 @@ ps-security/
 
 ```
 ps-api/
-├── src/main/java/com/ps/api/
+├── src/main/java/com/iotsic/ps/api/
 │   ├── user/             # 用户服务API
 │   │   └── UserApi      # 用户Feign接口
 │   ├── scale/            # 量表服务API
@@ -225,7 +225,7 @@ ps-api/
 #### 公共类设计规范
 
 - **统一响应**: 使用`RestResult<T>`封装响应结果
-- **分页对象**: 使用`PageRequest`、`SortablePageRequest`和`PageResult`
+- **分页对象**: 使用`PageRequest`、`SortablePageRequest`和`PageResult`。`SortablePageRequest`继承`PageRequest`，并添加多条件排序功能
 - **基础实体**: 所有实体类继承`BaseEntity`
 - **DTO规范**: 请求DTO以`Request`结尾，响应DTO以`Response`结尾
 
@@ -255,7 +255,7 @@ ps-api/
 
 - **响应格式**: 统一使用 `RestResult<T>` 封装
 - **错误码**: 统一错误码体系
-- **分页**: 使用 `PageRequest`、`SortablePageRequest` 和 `PageResult`
+- **分页**: 使用 `PageRequest`、`SortablePageRequest` 和 `PageResult`。`SortablePageRequest`继承`PageRequest`，并添加多条件排序功能
 - **认证**: JWT Token Bearer 认证
 
 ---

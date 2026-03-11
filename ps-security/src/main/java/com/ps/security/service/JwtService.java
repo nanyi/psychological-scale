@@ -1,8 +1,8 @@
-package com.ps.security.service;
+package com.iotsic.ps.security.service;
 
-import com.ps.common.constant.SystemConstant;
-import com.ps.common.exception.BusinessException;
-import com.ps.common.utils.EncryptUtils;
+import com.iotsic.ps.common.constant.SystemConstant;
+import com.iotsic.ps.common.exception.BusinessException;
+import com.iotsic.ps.common.utils.EncryptUtils;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;

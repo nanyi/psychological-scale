@@ -1,6 +1,6 @@
-package com.ps.common.exception;
+package com.iotsic.ps.common.exception;
 
-import com.ps.common.utils.JsonUtils;
+import com.iotsic.ps.common.utils.JsonUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;

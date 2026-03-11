@@ -1,7 +1,7 @@
-package com.ps.user.mapper;
+package com.iotsic.ps.user.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.ps.core.entity.RolePermission;
+import com.iotsic.ps.core.entity.RolePermission;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

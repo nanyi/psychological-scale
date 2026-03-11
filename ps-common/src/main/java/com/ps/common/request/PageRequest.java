@@ -1,6 +1,6 @@
-package com.ps.common.request;
+package com.iotsic.ps.common.request;
 
-import com.ps.common.constant.BusinessConstant;
+import com.iotsic.ps.common.constant.BusinessConstant;
 import lombok.Data;
 
 import java.io.Serializable;

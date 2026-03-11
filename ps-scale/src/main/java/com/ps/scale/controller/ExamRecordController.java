@@ -1,11 +1,11 @@
-package com.ps.scale.controller;
+package com.iotsic.ps.scale.controller;
 
-import com.ps.common.request.PageRequest;
-import com.ps.common.response.PageResult;
-import com.ps.common.result.RestResult;
-import com.ps.core.entity.ExamAnswer;
-import com.ps.core.entity.ExamRecord;
-import com.ps.scale.service.ExamRecordService;
+import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
+import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.core.entity.ExamAnswer;
+import com.iotsic.ps.core.entity.ExamRecord;
+import com.iotsic.ps.scale.service.ExamRecordService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

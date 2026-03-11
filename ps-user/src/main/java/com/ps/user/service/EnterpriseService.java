@@ -1,8 +1,8 @@
-package com.ps.user.service;
+package com.iotsic.ps.user.service;
 
-import com.ps.common.request.PageRequest;
-import com.ps.common.response.PageResult;
-import com.ps.core.entity.Enterprise;
+import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
+import com.iotsic.ps.core.entity.Enterprise;
 
 import java.util.Map;
 

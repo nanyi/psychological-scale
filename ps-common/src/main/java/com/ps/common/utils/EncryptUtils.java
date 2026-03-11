@@ -1,4 +1,4 @@
-package com.ps.common.utils;
+package com.iotsic.ps.common.utils;
 
 import cn.hutool.crypto.digest.BCrypt;
 import cn.hutool.crypto.digest.DigestUtil;

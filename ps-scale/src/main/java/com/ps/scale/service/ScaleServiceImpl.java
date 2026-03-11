@@ -1,14 +1,14 @@
-package com.ps.scale.service;
+package com.iotsic.ps.scale.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ps.common.exception.BusinessException;
-import com.ps.common.request.PageRequest;
-import com.ps.common.response.PageResult;
-import com.ps.common.utils.EncryptUtils;
-import com.ps.core.entity.Scale;
-import com.ps.scale.mapper.ScaleMapper;
+import com.iotsic.ps.common.exception.BusinessException;
+import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
+import com.iotsic.ps.common.utils.EncryptUtils;
+import com.iotsic.ps.core.entity.Scale;
+import com.iotsic.ps.scale.mapper.ScaleMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

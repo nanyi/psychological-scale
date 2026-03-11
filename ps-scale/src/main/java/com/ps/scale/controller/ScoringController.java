@@ -1,9 +1,9 @@
-package com.ps.scale.controller;
+package com.iotsic.ps.scale.controller;
 
-import com.ps.common.result.RestResult;
-import com.ps.core.entity.OptionScore;
-import com.ps.core.entity.ScoringRule;
-import com.ps.scale.service.ScoringService;
+import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.core.entity.OptionScore;
+import com.iotsic.ps.core.entity.ScoringRule;
+import com.iotsic.ps.scale.service.ScoringService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

@@ -1,9 +1,9 @@
-package com.ps.scale.controller;
+package com.iotsic.ps.scale.controller;
 
-import com.ps.common.result.RestResult;
-import com.ps.core.entity.Dimension;
-import com.ps.core.entity.Question;
-import com.ps.scale.service.QuestionService;
+import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.core.entity.Dimension;
+import com.iotsic.ps.core.entity.Question;
+import com.iotsic.ps.scale.service.QuestionService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

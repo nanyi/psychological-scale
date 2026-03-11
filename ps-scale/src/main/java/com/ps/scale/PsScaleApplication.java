@@ -1,4 +1,4 @@
-package com.ps.scale;
+package com.iotsic.ps.scale;
 
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -8,8 +8,8 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = {"com.ps.api"})
-@MapperScan("com.ps.scale.mapper")
+@EnableFeignClients(basePackages = {"com.iotsic.ps.api"})
+@MapperScan("com.iotsic.ps.scale.mapper")
 public class PsScaleApplication {
 
     public static void main(String[] args) {

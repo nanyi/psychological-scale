@@ -1,17 +1,17 @@
-package com.ps.user.service;
+package com.iotsic.ps.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.ps.common.exception.BusinessException;
-import com.ps.common.request.PageRequest;
-import com.ps.common.response.PageResult;
-import com.ps.core.entity.User;
-import com.ps.core.entity.UserGroup;
-import com.ps.core.entity.UserGroupMember;
-import com.ps.user.mapper.UserGroupMapper;
-import com.ps.user.mapper.UserGroupMemberMapper;
-import com.ps.user.mapper.UserMapper;
+import com.iotsic.ps.common.exception.BusinessException;
+import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
+import com.iotsic.ps.core.entity.User;
+import com.iotsic.ps.core.entity.UserGroup;
+import com.iotsic.ps.core.entity.UserGroupMember;
+import com.iotsic.ps.user.mapper.UserGroupMapper;
+import com.iotsic.ps.user.mapper.UserGroupMemberMapper;
+import com.iotsic.ps.user.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

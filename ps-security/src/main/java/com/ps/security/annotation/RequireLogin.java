@@ -1,4 +1,4 @@
-package com.ps.security.annotation;
+package com.iotsic.ps.security.annotation;
 
 import java.lang.annotation.*;
 

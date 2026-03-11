@@ -1,4 +1,4 @@
-package com.ps.core.entity;
+package com.iotsic.ps.core.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;

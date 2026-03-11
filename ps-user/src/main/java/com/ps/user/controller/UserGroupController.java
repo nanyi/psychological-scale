@@ -1,10 +1,10 @@
-package com.ps.user.controller;
+package com.iotsic.ps.user.controller;
 
-import com.ps.common.request.PageRequest;
-import com.ps.common.response.PageResult;
-import com.ps.common.result.RestResult;
-import com.ps.core.entity.UserGroup;
-import com.ps.user.service.UserGroupService;
+import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
+import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.core.entity.UserGroup;
+import com.iotsic.ps.user.service.UserGroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

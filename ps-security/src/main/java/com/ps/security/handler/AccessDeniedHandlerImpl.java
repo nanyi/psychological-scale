@@ -1,7 +1,7 @@
-package com.ps.security.handler;
+package com.iotsic.ps.security.handler;
 
-import com.ps.common.result.RestResult;
-import com.ps.common.utils.JsonUtils;
+import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.common.utils.JsonUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;

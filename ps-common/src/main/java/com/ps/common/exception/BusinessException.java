@@ -1,4 +1,4 @@
-package com.ps.common.exception;
+package com.iotsic.ps.common.exception;
 
 import lombok.Getter;
 import lombok.Setter;

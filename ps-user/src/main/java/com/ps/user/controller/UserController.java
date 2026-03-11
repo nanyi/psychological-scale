@@ -1,8 +1,8 @@
-package com.ps.user.controller;
+package com.iotsic.ps.user.controller;
 
-import com.ps.common.result.RestResult;
-import com.ps.user.service.UserService;
-import com.ps.user.vo.UserVO;
+import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.user.service.UserService;
+import com.iotsic.ps.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

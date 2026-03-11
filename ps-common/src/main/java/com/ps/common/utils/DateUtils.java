@@ -1,7 +1,7 @@
-package com.ps.common.utils;
+package com.iotsic.ps.common.utils;
 
 import cn.hutool.core.date.DateUtil;
-import com.ps.common.constant.SystemConstant;
+import com.iotsic.ps.common.constant.SystemConstant;
 import lombok.extern.slf4j.Slf4j;
 
 import java.text.SimpleDateFormat;

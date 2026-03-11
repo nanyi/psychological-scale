@@ -1,10 +1,10 @@
-package com.ps.scale.service;
+package com.iotsic.ps.scale.service;
 
-import com.ps.common.request.PageRequest;
-import com.ps.common.response.PageResult;
-import com.ps.core.entity.ExamAnswer;
-import com.ps.core.entity.ExamRecord;
-import com.ps.core.entity.Scale;
+import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
+import com.iotsic.ps.core.entity.ExamAnswer;
+import com.iotsic.ps.core.entity.ExamRecord;
+import com.iotsic.ps.core.entity.Scale;
 
 import java.util.Map;
 

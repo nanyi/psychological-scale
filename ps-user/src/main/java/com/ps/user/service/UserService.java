@@ -1,7 +1,7 @@
-package com.ps.user.service;
+package com.iotsic.ps.user.service;
 
-import com.ps.core.entity.User;
-import com.ps.user.vo.UserVO;
+import com.iotsic.ps.core.entity.User;
+import com.iotsic.ps.user.vo.UserVO;
 
 import java.util.Map;
 

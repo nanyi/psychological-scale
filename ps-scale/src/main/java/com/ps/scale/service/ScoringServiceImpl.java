@@ -1,10 +1,10 @@
-package com.ps.scale.service;
+package com.iotsic.ps.scale.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.ps.common.exception.BusinessException;
-import com.ps.common.utils.JsonUtils;
-import com.ps.core.entity.*;
-import com.ps.scale.mapper.*;
+import com.iotsic.ps.common.exception.BusinessException;
+import com.iotsic.ps.common.utils.JsonUtils;
+import com.iotsic.ps.core.entity.*;
+import com.iotsic.ps.scale.mapper.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

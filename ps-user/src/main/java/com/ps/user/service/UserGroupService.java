@@ -1,9 +1,9 @@
-package com.ps.user.service;
+package com.iotsic.ps.user.service;
 
-import com.ps.common.request.PageRequest;
-import com.ps.common.response.PageResult;
-import com.ps.core.entity.UserGroup;
-import com.ps.core.entity.UserGroupMember;
+import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
+import com.iotsic.ps.core.entity.UserGroup;
+import com.iotsic.ps.core.entity.UserGroupMember;
 
 import java.util.List;
 
