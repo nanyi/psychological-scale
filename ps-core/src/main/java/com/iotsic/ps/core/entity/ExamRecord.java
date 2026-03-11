@@ -43,4 +43,6 @@ public class ExamRecord extends BaseEntity {
     private String source;
 
     private Long enterpriseId;
+
+    private String dimensionScores;
 }

@@ -17,11 +17,8 @@ public class FeignConfig {
 
     @Bean
     public RequestInterceptor requestInterceptor() {
-        return new RequestInterceptor() {
-            @Override
-            public void apply(RequestTemplate template) {
-                template.request().timeout(3000);
-            }
+        return template -> {
+
         };
     }
 

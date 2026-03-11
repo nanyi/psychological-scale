@@ -18,17 +18,17 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("/{id}")
-    public RestResult<Map<String, Object>> getUserById(@PathVariable Long id) {
+    public RestResult<UserVO> getUserById(@PathVariable Long id) {
         return RestResult.success(userService.getUserInfo(id));
     }
 
     @GetMapping("/username/{username}")
-    public RestResult<Map<String, Object>> getUserByUsername(@PathVariable String username) {
+    public RestResult<UserVO> getUserByUsername(@PathVariable String username) {
         return RestResult.success(userService.getUserInfo(userService.getUserByUsername(username).getId()));
     }
 
     @GetMapping("/phone/{phone}")
-    public RestResult<Map<String, Object>> getUserByPhone(@PathVariable String phone) {
+    public RestResult<UserVO> getUserByPhone(@PathVariable String phone) {
         return RestResult.success(userService.getUserInfo(userService.getUserByPhone(phone).getId()));
     }
 
