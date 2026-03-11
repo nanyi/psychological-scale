@@ -3,11 +3,14 @@ package com.iotsic.ps.core.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @EqualsAndHashCode(callSuper = true)
 @TableName("exam_record")
 public class ExamRecord extends BaseEntity {
@@ -45,4 +48,6 @@ public class ExamRecord extends BaseEntity {
     private Long enterpriseId;
 
     private String dimensionScores;
+
+    private transient Scale scale;
 }
