@@ -95,7 +95,7 @@ Psychological Scale 是一套功能全面、专业可靠、开箱即用的心理
   - 统一使用 `@ControllerAdvice` + `RestResult<T>` 封装
   - 记录详细日志，返回友好错误信息
 - **API 设计**:
-  - RESTful 风格，与前端交互url、参数使用蛇形命名风格
+  - RESTful 风格，与前端交互使用蛇形风格
   - POST/PUT 使用 `@RequestBody`
 - **测试**: JUnit 5 + Mockito
 - **ORM**: MyBatis-Plus (自动建库建表，无需 SQL 脚本)
