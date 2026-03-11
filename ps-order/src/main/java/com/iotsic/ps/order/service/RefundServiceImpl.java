@@ -11,6 +11,7 @@ import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.order.entity.Order;
 import com.iotsic.ps.order.entity.OrderItem;
 import com.iotsic.ps.order.entity.Refund;
+import com.iotsic.ps.order.dto.RefundListRequest;
 import com.iotsic.ps.order.mapper.OrderItemMapper;
 import com.iotsic.ps.order.mapper.OrderMapper;
 import com.iotsic.ps.order.mapper.RefundMapper;
@@ -194,18 +195,18 @@ public class RefundServiceImpl implements RefundService {
     }
 
     @Override
-    public PageResult<Refund> getRefundList(PageRequest request, Map<String, Object> params) {
+    public PageResult<Refund> getRefundList(PageRequest request, RefundListRequest params) {
         LambdaQueryWrapper<Refund> wrapper = new LambdaQueryWrapper<>();
         
         if (params != null) {
-            if (params.get("orderNo") != null) {
-                wrapper.eq(Refund::getOrderNo, params.get("orderNo"));
+            if (params.getOrderNo() != null) {
+                wrapper.eq(Refund::getOrderNo, params.getOrderNo());
             }
-            if (params.get("userId") != null) {
-                wrapper.eq(Refund::getUserId, params.get("userId"));
+            if (params.getUserId() != null) {
+                wrapper.eq(Refund::getUserId, params.getUserId());
             }
-            if (params.get("refundStatus") != null) {
-                wrapper.eq(Refund::getRefundStatus, params.get("refundStatus"));
+            if (params.getStatus() != null) {
+                wrapper.eq(Refund::getRefundStatus, params.getStatus());
             }
         }
         

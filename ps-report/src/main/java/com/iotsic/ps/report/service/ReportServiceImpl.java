@@ -37,8 +37,12 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
         report.setTaskId(taskId);
         report.setUserId(examRecord.getUserId());
         report.setScaleId(examRecord.getScaleId());
-        report.setScaleName(examRecord.getScaleName());
-        report.setTotalScore(examRecord.getTotalScore());
+        report.setScaleName("量表" + examRecord.getScaleId());
+        if (examRecord.getScore() != null) {
+            report.setTotalScore(examRecord.getScore());
+        } else if (examRecord.getTotalScore() != null) {
+            report.setTotalScore(BigDecimal.valueOf(examRecord.getTotalScore()));
+        }
         report.setStatus(0);
         report.setSourceType(1);
         report.setCreateTime(LocalDateTime.now());
@@ -164,7 +168,7 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
         content.put("totalScore", report.getTotalScore());
         content.put("resultLevel", report.getResultLevel());
         content.put("conclusion", report.getConclusion());
-        content.put("suggestions", JsonUtils.parseObject(report.getSuggestions(), List.class));
+        content.put("suggestions", JsonUtils.fromJson(report.getSuggestions(), List.class));
         content.put("generateTime", report.getGenerateTime());
         return JsonUtils.toJson(content);
     }

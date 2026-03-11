@@ -29,6 +29,11 @@ public class AnswerSaveRequest {
     private String answer;
 
     /**
+     * 答案集合（题目ID -> 答案）
+     */
+    private Map<Long, String> answers;
+
+    /**
      * 答题时间（秒）
      */
     private Integer answerTime;

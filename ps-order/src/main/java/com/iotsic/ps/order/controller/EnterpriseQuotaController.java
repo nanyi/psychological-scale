@@ -89,7 +89,7 @@ public class EnterpriseQuotaController {
      */
     @PostMapping("/recharge")
     public RestResult<Void> rechargeQuota(@RequestBody QuotaRechargeRequest request) {
-        enterpriseQuotaService.rechargeQuota(request.getId(), request.getQuantity());
+        enterpriseQuotaService.rechargeQuota(request.getEnterpriseId(), request.getQuantity());
         return RestResult.success();
     }
 

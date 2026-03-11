@@ -2,6 +2,8 @@ package com.iotsic.ps.thirdparty.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.exception.BusinessException;
+import com.iotsic.ps.thirdparty.dto.ThirdPartyConfigCreateRequest;
+import com.iotsic.ps.thirdparty.dto.ThirdPartyConfigUpdateRequest;
 import com.iotsic.ps.thirdparty.entity.ThirdPartyConfig;
 import com.iotsic.ps.thirdparty.mapper.ThirdPartyConfigMapper;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +25,8 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ThirdPartyConfig createConfig(Map<String, Object> params) {
-        String platformCode = (String) params.get("platformCode");
+    public ThirdPartyConfig createConfig(ThirdPartyConfigCreateRequest request) {
+        String platformCode = request.getPlatformCode();
         
         LambdaQueryWrapper<ThirdPartyConfig> existWrapper = new LambdaQueryWrapper<>();
         existWrapper.eq(ThirdPartyConfig::getPlatformCode, platformCode);
@@ -33,16 +35,16 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
         }
 
         ThirdPartyConfig config = new ThirdPartyConfig();
-        config.setPlatformName((String) params.get("platformName"));
+        config.setPlatformName(request.getPlatformName());
         config.setPlatformCode(platformCode);
-        config.setAppKey((String) params.get("appKey"));
-        config.setAppSecret((String) params.get("appSecret"));
-        config.setApiUrl((String) params.get("apiUrl"));
-        config.setCallbackUrl((String) params.get("callbackUrl"));
-        config.setPlatformType((Integer) params.get("platformType"));
-        config.setConfigJson((String) params.get("configJson"));
-        config.setSyncInterval((Integer) params.getOrDefault("syncInterval", 60));
-        config.setDescription((String) params.get("description"));
+        config.setAppKey(request.getAppKey());
+        config.setAppSecret(request.getAppSecret());
+        config.setApiUrl(request.getApiUrl());
+        config.setCallbackUrl(request.getCallbackUrl());
+        config.setPlatformType(request.getPlatformType());
+        config.setConfigJson(request.getConfigJson());
+        config.setSyncInterval(request.getSyncInterval() != null ? request.getSyncInterval() : 60);
+        config.setDescription(request.getDescription());
         config.setStatus(1);
         config.setCreateTime(LocalDateTime.now());
         config.setUpdateTime(LocalDateTime.now());
@@ -55,32 +57,32 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateConfig(Long id, Map<String, Object> params) {
+    public void updateConfig(Long id, ThirdPartyConfigUpdateRequest request) {
         ThirdPartyConfig config = getConfigById(id);
 
-        if (params.containsKey("platformName")) {
-            config.setPlatformName((String) params.get("platformName"));
+        if (request.getPlatformName() != null) {
+            config.setPlatformName(request.getPlatformName());
         }
-        if (params.containsKey("appKey")) {
-            config.setAppKey((String) params.get("appKey"));
+        if (request.getAppKey() != null) {
+            config.setAppKey(request.getAppKey());
         }
-        if (params.containsKey("appSecret")) {
-            config.setAppSecret((String) params.get("appSecret"));
+        if (request.getAppSecret() != null) {
+            config.setAppSecret(request.getAppSecret());
         }
-        if (params.containsKey("apiUrl")) {
-            config.setApiUrl((String) params.get("apiUrl"));
+        if (request.getApiUrl() != null) {
+            config.setApiUrl(request.getApiUrl());
         }
-        if (params.containsKey("callbackUrl")) {
-            config.setCallbackUrl((String) params.get("callbackUrl"));
+        if (request.getCallbackUrl() != null) {
+            config.setCallbackUrl(request.getCallbackUrl());
         }
-        if (params.containsKey("configJson")) {
-            config.setConfigJson((String) params.get("configJson"));
+        if (request.getConfigJson() != null) {
+            config.setConfigJson(request.getConfigJson());
         }
-        if (params.containsKey("syncInterval")) {
-            config.setSyncInterval((Integer) params.get("syncInterval"));
+        if (request.getSyncInterval() != null) {
+            config.setSyncInterval(request.getSyncInterval());
         }
-        if (params.containsKey("description")) {
-            config.setDescription((String) params.get("description"));
+        if (request.getDescription() != null) {
+            config.setDescription(request.getDescription());
         }
 
         config.setUpdateTime(LocalDateTime.now());

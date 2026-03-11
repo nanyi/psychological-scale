@@ -12,34 +12,39 @@ import lombok.Data;
 public class ThirdPartyConfigUpdateRequest {
 
     /**
-     * 配置名称
+     * 平台名称
      */
-    private String name;
+    private String platformName;
 
     /**
-     * 平台类型
+     * AppKey
      */
-    private Integer platformType;
+    private String appKey;
 
     /**
-     * API密钥
+     * AppSecret
      */
-    private String apiKey;
+    private String appSecret;
 
     /**
-     * 密钥
+     * API地址
      */
-    private String apiSecret;
+    private String apiUrl;
 
     /**
-     * 接口地址
+     * 回调地址
      */
-    private String endpoint;
+    private String callbackUrl;
 
     /**
-     * 状态
+     * 配置JSON
      */
-    private Integer status;
+    private String configJson;
+
+    /**
+     * 同步间隔（分钟）
+     */
+    private Integer syncInterval;
 
     /**
      * 描述

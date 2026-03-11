@@ -30,4 +30,9 @@ public class ScoreInterpretResponse {
      * 参考范围
      */
     private String referenceRange;
+
+    /**
+     * 详细解读文本
+     */
+    private String interpretation;
 }

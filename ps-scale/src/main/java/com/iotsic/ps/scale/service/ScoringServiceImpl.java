@@ -72,23 +72,6 @@ public class ScoringServiceImpl implements ScoringService {
         rule.setUpdateTime(LocalDateTime.now());
         scoringRuleMapper.updateById(rule);
     }
-        }
-        if (params.containsKey("maxScore")) {
-            rule.setMaxScore((BigDecimal) params.get("maxScore"));
-        }
-        if (params.containsKey("weight")) {
-            rule.setWeight((BigDecimal) params.get("weight"));
-        }
-        if (params.containsKey("interpretationRule")) {
-            rule.setInterpretationRule((String) params.get("interpretationRule"));
-        }
-        if (params.containsKey("status")) {
-            rule.setStatus((Integer) params.get("status"));
-        }
-
-        rule.setUpdateTime(LocalDateTime.now());
-        scoringRuleMapper.updateById(rule);
-    }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -119,20 +102,18 @@ public class ScoringServiceImpl implements ScoringService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public OptionScore createOptionScore(Map<String, Object> params) {
-        Long questionId = Long.valueOf(params.get("questionId").toString());
-        
-        Question question = questionMapper.selectById(questionId);
+    public OptionScore createOptionScore(OptionScoreCreateRequest request) {
+        Question question = questionMapper.selectById(request.getQuestionId());
         if (question == null || question.getDeleted() == 1) {
             throw BusinessException.of("QUESTION_NOT_FOUND", "题目不存在");
         }
 
         OptionScore optionScore = new OptionScore();
-        optionScore.setQuestionId(questionId);
-        optionScore.setOptionValue((String) params.get("optionValue"));
-        optionScore.setScore((BigDecimal) params.get("score"));
-        optionScore.setReverseScore((Integer) params.get("reverseScore"));
-        optionScore.setDimensionCode((String) params.get("dimensionCode"));
+        optionScore.setQuestionId(request.getQuestionId());
+        optionScore.setOptionValue(request.getOptionValue());
+        optionScore.setScore(BigDecimal.valueOf(request.getScore()));
+        optionScore.setReverseScore(request.getReverseScore());
+        optionScore.setDimensionCode(request.getDimensionCode());
         optionScore.setCreateTime(LocalDateTime.now());
         optionScore.setUpdateTime(LocalDateTime.now());
 
@@ -142,20 +123,20 @@ public class ScoringServiceImpl implements ScoringService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateOptionScore(Long id, Map<String, Object> params) {
+    public void updateOptionScore(Long id, OptionScoreUpdateRequest request) {
         OptionScore optionScore = optionScoreMapper.selectById(id);
         if (optionScore == null || optionScore.getDeleted() == 1) {
             throw BusinessException.of("OPTION_NOT_FOUND", "选项分数不存在");
         }
 
-        if (params.containsKey("score")) {
-            optionScore.setScore((BigDecimal) params.get("score"));
+        if (request.getScore() != null) {
+            optionScore.setScore(BigDecimal.valueOf(request.getScore()));
         }
-        if (params.containsKey("reverseScore")) {
-            optionScore.setReverseScore((Integer) params.get("reverseScore"));
+        if (request.getReverseScore() != null) {
+            optionScore.setReverseScore(request.getReverseScore());
         }
-        if (params.containsKey("dimensionCode")) {
-            optionScore.setDimensionCode((String) params.get("dimensionCode"));
+        if (request.getDimensionCode() != null) {
+            optionScore.setDimensionCode(request.getDimensionCode());
         }
 
         optionScore.setUpdateTime(LocalDateTime.now());
