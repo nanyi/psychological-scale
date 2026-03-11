@@ -2,15 +2,25 @@ package com.iotsic.ps.scale.service;
 
 import com.iotsic.ps.core.entity.OptionScore;
 import com.iotsic.ps.core.entity.ScoringRule;
+import com.iotsic.ps.scale.dto.OptionScoreCreateRequest;
+import com.iotsic.ps.scale.dto.OptionScoreUpdateRequest;
+import com.iotsic.ps.scale.dto.ScoringRuleCreateRequest;
+import com.iotsic.ps.scale.dto.ScoringRuleUpdateRequest;
 
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 计分服务接口
+ * 
+ * @author Ryan
+ * @since 2026-03-12
+ */
 public interface ScoringService {
 
-    ScoringRule createScoringRule(Map<String, Object> params);
+    ScoringRule createScoringRule(ScoringRuleCreateRequest request);
 
-    void updateScoringRule(Long id, Map<String, Object> params);
+    void updateScoringRule(Long id, ScoringRuleUpdateRequest request);
 
     void deleteScoringRule(Long id);
 
@@ -18,9 +28,9 @@ public interface ScoringService {
 
     List<ScoringRule> getScoringRulesByDimensionId(Long dimensionId);
 
-    OptionScore createOptionScore(Map<String, Object> params);
+    OptionScore createOptionScore(OptionScoreCreateRequest request);
 
-    void updateOptionScore(Long id, Map<String, Object> params);
+    void updateOptionScore(Long id, OptionScoreUpdateRequest request);
 
     void deleteOptionScore(Long id);
 

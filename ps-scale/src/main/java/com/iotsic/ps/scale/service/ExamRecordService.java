@@ -4,10 +4,17 @@ import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.ExamAnswer;
 import com.iotsic.ps.core.entity.ExamRecord;
+import com.iotsic.ps.scale.dto.ExamRecordListRequest;
 
 import java.util.List;
 import java.util.Map;
 
+/**
+ * 测评记录服务接口
+ * 
+ * @author Ryan
+ * @since 2026-03-12
+ */
 public interface ExamRecordService {
 
     ExamRecord getRecordById(Long id);
@@ -16,7 +23,7 @@ public interface ExamRecordService {
 
     Map<String, Object> getRecordDetail(Long recordId);
 
-    PageResult<ExamRecord> getRecordList(PageRequest request, Map<String, Object> params);
+    PageResult<ExamRecord> getRecordList(PageRequest request, ExamRecordListRequest examRecordListRequest);
 
     Map<String, Object> getRecordStatistics(Long userId);
 
