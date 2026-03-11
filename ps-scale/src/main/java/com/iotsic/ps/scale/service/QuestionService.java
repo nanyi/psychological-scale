@@ -2,19 +2,28 @@ package com.iotsic.ps.scale.service;
 
 import com.iotsic.ps.core.entity.Question;
 import com.iotsic.ps.core.entity.Dimension;
+import com.iotsic.ps.scale.dto.DimensionCreateRequest;
+import com.iotsic.ps.scale.dto.DimensionUpdateRequest;
+import com.iotsic.ps.scale.dto.QuestionCreateRequest;
+import com.iotsic.ps.scale.dto.QuestionUpdateRequest;
 
 import java.util.List;
-import java.util.Map;
 
+/**
+ * 题目服务接口
+ * 
+ * @author Ryan
+ * @since 2026-03-12
+ */
 public interface QuestionService {
 
     Question getQuestionById(Long id);
 
     List<Question> getQuestionsByScaleId(Long scaleId);
 
-    Question createQuestion(Map<String, Object> params);
+    Question createQuestion(QuestionCreateRequest request);
 
-    void updateQuestion(Long id, Map<String, Object> params);
+    void updateQuestion(Long id, QuestionUpdateRequest request);
 
     void deleteQuestion(Long id);
 
@@ -24,9 +33,9 @@ public interface QuestionService {
 
     List<Dimension> getDimensionsByScaleId(Long scaleId);
 
-    Dimension createDimension(Map<String, Object> params);
+    Dimension createDimension(DimensionCreateRequest request);
 
-    void updateDimension(Long id, Map<String, Object> params);
+    void updateDimension(Long id, DimensionUpdateRequest request);
 
     void deleteDimension(Long id);
 }
