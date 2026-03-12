@@ -8,6 +8,8 @@ import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.core.entity.*;
+import com.iotsic.ps.scale.dto.ExamProgressResponse;
+import com.iotsic.ps.scale.dto.ExamSubmitResultResponse;
 import com.iotsic.ps.scale.mapper.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -121,7 +123,7 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> submitExam(Long recordId) {
+    public ExamSubmitResultResponse submitExam(Long recordId) {
         ExamRecord record = getExamRecordById(recordId);
         if (record.getExamStatus() == 1) {
             throw BusinessException.of("EXAM_FINISHED", "测评已提交");
@@ -147,13 +149,15 @@ public class ExamServiceImpl implements ExamService {
         record.setUpdateTime(LocalDateTime.now());
         examRecordMapper.updateById(record);
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("record", record);
-        result.put("totalScore", totalScore);
-        result.put("dimensionScores", dimensionScores);
-        
         String interpretation = scoringService.interpretScore(record.getScaleId(), dimensionScores);
-        result.put("interpretation", interpretation);
+
+        ExamSubmitResultResponse result = new ExamSubmitResultResponse();
+        result.setRecordId(recordId);
+        result.setRecordNo(record.getRecordNo());
+        result.setTotalScore(totalScore);
+        result.setDimensionScores(dimensionScores);
+        result.setInterpretation(interpretation);
+        result.setSubmitTime(record.getSubmitTime());
 
         return result;
     }
@@ -203,7 +207,7 @@ public class ExamServiceImpl implements ExamService {
     }
 
     @Override
-    public Map<String, Object> getExamProgress(Long recordId) {
+    public ExamProgressResponse getExamProgress(Long recordId) {
         ExamRecord record = getExamRecordById(recordId);
 
         LambdaQueryWrapper<ExamAnswer> wrapper = new LambdaQueryWrapper<>();
@@ -214,13 +218,18 @@ public class ExamServiceImpl implements ExamService {
         int totalQuestions = scale != null ? scale.getQuestionCount() : 0;
         int answeredQuestions = answers.size();
 
-        Map<String, Object> progress = new HashMap<>();
-        progress.put("recordId", recordId);
-        progress.put("status", record.getExamStatus());
-        progress.put("totalQuestions", totalQuestions);
-        progress.put("answeredQuestions", answeredQuestions);
-        progress.put("progress", totalQuestions > 0 ? (answeredQuestions * 100 / totalQuestions) : 0);
-        progress.put("startTime", record.getStartTime());
+        ExamProgressResponse progress = new ExamProgressResponse();
+        progress.setRecordId(recordId);
+        progress.setRecordNo(record.getRecordNo());
+        progress.setTotalQuestions(totalQuestions);
+        progress.setAnsweredQuestions(answeredQuestions);
+        if (totalQuestions > 0) {
+            progress.setProgressPercent(BigDecimal.valueOf(answeredQuestions * 100.0 / totalQuestions));
+        } else {
+            progress.setProgressPercent(BigDecimal.ZERO);
+        }
+        progress.setCurrentQuestionNo(answeredQuestions + 1);
+        progress.setStatus(record.getExamStatus());
 
         return progress;
     }

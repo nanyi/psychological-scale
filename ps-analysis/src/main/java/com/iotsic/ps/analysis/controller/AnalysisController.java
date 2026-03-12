@@ -2,11 +2,13 @@ package com.iotsic.ps.analysis.controller;
 
 import com.iotsic.ps.analysis.dto.DashboardDTO;
 import com.iotsic.ps.analysis.dto.EnterpriseUsageResponse;
+import com.iotsic.ps.analysis.dto.ExportDataResponse;
 import com.iotsic.ps.analysis.dto.IncomeReportResponse;
 import com.iotsic.ps.analysis.dto.NormCompareDTO;
 import com.iotsic.ps.analysis.dto.ReportExportRequest;
 import com.iotsic.ps.analysis.dto.ResultDistributionResponse;
 import com.iotsic.ps.analysis.dto.ScaleUsageReportResponse;
+import com.iotsic.ps.analysis.dto.TrendDataResponse;
 import com.iotsic.ps.analysis.dto.UserExamReportResponse;
 import com.iotsic.ps.analysis.service.AnalysisService;
 import com.iotsic.ps.common.result.RestResult;
@@ -14,7 +16,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 数据分析控制器
@@ -125,17 +126,17 @@ public class AnalysisController {
     /**
      * 获取群体趋势分析
      * 
-     * @param dimension 分析维度（age/gender）
+     * @param dimension 维度（age/gender）
      * @param startDate 开始日期
      * @param endDate 结束日期
      * @return 趋势分析数据
      */
     @GetMapping("/trend/group")
-    public RestResult<List<Map<String, Object>>> getGroupTrendAnalysis(
+    public RestResult<List<TrendDataResponse>> getGroupTrendAnalysis(
             @RequestParam String dimension,
             @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
             @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
-        List<Map<String, Object>> data = analysisService.getGroupTrendAnalysis(dimension, startDate, endDate);
+        List<TrendDataResponse> data = analysisService.getGroupTrendAnalysis(dimension, startDate, endDate);
         return RestResult.success(data);
     }
 
@@ -162,10 +163,10 @@ public class AnalysisController {
      * @return 导出结果
      */
     @PostMapping("/export")
-    public RestResult<Map<String, Object>> exportReportData(
+    public RestResult<ExportDataResponse> exportReportData(
             @RequestParam String reportType,
             @RequestBody ReportExportRequest request) {
-        Map<String, Object> data = analysisService.exportReportData(reportType, request);
+        ExportDataResponse data = analysisService.exportReportData(reportType, request);
         return RestResult.success(data);
     }
 }

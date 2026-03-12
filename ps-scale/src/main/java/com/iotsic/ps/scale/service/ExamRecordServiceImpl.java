@@ -8,12 +8,15 @@ import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.*;
 import com.iotsic.ps.scale.dto.ExamRecordListRequest;
+import com.iotsic.ps.scale.dto.RecordDetailResponse;
+import com.iotsic.ps.scale.dto.RecordStatisticsResponse;
 import com.iotsic.ps.scale.mapper.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -47,7 +50,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     }
 
     @Override
-    public Map<String, Object> getRecordDetail(Long recordId) {
+    public RecordDetailResponse getRecordDetail(Long recordId) {
         ExamRecord record = getRecordById(recordId);
         
         Scale scale = scaleMapper.selectById(record.getScaleId());
@@ -68,34 +71,33 @@ public class ExamRecordServiceImpl implements ExamRecordService {
                     .collect(Collectors.toMap(Question::getId, q -> q));
         }
 
-        List<Map<String, Object>> answerDetails = new ArrayList<>();
+        RecordDetailResponse result = new RecordDetailResponse();
+        result.setRecordId(record.getId());
+        result.setRecordNo(record.getRecordNo());
+        result.setUserId(record.getUserId());
+        result.setScaleId(record.getScaleId());
+        result.setScaleName(scale != null ? scale.getScaleName() : null);
+        result.setTotalScore(record.getScore());
+        result.setStatus(record.getExamStatus());
+        result.setStartTime(record.getStartTime());
+        result.setEndTime(record.getSubmitTime());
+        result.setDuration(record.getAnswerTime());
+        
+        List<RecordDetailResponse.AnswerDetail> answerDetails = new ArrayList<>();
         for (ExamAnswer answer : answers) {
-            Map<String, Object> detail = new HashMap<>();
-            detail.put("questionId", answer.getQuestionId());
-            detail.put("questionCode", answer.getQuestionCode());
+            RecordDetailResponse.AnswerDetail detail = new RecordDetailResponse.AnswerDetail();
+            detail.setQuestionId(answer.getQuestionId());
             
             Question question = questionMap.get(answer.getQuestionId());
             if (question != null) {
-                detail.put("questionText", question.getQuestionText());
-                detail.put("questionType", question.getQuestionType());
-                detail.put("options", question.getOptions());
+                detail.setQuestionContent(question.getQuestionText());
             }
             
-            detail.put("answer", answer.getAnswer());
-            detail.put("score", answer.getScore());
-            detail.put("answerTime", answer.getAnswerTime());
-            
+            detail.setAnswer(answer.getAnswer());
+            detail.setScore(answer.getScore() != null ? BigDecimal.valueOf(answer.getScore()) : null);
             answerDetails.add(detail);
         }
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("record", record);
-        result.put("scale", scale);
-        result.put("answers", answerDetails);
-        
-        if (record.getDimensionScores() != null) {
-            result.put("dimensionScores", record.getDimensionScores());
-        }
+        result.setAnswers(answerDetails);
 
         return result;
     }
@@ -131,7 +133,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     }
 
     @Override
-    public Map<String, Object> getRecordStatistics(Long userId) {
+    public RecordStatisticsResponse getRecordStatistics(Long userId) {
         LambdaQueryWrapper<ExamRecord> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ExamRecord::getUserId, userId);
         
@@ -142,7 +144,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
                 .filter(r -> r.getExamStatus() != null && r.getExamStatus() == 1)
                 .count();
         
-        double avgScore = records.stream()
+        double avgScoreVal = records.stream()
                 .filter(r -> r.getScore() != null)
                 .mapToDouble(r -> r.getScore().doubleValue())
                 .average()
@@ -151,12 +153,17 @@ public class ExamRecordServiceImpl implements ExamRecordService {
         Map<Long, Long> scaleCountMap = records.stream()
                 .collect(Collectors.groupingBy(ExamRecord::getScaleId, Collectors.counting()));
         
-        Map<String, Object> statistics = new HashMap<>();
-        statistics.put("totalExams", totalExams);
-        statistics.put("completedExams", completedExams);
-        statistics.put("incompleteExams", totalExams - completedExams);
-        statistics.put("avgScore", Math.round(avgScore * 100) / 100.0);
-        statistics.put("scaleCountMap", scaleCountMap);
+        RecordStatisticsResponse statistics = new RecordStatisticsResponse();
+        statistics.setUserId(userId);
+        statistics.setTotalExams(totalExams);
+        statistics.setCompletedExams(completedExams);
+        if (totalExams > 0) {
+            statistics.setCompletionRate(BigDecimal.valueOf(completedExams * 100.0 / totalExams).setScale(2, BigDecimal.ROUND_HALF_UP));
+        } else {
+            statistics.setCompletionRate(BigDecimal.ZERO);
+        }
+        statistics.setAvgScore(BigDecimal.valueOf(avgScoreVal).setScale(2, BigDecimal.ROUND_HALF_UP));
+        statistics.setScaleCount(scaleCountMap.size());
         
         return statistics;
     }

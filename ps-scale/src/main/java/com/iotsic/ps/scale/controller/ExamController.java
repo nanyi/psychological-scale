@@ -7,13 +7,11 @@ import com.iotsic.ps.core.entity.ExamRecord;
 import com.iotsic.ps.scale.dto.AnswerSaveRequest;
 import com.iotsic.ps.scale.dto.ExamProgressResponse;
 import com.iotsic.ps.scale.dto.ExamStartRequest;
-import com.iotsic.ps.scale.dto.ExamSubmitResponse;
+import com.iotsic.ps.scale.dto.ExamSubmitResultResponse;
 import com.iotsic.ps.scale.service.ExamService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Map;
 
 /**
  * 测评控制器
@@ -88,16 +86,9 @@ public class ExamController {
      * @return 提交结果
      */
     @PostMapping("/submit/{recordId}")
-    public RestResult<ExamSubmitResponse> submitExam(@PathVariable Long recordId) {
-        Map<String, Object> result = examService.submitExam(recordId);
-        
-        ExamSubmitResponse response = new ExamSubmitResponse();
-        response.setRecordId(recordId);
-        response.setStatus((String) result.get("status"));
-        response.setTotalQuestions((Integer) result.get("totalQuestions"));
-        response.setAnsweredCount((Integer) result.get("answeredCount"));
-        
-        return RestResult.success("测评提交成功", response);
+    public RestResult<ExamSubmitResultResponse> submitExam(@PathVariable Long recordId) {
+        ExamSubmitResultResponse result = examService.submitExam(recordId);
+        return RestResult.success("测评提交成功", result);
     }
 
     /**
@@ -160,16 +151,7 @@ public class ExamController {
      */
     @GetMapping("/progress/detail/{recordId}")
     public RestResult<ExamProgressResponse> getExamProgress(@PathVariable Long recordId) {
-        Map<String, Object> result = examService.getExamProgress(recordId);
-        
-        ExamProgressResponse response = new ExamProgressResponse();
-        response.setRecordId(recordId);
-        response.setTotalQuestions((Integer) result.get("totalQuestions"));
-        response.setAnsweredCount((Integer) result.get("answeredCount"));
-        response.setCurrentIndex((Integer) result.get("currentIndex"));
-        response.setRemainingTime((Integer) result.get("remainingTime"));
-        response.setStatus((String) result.get("status"));
-        
+        ExamProgressResponse response = examService.getExamProgress(recordId);
         return RestResult.success(response);
     }
 }

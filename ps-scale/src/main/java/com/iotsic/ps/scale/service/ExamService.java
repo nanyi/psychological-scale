@@ -3,6 +3,8 @@ package com.iotsic.ps.scale.service;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.ExamRecord;
+import com.iotsic.ps.scale.dto.ExamProgressResponse;
+import com.iotsic.ps.scale.dto.ExamSubmitResultResponse;
 
 import java.util.Map;
 
@@ -56,7 +58,7 @@ public interface ExamService {
      * @param recordId 记录ID
      * @return 提交结果
      */
-    Map<String, Object> submitExam(Long recordId);
+    ExamSubmitResultResponse submitExam(Long recordId);
 
     /**
      * 暂停测评
@@ -96,5 +98,5 @@ public interface ExamService {
      * @param recordId 记录ID
      * @return 进度信息
      */
-    Map<String, Object> getExamProgress(Long recordId);
+    ExamProgressResponse getExamProgress(Long recordId);
 }

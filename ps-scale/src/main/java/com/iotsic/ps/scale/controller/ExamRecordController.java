@@ -3,9 +3,9 @@ package com.iotsic.ps.scale.controller;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.result.RestResult;
-import com.iotsic.ps.scale.dto.ExamRecordDetailResponse;
+import com.iotsic.ps.scale.dto.RecordDetailResponse;
+import com.iotsic.ps.scale.dto.RecordStatisticsResponse;
 import com.iotsic.ps.scale.dto.ExamRecordListRequest;
-import com.iotsic.ps.scale.dto.ExamRecordStatisticsResponse;
 import com.iotsic.ps.core.entity.ExamAnswer;
 import com.iotsic.ps.core.entity.ExamRecord;
 import com.iotsic.ps.scale.service.ExamRecordService;
@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 测评记录控制器
@@ -60,17 +59,8 @@ public class ExamRecordController {
      * @return 记录详情
      */
     @GetMapping("/info/{id}")
-    public RestResult<ExamRecordDetailResponse> getRecordDetail(@PathVariable Long id) {
-        Map<String, Object> result = examRecordService.getRecordDetail(id);
-        
-        ExamRecordDetailResponse response = new ExamRecordDetailResponse();
-        response.setRecordId((Long) result.get("recordId"));
-        response.setScaleId((Long) result.get("scaleId"));
-        response.setScaleName((String) result.get("scaleName"));
-        response.setUserId((Long) result.get("userId"));
-        response.setStatus((Integer) result.get("status"));
-        // 设置其他字段...
-        
+    public RestResult<RecordDetailResponse> getRecordDetail(@PathVariable Long id) {
+        RecordDetailResponse response = examRecordService.getRecordDetail(id);
         return RestResult.success(response);
     }
 
@@ -95,15 +85,8 @@ public class ExamRecordController {
      * @return 统计数据
      */
     @GetMapping("/statistics")
-    public RestResult<ExamRecordStatisticsResponse> getRecordStatistics(@RequestParam Long userId) {
-        Map<String, Object> result = examRecordService.getRecordStatistics(userId);
-        
-        ExamRecordStatisticsResponse response = new ExamRecordStatisticsResponse();
-        response.setTotalCount((Long) result.get("totalCount"));
-        response.setCompletedCount((Long) result.get("completedCount"));
-        response.setInProgressCount((Long) result.get("inProgressCount"));
-        response.setAbandonedCount((Long) result.get("abandonedCount"));
-        
+    public RestResult<RecordStatisticsResponse> getRecordStatistics(@RequestParam Long userId) {
+        RecordStatisticsResponse response = examRecordService.getRecordStatistics(userId);
         return RestResult.success(response);
     }
 

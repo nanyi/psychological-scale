@@ -19,17 +19,34 @@ public class UserPermissionsResponse {
     private Long userId;
 
     /**
-     * 角色列表
+     * 用户名
      */
-    private List<String> roles;
+    private String username;
 
     /**
      * 权限列表
      */
-    private List<String> permissions;
+    private List<PermissionDTO> permissions;
 
     /**
-     * 是否为管理员
+     * 权限DTO
      */
-    private Boolean isAdmin;
+    @Data
+    public static class PermissionDTO {
+
+        /**
+         * 权限ID
+         */
+        private Long permissionId;
+
+        /**
+         * 权限编码
+         */
+        private String permissionCode;
+
+        /**
+         * 权限名称
+         */
+        private String permissionName;
+    }
 }

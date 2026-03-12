@@ -2,6 +2,7 @@ package com.iotsic.ps.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.core.entity.*;
+import com.iotsic.ps.user.dto.UserPermissionsResponse;
 import com.iotsic.ps.user.mapper.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -100,5 +101,54 @@ public class RoleServiceImpl implements RoleService {
                 .map(Permission::getPermissionCode)
                 .distinct()
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public UserPermissionsResponse getUserPermissionsDetail(Long userId) {
+        List<Role> roles = getUserRoles(userId);
+        if (roles.isEmpty()) {
+            UserPermissionsResponse response = new UserPermissionsResponse();
+            response.setUserId(userId);
+            response.setPermissions(new ArrayList<>());
+            return response;
+        }
+
+        List<Long> roleIds = roles.stream().map(Role::getId).collect(Collectors.toList());
+
+        LambdaQueryWrapper<RolePermission> rpWrapper = new LambdaQueryWrapper<>();
+        rpWrapper.in(RolePermission::getRoleId, roleIds);
+        List<RolePermission> rolePermissions = rolePermissionMapper.selectList(rpWrapper);
+
+        if (rolePermissions.isEmpty()) {
+            UserPermissionsResponse response = new UserPermissionsResponse();
+            response.setUserId(userId);
+            response.setPermissions(new ArrayList<>());
+            return response;
+        }
+
+        List<Long> permIds = rolePermissions.stream()
+                .map(RolePermission::getPermissionId)
+                .collect(Collectors.toList());
+
+        LambdaQueryWrapper<Permission> permWrapper = new LambdaQueryWrapper<>();
+        permWrapper.in(Permission::getId, permIds);
+        List<Permission> permissions = permissionMapper.selectList(permWrapper);
+
+        UserPermissionsResponse response = new UserPermissionsResponse();
+        response.setUserId(userId);
+
+        List<UserPermissionsResponse.PermissionDTO> permissionDTOs = permissions.stream()
+                .map(p -> {
+                    UserPermissionsResponse.PermissionDTO dto = new UserPermissionsResponse.PermissionDTO();
+                    dto.setPermissionId(p.getId());
+                    dto.setPermissionCode(p.getPermissionCode());
+                    dto.setPermissionName(p.getPermissionName());
+                    return dto;
+                })
+                .distinct()
+                .collect(Collectors.toList());
+        response.setPermissions(permissionDTOs);
+
+        return response;
     }
 }

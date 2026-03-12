@@ -2,6 +2,8 @@ package com.iotsic.ps.scale.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * 测评进度响应DTO
  * 
@@ -17,6 +19,11 @@ public class ExamProgressResponse {
     private Long recordId;
 
     /**
+     * 记录编号
+     */
+    private String recordNo;
+
+    /**
      * 总题数
      */
     private Integer totalQuestions;
@@ -24,12 +31,17 @@ public class ExamProgressResponse {
     /**
      * 已答题目数
      */
-    private Integer answeredCount;
+    private Integer answeredQuestions;
+
+    /**
+     * 完成进度百分比
+     */
+    private BigDecimal progressPercent;
 
     /**
      * 当前题目序号
      */
-    private Integer currentIndex;
+    private Integer currentQuestionNo;
 
     /**
      * 剩余时间（秒）
@@ -37,7 +49,7 @@ public class ExamProgressResponse {
     private Integer remainingTime;
 
     /**
-     * 完成状态
+     * 状态（0-进行中,1-已完成,2-已暂停）
      */
-    private String status;
+    private Integer status;
 }

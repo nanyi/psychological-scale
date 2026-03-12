@@ -2,14 +2,13 @@ package com.iotsic.ps.user.controller;
 
 import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.core.entity.Role;
+import com.iotsic.ps.user.dto.UserPermissionsResponse;
 import com.iotsic.ps.user.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -35,11 +34,8 @@ public class RoleController {
     }
 
     @GetMapping("/permissions/{userId}")
-    public RestResult<Map<String, Object>> getUserPermissions(@PathVariable Long userId) {
-        List<String> permissions = roleService.getUserPermissions(userId);
-        Map<String, Object> result = new HashMap<>();
-        result.put("permissions", permissions);
-        return RestResult.success(result);
+    public RestResult<UserPermissionsResponse> getUserPermissions(@PathVariable Long userId) {
+        return RestResult.success(roleService.getUserPermissionsDetail(userId));
     }
 
     @PostMapping("/assign")

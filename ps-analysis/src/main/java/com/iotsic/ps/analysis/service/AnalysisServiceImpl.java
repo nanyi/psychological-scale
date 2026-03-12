@@ -2,11 +2,13 @@ package com.iotsic.ps.analysis.service;
 
 import com.iotsic.ps.analysis.dto.DashboardDTO;
 import com.iotsic.ps.analysis.dto.EnterpriseUsageResponse;
+import com.iotsic.ps.analysis.dto.ExportDataResponse;
 import com.iotsic.ps.analysis.dto.IncomeReportResponse;
 import com.iotsic.ps.analysis.dto.NormCompareDTO;
 import com.iotsic.ps.analysis.dto.ReportExportRequest;
 import com.iotsic.ps.analysis.dto.ResultDistributionResponse;
 import com.iotsic.ps.analysis.dto.ScaleUsageReportResponse;
+import com.iotsic.ps.analysis.dto.TrendDataResponse;
 import com.iotsic.ps.analysis.dto.UserExamReportResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -173,36 +175,36 @@ public class AnalysisServiceImpl implements AnalysisService {
     }
 
     @Override
-    public List<Map<String, Object>> getGroupTrendAnalysis(String dimension, String startDate, String endDate) {
-        List<Map<String, Object>> result = new ArrayList<>();
+    public List<TrendDataResponse> getGroupTrendAnalysis(String dimension, String startDate, String endDate) {
+        List<TrendDataResponse> result = new ArrayList<>();
         
         if ("age".equals(dimension)) {
-            Map<String, Object> group1 = new HashMap<>();
-            group1.put("groupName", "18-25岁");
-            group1.put("examCount", 3500);
-            group1.put("avgScore", 118.5);
-            group1.put("abnormalRate", 0.11);
+            TrendDataResponse group1 = new TrendDataResponse();
+            group1.setGroupName("18-25岁");
+            group1.setExamCount(3500L);
+            group1.setAvgScore(BigDecimal.valueOf(118.5));
+            group1.setAbnormalRate(BigDecimal.valueOf(0.11));
             result.add(group1);
 
-            Map<String, Object> group2 = new HashMap<>();
-            group2.put("groupName", "26-35岁");
-            group2.put("examCount", 4200);
-            group2.put("avgScore", 125.2);
-            group2.put("abnormalRate", 0.14);
+            TrendDataResponse group2 = new TrendDataResponse();
+            group2.setGroupName("26-35岁");
+            group2.setExamCount(4200L);
+            group2.setAvgScore(BigDecimal.valueOf(125.2));
+            group2.setAbnormalRate(BigDecimal.valueOf(0.14));
             result.add(group2);
         } else if ("gender".equals(dimension)) {
-            Map<String, Object> male = new HashMap<>();
-            male.put("groupName", "男性");
-            male.put("examCount", 5800);
-            male.put("avgScore", 120.3);
-            male.put("abnormalRate", 0.10);
+            TrendDataResponse male = new TrendDataResponse();
+            male.setGroupName("男性");
+            male.setExamCount(5800L);
+            male.setAvgScore(BigDecimal.valueOf(120.3));
+            male.setAbnormalRate(BigDecimal.valueOf(0.10));
             result.add(male);
 
-            Map<String, Object> female = new HashMap<>();
-            female.put("groupName", "女性");
-            female.put("examCount", 6780);
-            female.put("avgScore", 128.7);
-            female.put("abnormalRate", 0.15);
+            TrendDataResponse female = new TrendDataResponse();
+            female.setGroupName("女性");
+            female.setExamCount(6780L);
+            female.setAvgScore(BigDecimal.valueOf(128.7));
+            female.setAbnormalRate(BigDecimal.valueOf(0.15));
             result.add(female);
         }
 
@@ -233,11 +235,12 @@ public class AnalysisServiceImpl implements AnalysisService {
     }
 
     @Override
-    public Map<String, Object> exportReportData(String reportType, ReportExportRequest request) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("fileName", reportType + "_" + System.currentTimeMillis() + ".xlsx");
-        result.put("fileUrl", "/exports/" + reportType + "_" + System.currentTimeMillis() + ".xlsx");
-        result.put("recordCount", 1000);
+    public ExportDataResponse exportReportData(String reportType, ReportExportRequest request) {
+        ExportDataResponse result = new ExportDataResponse();
+        result.setFileName(reportType + "_" + System.currentTimeMillis() + ".xlsx");
+        result.setFileUrl("/exports/" + reportType + "_" + System.currentTimeMillis() + ".xlsx");
+        result.setRecordCount(1000);
+        result.setExportTime(java.time.LocalDateTime.now().toString());
         return result;
     }
 }
