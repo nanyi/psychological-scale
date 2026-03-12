@@ -1,6 +1,7 @@
 package com.iotsic.ps.analysis.service;
 
 import com.iotsic.ps.analysis.dto.DashboardDTO;
+import com.iotsic.ps.analysis.dto.DashboardSummaryDTO;
 import com.iotsic.ps.analysis.dto.EnterpriseUsageResponse;
 import com.iotsic.ps.analysis.dto.ExportDataResponse;
 import com.iotsic.ps.analysis.dto.IncomeReportResponse;
@@ -65,11 +66,11 @@ public class AnalysisServiceImpl implements AnalysisService {
         }
         dashboard.setTrendData(trendData);
 
-        Map<String, Object> summary = new HashMap<>();
-        summary.put("todayExams", 156L);
-        summary.put("todayUsers", 45L);
-        summary.put("weekGrowth", "+12.5%");
-        summary.put("monthGrowth", "+25.8%");
+        DashboardSummaryDTO summary = new DashboardSummaryDTO();
+        summary.setTodayExams(156L);
+        summary.setTodayUsers(45L);
+        summary.setWeekGrowth("+12.5%");
+        summary.setMonthGrowth("+25.8%");
         dashboard.setSummary(summary);
 
         return dashboard;

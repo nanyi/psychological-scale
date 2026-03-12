@@ -3,7 +3,6 @@ package com.iotsic.ps.analysis.dto;
 import lombok.Data;
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Map;
 
 @Data
 public class DashboardDTO {
@@ -15,7 +14,7 @@ public class DashboardDTO {
     private BigDecimal abnormalRate;
     private List<ScaleUsageDTO> scaleRankings;
     private List<TrendDataDTO> trendData;
-    private Map<String, Object> summary;
+    private DashboardSummaryDTO summary;
 
     @Data
     public static class ScaleUsageDTO {
