@@ -3,6 +3,7 @@ package com.iotsic.ps.order.controller;
 import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.order.dto.PaymentCancelRequest;
 import com.iotsic.ps.order.dto.PaymentCreateRequest;
+import com.iotsic.ps.order.dto.PaymentResponse;
 import com.iotsic.ps.order.dto.PaymentStatusResponse;
 import com.iotsic.ps.order.service.PaymentService;
 import lombok.RequiredArgsConstructor;
@@ -33,8 +34,8 @@ public class PaymentController {
      * @return 支付结果
      */
     @PostMapping("/wechat/create")
-    public RestResult<Map<String, Object>> createWechatPayOrder(@RequestBody PaymentCreateRequest request) {
-        Map<String, Object> result = paymentService.createWechatPayOrder(
+    public RestResult<PaymentResponse> createWechatPayOrder(@RequestBody PaymentCreateRequest request) {
+        PaymentResponse result = paymentService.createWechatPayOrder(
                 request.getOrderId(),
                 request.getReturnUrl() != null ? request.getReturnUrl() : ""
         );
@@ -48,8 +49,8 @@ public class PaymentController {
      * @return 支付结果
      */
     @PostMapping("/alipay/create")
-    public RestResult<Map<String, Object>> createAlipayOrder(@RequestBody PaymentCreateRequest request) {
-        Map<String, Object> result = paymentService.createAlipayOrder(
+    public RestResult<PaymentResponse> createAlipayOrder(@RequestBody PaymentCreateRequest request) {
+        PaymentResponse result = paymentService.createAlipayOrder(
                 request.getOrderId(),
                 request.getReturnUrl() != null ? request.getReturnUrl() : ""
         );

@@ -3,6 +3,7 @@ package com.iotsic.ps.report.service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.utils.JsonUtils;
+import com.iotsic.ps.report.dto.ReportDownloadResponse;
 import com.iotsic.ps.report.dto.ReportExportResponse;
 import com.iotsic.ps.report.entity.Report;
 import com.iotsic.ps.report.entity.ReportExport;
@@ -69,7 +70,7 @@ public class ExportServiceImpl extends ServiceImpl<ReportExportMapper, ReportExp
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> exportPdf(Long reportId, Long templateId, String pageSize, String orientation, String watermark) {
+    public ReportExportResponse exportPdf(Long reportId, Long templateId, String pageSize, String orientation, String watermark) {
         Report report = reportService.getReportDetail(reportId);
         if (report == null) {
             throw new BusinessException("报告不存在");
@@ -89,10 +90,10 @@ public class ExportServiceImpl extends ServiceImpl<ReportExportMapper, ReportExp
             exportRecord.setCreateTime(LocalDateTime.now());
             this.save(exportRecord);
 
-            Map<String, Object> result = new HashMap<>();
-            result.put("downloadUrl", exportRecord.getFileUrl());
-            result.put("fileName", fileName);
-            result.put("expireTime", LocalDateTime.now().plusDays(7));
+            ReportExportResponse result = new ReportExportResponse();
+            result.setDownloadUrl(exportRecord.getFileUrl());
+            result.setFileName(fileName);
+            result.setExpireTime(LocalDateTime.now().plusDays(7));
 
             return result;
         } catch (Exception e) {
@@ -242,8 +243,13 @@ public class ExportServiceImpl extends ServiceImpl<ReportExportMapper, ReportExp
     }
 
     @Override
-    public String getDownloadUrl(String filePath, Long userId) {
+    public ReportDownloadResponse getDownloadUrl(String filePath, Long userId) {
         String fileName = filePath.substring(filePath.lastIndexOf("/") + 1);
-        return urlPrefix + "/" + fileName;
+
+        ReportDownloadResponse result = new ReportDownloadResponse();
+        result.setDownloadUrl(urlPrefix + "/" + fileName);
+        result.setFileName(fileName);
+        result.setExpireTime(LocalDateTime.now().plusDays(7));
+        return result;
     }
 }

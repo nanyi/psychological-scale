@@ -2,6 +2,7 @@ package com.iotsic.ps.order.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.exception.BusinessException;
+import com.iotsic.ps.order.dto.PaymentResponse;
 import com.iotsic.ps.order.entity.Order;
 import com.iotsic.ps.order.mapper.OrderMapper;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> createWechatPayOrder(Long orderId, String returnUrl) {
+    public PaymentResponse createWechatPayOrder(Long orderId, String returnUrl) {
         Order order = getOrderForPayment(orderId);
 
         Map<String, Object> payParams = new HashMap<>();
@@ -33,11 +34,11 @@ public class PaymentServiceImpl implements PaymentService {
         payParams.put("returnUrl", returnUrl);
         payParams.put("payMethod", "WECHAT");
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("prepayId", "wx" + UUID.randomUUID().toString().replace("-", "").substring(0, 32));
-        result.put("orderNo", order.getOrderNo());
-        result.put("amount", order.getActualAmount());
-        result.put("payUrl", "weixin://wxpay/bizpayurl?pr=" + result.get("prepayId"));
+        PaymentResponse result = new PaymentResponse();
+        result.setPrepayId("wx" + UUID.randomUUID().toString().replace("-", "").substring(0, 32));
+        result.setOrderNo(order.getOrderNo());
+        result.setAmount(order.getActualAmount());
+        result.setPayUrl("weixin://wxpay/bizpayurl?pr=" + result.getPrepayId());
 
         log.info("创建微信支付订单: orderId={}, amount={}", orderId, order.getActualAmount());
 
@@ -46,7 +47,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> createAlipayOrder(Long orderId, String returnUrl) {
+    public PaymentResponse createAlipayOrder(Long orderId, String returnUrl) {
         Order order = getOrderForPayment(orderId);
 
         Map<String, Object> payParams = new HashMap<>();
@@ -55,10 +56,10 @@ public class PaymentServiceImpl implements PaymentService {
         payParams.put("returnUrl", returnUrl);
         payParams.put("payMethod", "ALIPAY");
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("orderNo", order.getOrderNo());
-        result.put("amount", order.getActualAmount());
-        result.put("payUrl", "https://openapi.alipay.com/gateway.do?order_no=" + order.getOrderNo());
+        PaymentResponse result = new PaymentResponse();
+        result.setOrderNo(order.getOrderNo());
+        result.setAmount(order.getActualAmount());
+        result.setPayUrl("https://openapi.alipay.com/gateway.do?order_no=" + order.getOrderNo());
 
         log.info("创建支付宝订单: orderId={}, amount={}", orderId, order.getActualAmount());
 

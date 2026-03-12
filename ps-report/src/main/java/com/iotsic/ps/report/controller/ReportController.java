@@ -112,12 +112,7 @@ public class ReportController {
                 request.getWatermark()
         );
         
-        ReportExportResponse response = new ReportExportResponse();
-        response.setDownloadUrl((String) result.get("downloadUrl"));
-        response.setFileName((String) result.get("fileName"));
-        response.setExpireTime((java.time.LocalDateTime) result.get("expireTime"));
-        
-        return RestResult.success(response);
+        return RestResult.success(result);
     }
 
     /**
@@ -128,7 +123,7 @@ public class ReportController {
      */
     @PostMapping("/export/pdf")
     public RestResult<ReportExportResponse> exportPdf(@RequestBody ReportExportRequest request) {
-        Map<String, Object> result = exportService.exportPdf(
+        ReportExportResponse result = exportService.exportPdf(
                 request.getReportId(), 
                 request.getTemplateId(), 
                 request.getPageSize(), 
@@ -136,12 +131,7 @@ public class ReportController {
                 request.getWatermark()
         );
         
-        ReportExportResponse response = new ReportExportResponse();
-        response.setDownloadUrl((String) result.get("downloadUrl"));
-        response.setFileName((String) result.get("fileName"));
-        response.setExpireTime((java.time.LocalDateTime) result.get("expireTime"));
-        
-        return RestResult.success(response);
+        return RestResult.success(result);
     }
 
     /**
@@ -155,13 +145,9 @@ public class ReportController {
     public RestResult<ReportDownloadResponse> downloadReport(
             @RequestParam String filePath,
             @RequestParam Long userId) {
-        
-        String downloadUrl = exportService.getDownloadUrl(filePath, userId);
 
-        ReportDownloadResponse result = new ReportDownloadResponse();
-        result.setDownloadUrl(downloadUrl);
-        result.setFileName(filePath.substring(filePath.lastIndexOf("/") + 1));
-        
+        ReportDownloadResponse result = exportService.getDownloadUrl(filePath, userId);
+
         return RestResult.success(result);
     }
 }
