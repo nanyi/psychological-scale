@@ -18,17 +18,17 @@ public class RoleController {
 
     private final RoleService roleService;
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public RestResult<Role> getRoleById(@PathVariable Long id) {
         return RestResult.success(roleService.getRoleById(id));
     }
 
-    @GetMapping("/code/{code}")
+    @GetMapping("/by-code/{code}")
     public RestResult<Role> getRoleByCode(@PathVariable String code) {
         return RestResult.success(roleService.getRoleByCode(code));
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/by-user/{userId}")
     public RestResult<List<Role>> getUserRoles(@PathVariable Long userId) {
         return RestResult.success(roleService.getUserRoles(userId));
     }

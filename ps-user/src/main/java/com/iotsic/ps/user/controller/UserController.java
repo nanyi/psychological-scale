@@ -36,7 +36,7 @@ public class UserController {
      * @param id 用户ID
      * @return 用户信息
      */
-    @GetMapping("/{id}")
+    @GetMapping("/info/{id}")
     public RestResult<UserVO> getUserById(@PathVariable Long id) {
         return RestResult.success(userService.getUserInfo(id));
     }
@@ -47,7 +47,7 @@ public class UserController {
      * @param username 用户名
      * @return 用户信息
      */
-    @GetMapping("/username/{username}")
+    @GetMapping("/by-username/{username}")
     public RestResult<UserVO> getUserByUsername(@PathVariable String username) {
         return RestResult.success(userService.getUserInfo(userService.getUserByUsername(username).getId()));
     }
@@ -58,7 +58,7 @@ public class UserController {
      * @param phone 手机号
      * @return 用户信息
      */
-    @GetMapping("/phone/{phone}")
+    @GetMapping("/by-phone/{phone}")
     public RestResult<UserVO> getUserByPhone(@PathVariable String phone) {
         return RestResult.success(userService.getUserInfo(userService.getUserByPhone(phone).getId()));
     }

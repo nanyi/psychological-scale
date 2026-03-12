@@ -18,13 +18,13 @@ import java.util.Map;
 @FeignClient(name = "ps-user", contextId = "userApi", configuration = FeignConfig.class)
 public interface UserApi {
 
-    @GetMapping("/api/user/{id}")
+    @GetMapping("/api/user/info/{id}")
     RestResult<UserResponse> getUserById(@PathVariable("id") Long id);
 
-    @GetMapping("/api/user/username/{username}")
+    @GetMapping("/api/user/by-username/{username}")
     RestResult<UserResponse> getUserByUsername(@PathVariable("username") String username);
 
-    @GetMapping("/api/user/phone/{phone}")
+    @GetMapping("/api/user/by-phone/{phone}")
     RestResult<UserResponse> getUserByPhone(@PathVariable("phone") String phone);
 
     @PostMapping("/api/user/register")

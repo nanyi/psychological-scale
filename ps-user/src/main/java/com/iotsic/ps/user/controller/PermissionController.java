@@ -22,7 +22,7 @@ public class PermissionController {
         return RestResult.success(permissionMapper.selectList(null));
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public RestResult<Permission> getPermissionById(@PathVariable Long id) {
         return RestResult.success(permissionMapper.selectById(id));
     }

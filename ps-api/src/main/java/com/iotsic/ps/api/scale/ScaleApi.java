@@ -15,7 +15,7 @@ public interface ScaleApi {
     @GetMapping("/api/scale/{id}")
     RestResult<ScaleResponse> getScaleById(@PathVariable("id") Long id);
 
-    @GetMapping("/api/scale/code/{code}")
+    @GetMapping("/api/scale/by-code/{code}")
     RestResult<ScaleResponse> getScaleByCode(@PathVariable("code") String code);
 
     @GetMapping("/api/scale/list")

@@ -53,7 +53,7 @@ public class OrderController {
      * @param id 订单ID
      * @return 订单信息
      */
-    @GetMapping("/{id}")
+    @GetMapping("/detail/{id}")
     public RestResult<Order> getOrderById(@PathVariable Long id) {
         return RestResult.success(orderService.getOrderById(id));
     }
@@ -64,7 +64,7 @@ public class OrderController {
      * @param orderNo 订单编号
      * @return 订单信息
      */
-    @GetMapping("/no/{orderNo}")
+    @GetMapping("/by-no/{orderNo}")
     public RestResult<Order> getOrderByNo(@PathVariable String orderNo) {
         return RestResult.success(orderService.getOrderByNo(orderNo));
     }
@@ -89,7 +89,7 @@ public class OrderController {
      * @param request 分页请求
      * @return 订单分页列表
      */
-    @GetMapping("/user/{userId}")
+    @GetMapping("/by-user/{userId}")
     public RestResult<PageResult<Order>> getUserOrders(
             @PathVariable Long userId,
             PageRequest request) {

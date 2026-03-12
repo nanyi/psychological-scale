@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "ps-order", contextId = "orderApi", configuration = FeignConfig.class)
 public interface OrderApi {
 
-    @GetMapping("/api/order/{id}")
+    @GetMapping("/api/order/detail/{id}")
     RestResult<OrderResponse> getOrderById(@PathVariable("id") Long id);
 
-    @GetMapping("/api/order/no/{orderNo}")
+    @GetMapping("/api/order/by-no/{orderNo}")
     RestResult<OrderResponse> getOrderByNo(@PathVariable("orderNo") String orderNo);
 
     @PostMapping("/api/order/create")
@@ -32,7 +32,7 @@ public interface OrderApi {
     @PostMapping("/api/order/refund")
     RestResult<RefundOrderResponse> refundOrder(@RequestBody RefundOrderRequest request);
 
-    @GetMapping("/api/order/user/{userId}")
+    @GetMapping("/api/order/by-user/{userId}")
     RestResult<OrderListResponse> getUserOrders(@PathVariable("userId") Long userId,
                                                   PageRequest pageRequest,
                                                   OrderQueryRequest queryRequest);
