@@ -1,6 +1,8 @@
 package com.iotsic.ps.thirdparty.controller;
 
 import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.thirdparty.dto.SyncResultResponse;
+import com.iotsic.ps.thirdparty.dto.SyncStatisticsResponse;
 import com.iotsic.ps.thirdparty.entity.SyncLog;
 import com.iotsic.ps.thirdparty.service.ScaleSyncService;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @RestController
@@ -19,16 +20,16 @@ public class ScaleSyncController {
     private final ScaleSyncService scaleSyncService;
 
     @PostMapping("/scales/{configId}")
-    public RestResult<Map<String, Object>> syncScales(@PathVariable Long configId) {
-        Map<String, Object> result = scaleSyncService.syncScalesFromPlatform(configId);
+    public RestResult<SyncResultResponse> syncScales(@PathVariable Long configId) {
+        SyncResultResponse result = scaleSyncService.syncScalesFromPlatform(configId);
         return RestResult.success("量表同步成功", result);
     }
 
     @PostMapping("/scale/{configId}/{externalScaleId}")
-    public RestResult<Map<String, Object>> syncSingleScale(
+    public RestResult<SyncResultResponse> syncSingleScale(
             @PathVariable Long configId,
             @PathVariable String externalScaleId) {
-        Map<String, Object> result = scaleSyncService.syncSingleScale(configId, externalScaleId);
+        SyncResultResponse result = scaleSyncService.syncSingleScale(configId, externalScaleId);
         return RestResult.success("量表同步成功", result);
     }
 
@@ -40,7 +41,7 @@ public class ScaleSyncController {
     }
 
     @GetMapping("/statistics/{configId}")
-    public RestResult<Map<String, Object>> getSyncStatistics(@PathVariable Long configId) {
+    public RestResult<SyncStatisticsResponse> getSyncStatistics(@PathVariable Long configId) {
         return RestResult.success(scaleSyncService.getSyncStatistics(configId));
     }
 }

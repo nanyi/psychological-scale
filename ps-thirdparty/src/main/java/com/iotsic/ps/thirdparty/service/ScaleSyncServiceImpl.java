@@ -2,6 +2,8 @@ package com.iotsic.ps.thirdparty.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.exception.BusinessException;
+import com.iotsic.ps.thirdparty.dto.SyncResultResponse;
+import com.iotsic.ps.thirdparty.dto.SyncStatisticsResponse;
 import com.iotsic.ps.thirdparty.entity.SyncLog;
 import com.iotsic.ps.thirdparty.entity.ThirdPartyConfig;
 import com.iotsic.ps.thirdparty.mapper.SyncLogMapper;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -25,7 +29,7 @@ public class ScaleSyncServiceImpl implements ScaleSyncService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> syncScalesFromPlatform(Long configId) {
+    public SyncResultResponse syncScalesFromPlatform(Long configId) {
         ThirdPartyConfig config = thirdPartyConfigService.getConfigById(configId);
         
         SyncLog syncLog = new SyncLog();
@@ -39,9 +43,12 @@ public class ScaleSyncServiceImpl implements ScaleSyncService {
         
         syncLogMapper.insert(syncLog);
 
+        SyncResultResponse response = new SyncResultResponse();
+        
         try {
             List<Map<String, Object>> scaleList = fetchScalesFromPlatform(config);
             
+            List<Long> scaleIds = new ArrayList<>();
             int syncCount = 0;
             for (Map<String, Object> scaleData : scaleList) {
                 syncScaleToLocal(config, scaleData);
@@ -53,6 +60,10 @@ public class ScaleSyncServiceImpl implements ScaleSyncService {
             syncLog.setEndTime(LocalDateTime.now());
             syncLog.setResponseData("{\"total\": " + scaleList.size() + ", \"synced\": " + syncCount + "}");
             
+            response.setSuccessCount(syncCount);
+            response.setFailCount(0);
+            response.setScaleIds(scaleIds);
+            
             log.info("量表同步成功: platformCode={}, count={}", config.getPlatformCode(), syncCount);
             
         } catch (Exception e) {
@@ -60,24 +71,21 @@ public class ScaleSyncServiceImpl implements ScaleSyncService {
             syncLog.setErrorMessage(e.getMessage());
             syncLog.setEndTime(LocalDateTime.now());
             
+            response.setSuccessCount(0);
+            response.setFailCount(1);
+            response.setErrorMessage(e.getMessage());
+            
             log.error("量表同步失败: platformCode={}", config.getPlatformCode(), e);
         }
         
         syncLogMapper.updateById(syncLog);
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("syncLogId", syncLog.getId());
-        result.put("syncStatus", syncLog.getSyncStatus());
-        result.put("syncCount", syncLog.getSyncCount());
-        result.put("startTime", syncLog.getStartTime());
-        result.put("endTime", syncLog.getEndTime());
-        
-        return result;
+        return response;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> syncSingleScale(Long configId, String externalScaleId) {
+    public SyncResultResponse syncSingleScale(Long configId, String externalScaleId) {
         ThirdPartyConfig config = thirdPartyConfigService.getConfigById(configId);
         
         SyncLog syncLog = new SyncLog();
@@ -91,6 +99,8 @@ public class ScaleSyncServiceImpl implements ScaleSyncService {
         
         syncLogMapper.insert(syncLog);
 
+        SyncResultResponse response = new SyncResultResponse();
+        
         try {
             Map<String, Object> scaleData = fetchSingleScaleFromPlatform(config, externalScaleId);
             syncScaleToLocal(config, scaleData);
@@ -100,6 +110,9 @@ public class ScaleSyncServiceImpl implements ScaleSyncService {
             syncLog.setEndTime(LocalDateTime.now());
             syncLog.setResponseData("{\"externalScaleId\": \"" + externalScaleId + "\"}");
             
+            response.setSuccessCount(1);
+            response.setFailCount(0);
+            
             log.info("单个量表同步成功: platformCode={}, externalScaleId={}", 
                     config.getPlatformCode(), externalScaleId);
             
@@ -108,17 +121,17 @@ public class ScaleSyncServiceImpl implements ScaleSyncService {
             syncLog.setErrorMessage(e.getMessage());
             syncLog.setEndTime(LocalDateTime.now());
             
+            response.setSuccessCount(0);
+            response.setFailCount(1);
+            response.setErrorMessage(e.getMessage());
+            
             log.error("单个量表同步失败: platformCode={}, externalScaleId={}", 
                     config.getPlatformCode(), externalScaleId, e);
         }
         
         syncLogMapper.updateById(syncLog);
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("syncLogId", syncLog.getId());
-        result.put("syncStatus", syncLog.getSyncStatus());
-        
-        return result;
+        return response;
     }
 
     @Override
@@ -139,7 +152,7 @@ public class ScaleSyncServiceImpl implements ScaleSyncService {
     }
 
     @Override
-    public Map<String, Object> getSyncStatistics(Long configId) {
+    public SyncStatisticsResponse getSyncStatistics(Long configId) {
         LambdaQueryWrapper<SyncLog> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(SyncLog::getConfigId, configId);
         
@@ -158,13 +171,22 @@ public class ScaleSyncServiceImpl implements ScaleSyncService {
                 .mapToLong(SyncLog::getSyncCount)
                 .sum();
         
-        Map<String, Object> statistics = new HashMap<>();
-        statistics.put("totalSyncs", totalSyncs);
-        statistics.put("successSyncs", successSyncs);
-        statistics.put("failedSyncs", failedSyncs);
-        statistics.put("totalCount", totalCount);
+        SyncStatisticsResponse response = new SyncStatisticsResponse();
+        response.setTotalSyncCount(totalSyncs);
+        response.setSuccessCount(successSyncs);
+        response.setFailCount(failedSyncs);
         
-        return statistics;
+        Map<String, Object> statistics = new HashMap<>();
+        statistics.put("totalCount", totalCount);
+        response.setStatistics(statistics);
+        
+        logs.stream()
+                .filter(log -> log.getEndTime() != null)
+                .max((a, b) -> a.getEndTime().compareTo(b.getEndTime()))
+                .ifPresent(latestLog -> 
+                        response.setLastSyncTime(latestLog.getEndTime().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME)));
+        
+        return response;
     }
 
     private List<Map<String, Object>> fetchScalesFromPlatform(ThirdPartyConfig config) {

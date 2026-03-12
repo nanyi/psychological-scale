@@ -2,6 +2,8 @@ package com.iotsic.ps.thirdparty.dto;
 
 import lombok.Data;
 
+import java.util.Map;
+
 /**
  * 同步统计响应DTO
  * 
@@ -12,27 +14,27 @@ import lombok.Data;
 public class SyncStatisticsResponse {
 
     /**
-     * 总量表数
+     * 总同步次数
      */
-    private Integer totalScales;
+    private Integer totalSyncCount;
 
     /**
-     * 已同步数
+     * 成功次数
      */
-    private Integer syncedCount;
+    private Integer successCount;
 
     /**
-     * 同步失败数
+     * 失败次数
      */
-    private Integer failedCount;
+    private Integer failCount;
 
     /**
      * 最后同步时间
      */
-    private java.time.LocalDateTime lastSyncTime;
+    private String lastSyncTime;
 
     /**
-     * 同步状态
+     * 统计详情
      */
-    private String status;
+    private Map<String, Object> statistics;
 }
