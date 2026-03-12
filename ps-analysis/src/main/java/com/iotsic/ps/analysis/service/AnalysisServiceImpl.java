@@ -1,7 +1,13 @@
 package com.iotsic.ps.analysis.service;
 
 import com.iotsic.ps.analysis.dto.DashboardDTO;
+import com.iotsic.ps.analysis.dto.EnterpriseUsageResponse;
+import com.iotsic.ps.analysis.dto.IncomeReportResponse;
 import com.iotsic.ps.analysis.dto.NormCompareDTO;
+import com.iotsic.ps.analysis.dto.ReportExportRequest;
+import com.iotsic.ps.analysis.dto.ResultDistributionResponse;
+import com.iotsic.ps.analysis.dto.ScaleUsageReportResponse;
+import com.iotsic.ps.analysis.dto.UserExamReportResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -68,90 +74,101 @@ public class AnalysisServiceImpl implements AnalysisService {
     }
 
     @Override
-    public Map<String, Object> getScaleUsageReport(String startDate, String endDate) {
-        Map<String, Object> result = new HashMap<>();
+    public List<ScaleUsageReportResponse> getScaleUsageReport(String startDate, String endDate) {
+        List<ScaleUsageReportResponse> result = new ArrayList<>();
         
-        List<Map<String, Object>> data = new ArrayList<>();
-        Map<String, Object> item1 = new HashMap<>();
-        item1.put("scaleName", "SCL-90症状自评量表");
-        item1.put("usageCount", 4500);
-        item1.put("avgScore", 125.5);
-        item1.put("abnormalRate", 0.12);
-        data.add(item1);
+        ScaleUsageReportResponse item1 = new ScaleUsageReportResponse();
+        item1.setScaleId(1L);
+        item1.setScaleName("SCL-90症状自评量表");
+        item1.setUsageCount(4500L);
+        item1.setCompletedCount(4200L);
+        item1.setCompletionRate(new BigDecimal("0.93"));
+        item1.setAvgScore(new BigDecimal("125.5"));
+        result.add(item1);
 
-        Map<String, Object> item2 = new HashMap<>();
-        item2.put("scaleName", "SDS抑郁自评量表");
-        item2.put("usageCount", 3200);
-        item2.put("avgScore", 42.3);
-        item2.put("abnormalRate", 0.18);
-        data.add(item2);
+        ScaleUsageReportResponse item2 = new ScaleUsageReportResponse();
+        item2.setScaleId(2L);
+        item2.setScaleName("SDS抑郁自评量表");
+        item2.setUsageCount(3200L);
+        item2.setCompletedCount(2900L);
+        item2.setCompletionRate(new BigDecimal("0.91"));
+        item2.setAvgScore(new BigDecimal("42.3"));
+        result.add(item2);
 
-        result.put("data", data);
-        result.put("total", data.size());
         return result;
     }
 
     @Override
-    public Map<String, Object> getUserExamReport(String startDate, String endDate) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("totalUsers", 5800);
-        result.put("activeUsers", 3280);
-        result.put("newUsers", 520);
-        result.put("repeatRate", 0.65);
-        return result;
-    }
-
-    @Override
-    public Map<String, Object> getIncomeReport(String startDate, String endDate) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("totalAmount", 285000.00);
-        result.put("orderCount", 1250);
-        result.put("avgAmount", 228.00);
-        result.put("refundAmount", 8500.00);
-        return result;
-    }
-
-    @Override
-    public Map<String, Object> getResultDistributionReport(String startDate, String endDate) {
-        Map<String, Object> result = new HashMap<>();
+    public List<UserExamReportResponse> getUserExamReport(String startDate, String endDate) {
+        List<UserExamReportResponse> result = new ArrayList<>();
         
-        List<Map<String, Object>> distribution = new ArrayList<>();
-        Map<String, Object> normal = new HashMap<>();
-        normal.put("level", "正常");
-        normal.put("count", 8800);
-        normal.put("ratio", 0.70);
-        distribution.add(normal);
-
-        Map<String, Object> mild = new HashMap<>();
-        mild.put("level", "轻度异常");
-        mild.put("count", 2000);
-        mild.put("ratio", 0.16);
-        distribution.add(mild);
-
-        Map<String, Object> moderate = new HashMap<>();
-        moderate.put("level", "中度异常");
-        moderate.put("count", 1200);
-        moderate.put("ratio", 0.095);
-        distribution.add(moderate);
-
-        Map<String, Object> severe = new HashMap<>();
-        severe.put("level", "重度异常");
-        severe.put("count", 580);
-        severe.put("ratio", 0.046);
-        distribution.add(severe);
-
-        result.put("distribution", distribution);
-        result.put("total", 12580);
+        UserExamReportResponse item = new UserExamReportResponse();
+        item.setUserId(1L);
+        item.setUsername("testuser");
+        item.setExamCount(5800L);
+        item.setCompletedCount(5200L);
+        item.setAvgScore(new BigDecimal("85.5"));
+        result.add(item);
+        
         return result;
     }
 
     @Override
-    public Map<String, Object> getEnterpriseUsageReport(String startDate, String endDate) {
-        Map<String, Object> result = new HashMap<>();
-        result.put("totalEnterprises", 85);
-        result.put("activeEnterprises", 62);
-        result.put("totalEmployees", 5200);
-        result.put("avgExamsPerEmployee", 2.4);
+    public IncomeReportResponse getIncomeReport(String startDate, String endDate) {
+        IncomeReportResponse result = new IncomeReportResponse();
+        result.setTotalIncome(new BigDecimal("285000.00"));
+        result.setWechatIncome(new BigDecimal("180000.00"));
+        result.setAlipayIncome(new BigDecimal("105000.00"));
+        result.setOrderCount(1250L);
+        result.setRefundAmount(new BigDecimal("8500.00"));
+        result.setNetIncome(new BigDecimal("276500.00"));
+        return result;
+    }
+
+    @Override
+    public ResultDistributionResponse getResultDistributionReport(Long scaleId, String startDate, String endDate) {
+        ResultDistributionResponse result = new ResultDistributionResponse();
+        result.setScaleId(scaleId);
+        result.setScaleName("SCL-90症状自评量表");
+        
+        List<ResultDistributionResponse.ScoreRange> distribution = new ArrayList<>();
+        ResultDistributionResponse.ScoreRange range1 = new ResultDistributionResponse.ScoreRange();
+        range1.setMinScore(0);
+        range1.setMaxScore(50);
+        range1.setCount(3500L);
+        distribution.add(range1);
+        
+        ResultDistributionResponse.ScoreRange range2 = new ResultDistributionResponse.ScoreRange();
+        range2.setMinScore(51);
+        range2.setMaxScore(100);
+        range2.setCount(4500L);
+        distribution.add(range2);
+        
+        result.setDistribution(distribution);
+        
+        Map<String, Long> levelDistribution = new HashMap<>();
+        levelDistribution.put("正常", 8800L);
+        levelDistribution.put("轻度异常", 2000L);
+        levelDistribution.put("中度异常", 1200L);
+        levelDistribution.put("重度异常", 580L);
+        result.setLevelDistribution(levelDistribution);
+        
+        return result;
+    }
+
+    @Override
+    public List<EnterpriseUsageResponse> getEnterpriseUsageReport(String startDate, String endDate) {
+        List<EnterpriseUsageResponse> result = new ArrayList<>();
+        
+        EnterpriseUsageResponse item = new EnterpriseUsageResponse();
+        item.setEnterpriseId(1L);
+        item.setEnterpriseName("测试企业");
+        item.setExamCount(5200L);
+        item.setQuotaUsed(4500L);
+        item.setQuotaTotal(5000L);
+        item.setUsageRate(new BigDecimal("0.90"));
+        result.add(item);
+        
         return result;
     }
 
@@ -197,8 +214,8 @@ public class AnalysisServiceImpl implements AnalysisService {
         NormCompareDTO result = new NormCompareDTO();
         result.setReportId(reportId);
         result.setRawScore(new BigDecimal("145.5"));
-        result.settScore(new BigDecimal("55.2"));
-        result.setzScore(new BigDecimal("0.52"));
+        result.setTScore(new BigDecimal("55.2"));
+        result.setZScore(new BigDecimal("0.52"));
         result.setPercentile(new BigDecimal("69.8"));
         result.setLevel("正常");
         result.setComparison("略高于常模平均水平");
@@ -216,7 +233,7 @@ public class AnalysisServiceImpl implements AnalysisService {
     }
 
     @Override
-    public Map<String, Object> exportReportData(String reportType, Map<String, Object> params) {
+    public Map<String, Object> exportReportData(String reportType, ReportExportRequest request) {
         Map<String, Object> result = new HashMap<>();
         result.put("fileName", reportType + "_" + System.currentTimeMillis() + ".xlsx");
         result.put("fileUrl", "/exports/" + reportType + "_" + System.currentTimeMillis() + ".xlsx");
