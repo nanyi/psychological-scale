@@ -1,6 +1,10 @@
 package com.iotsic.ps.api.user;
 
 import com.iotsic.ps.api.config.FeignConfig;
+import com.iotsic.ps.api.dto.TokenResponse;
+import com.iotsic.ps.api.dto.UserLoginRequest;
+import com.iotsic.ps.api.dto.UserRegisterRequest;
+import com.iotsic.ps.api.dto.UserResponse;
 import com.iotsic.ps.common.result.RestResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,23 +19,23 @@ import java.util.Map;
 public interface UserApi {
 
     @GetMapping("/api/user/{id}")
-    RestResult<Map<String, Object>> getUserById(@PathVariable("id") Long id);
+    RestResult<UserResponse> getUserById(@PathVariable("id") Long id);
 
     @GetMapping("/api/user/username/{username}")
-    RestResult<Map<String, Object>> getUserByUsername(@PathVariable("username") String username);
+    RestResult<UserResponse> getUserByUsername(@PathVariable("username") String username);
 
     @GetMapping("/api/user/phone/{phone}")
-    RestResult<Map<String, Object>> getUserByPhone(@PathVariable("phone") String phone);
+    RestResult<UserResponse> getUserByPhone(@PathVariable("phone") String phone);
 
     @PostMapping("/api/user/register")
-    RestResult<Map<String, Object>> register(@RequestBody Map<String, Object> request);
+    RestResult<UserResponse> register(@RequestBody UserRegisterRequest request);
 
     @PostMapping("/api/user/login")
-    RestResult<Map<String, Object>> login(@RequestBody Map<String, Object> request);
+    RestResult<TokenResponse> login(@RequestBody UserLoginRequest request);
 
     @PostMapping("/api/user/logout")
     RestResult<Void> logout(@RequestParam("userId") Long userId);
 
     @PostMapping("/api/user/refresh-token")
-    RestResult<Map<String, Object>> refreshToken(@RequestParam("refreshToken") String refreshToken);
+    RestResult<TokenResponse> refreshToken(@RequestParam("refreshToken") String refreshToken);
 }
