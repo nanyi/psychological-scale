@@ -12,14 +12,14 @@ import lombok.Data;
 public class ThirdPartyConfigUpdateRequest {
 
     /**
-     * 配置ID
+     * 平台名称
      */
-    private Long id;
+    private String platformName;
 
     /**
-     * AppId
+     * AppKey
      */
-    private String appId;
+    private String appKey;
 
     /**
      * AppSecret
@@ -27,7 +27,27 @@ public class ThirdPartyConfigUpdateRequest {
     private String appSecret;
 
     /**
-     * 状态
+     * API地址
      */
-    private Integer status;
+    private String apiUrl;
+
+    /**
+     * 回调地址
+     */
+    private String callbackUrl;
+
+    /**
+     * 配置JSON
+     */
+    private String configJson;
+
+    /**
+     * 同步间隔（分钟）
+     */
+    private Integer syncInterval;
+
+    /**
+     * 描述
+     */
+    private String description;
 }

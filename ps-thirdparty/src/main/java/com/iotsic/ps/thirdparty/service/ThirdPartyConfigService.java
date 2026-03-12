@@ -1,5 +1,7 @@
 package com.iotsic.ps.thirdparty.service;
 
+import com.iotsic.ps.thirdparty.dto.ThirdPartyConfigCreateRequest;
+import com.iotsic.ps.thirdparty.dto.ThirdPartyConfigUpdateRequest;
 import com.iotsic.ps.thirdparty.entity.ThirdPartyConfig;
 
 import java.util.List;
@@ -7,9 +9,9 @@ import java.util.Map;
 
 public interface ThirdPartyConfigService {
 
-    ThirdPartyConfig createConfig(Map<String, Object> params);
+    ThirdPartyConfig createConfig(ThirdPartyConfigCreateRequest request);
 
-    void updateConfig(Long id, Map<String, Object> params);
+    void updateConfig(Long id, ThirdPartyConfigUpdateRequest request);
 
     void deleteConfig(Long id);
 

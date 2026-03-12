@@ -3,7 +3,7 @@ package com.iotsic.ps.scale.dto;
 import lombok.Data;
 
 /**
- * 评分规则创建请求DTO
+ * 计分规则创建请求DTO
  * 
  * @author Ryan
  * @since 2026-03-12
@@ -17,17 +17,27 @@ public class ScoringRuleCreateRequest {
     private Long scaleId;
 
     /**
+     * 维度ID
+     */
+    private Long dimensionId;
+
+    /**
      * 规则名称
      */
-    private String ruleName;
+    private String name;
 
     /**
-     * 规则类型
+     * 计分方式：1-正向计分，2-反向计分
      */
-    private Integer ruleType;
+    private Integer scoringType;
 
     /**
-     * 规则表达式
+     * 最低分
      */
-    private String ruleExpression;
+    private Integer minScore;
+
+    /**
+     * 最高分
+     */
+    private Integer maxScore;
 }

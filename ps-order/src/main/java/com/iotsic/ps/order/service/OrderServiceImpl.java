@@ -8,7 +8,8 @@ import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.utils.EncryptUtils;
-import com.iotsic.ps.core.entity.Scale;
+import com.iotsic.ps.order.dto.OrderListRequest;
+import com.iotsic.ps.order.dto.OrderStatisticsResponse;
 import com.iotsic.ps.order.entity.Order;
 import com.iotsic.ps.order.mapper.OrderMapper;
 import lombok.RequiredArgsConstructor;
@@ -31,19 +32,14 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public Order createOrder(Long userId, Long scaleId, Integer orderType) {
-        Scale scale = new Scale();
-        scale.setId(scaleId);
-        scale.setScaleName("量表" + scaleId);
-        scale.setPrice(BigDecimal.valueOf(99.00));
+        BigDecimal price = BigDecimal.valueOf(99.00);
 
         Order order = new Order();
         order.setOrderNo(EncryptUtils.generateUUID().substring(0, 16));
         order.setUserId(userId);
-        order.setScaleId(scaleId);
-        order.setScaleName(scale.getScaleName());
-        order.setAmount(scale.getPrice());
+        order.setTotalAmount(price);
         order.setDiscountAmount(BigDecimal.ZERO);
-        order.setActualAmount(scale.getPrice());
+        order.setActualAmount(price);
         order.setOrderType(orderType);
         order.setOrderStatus(0);
         order.setExpireTime(LocalDateTime.now().plusMinutes(BusinessConstant.ORDER_EXPIRE_MINUTES));
@@ -100,19 +96,19 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public PageResult<Order> getOrderList(PageRequest request, Map<String, Object> params) {
+    public PageResult<Order> getOrderList(PageRequest request, OrderListRequest params) {
         Page<Order> page = new Page<>(request.getPageNum(), request.getPageSize());
         LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
         
         if (params != null) {
-            if (params.containsKey("userId") && params.get("userId") != null) {
-                wrapper.eq(Order::getUserId, params.get("userId"));
+            if (params.getUserId() != null) {
+                wrapper.eq(Order::getUserId, params.getUserId());
             }
-            if (params.containsKey("orderStatus") && params.get("orderStatus") != null) {
-                wrapper.eq(Order::getOrderStatus, params.get("orderStatus"));
+            if (params.getStatus() != null) {
+                wrapper.eq(Order::getOrderStatus, params.getStatus());
             }
-            if (params.containsKey("orderType") && params.get("orderType") != null) {
-                wrapper.eq(Order::getOrderType, params.get("orderType"));
+            if (params.getPayType() != null) {
+                wrapper.eq(Order::getOrderType, params.getPayType());
             }
         }
         
@@ -134,17 +130,17 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public Map<String, Object> getOrderStatistics(Long userId) {
+    public OrderStatisticsResponse getOrderStatistics(Long userId) {
         LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Order::getUserId, userId);
         
         java.util.List<Order> orders = orderMapper.selectList(wrapper);
         
-        int totalOrders = orders.size();
-        int paidOrders = (int) orders.stream()
+        long totalOrders = orders.size();
+        long paidOrders = orders.stream()
                 .filter(o -> o.getOrderStatus() != null && o.getOrderStatus() == 1)
                 .count();
-        int pendingOrders = (int) orders.stream()
+        long pendingOrders = orders.stream()
                 .filter(o -> o.getOrderStatus() != null && o.getOrderStatus() == 0)
                 .count();
         
@@ -153,12 +149,19 @@ public class OrderServiceImpl implements OrderService {
                 .map(Order::getActualAmount)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
         
-        Map<String, Object> statistics = new HashMap<>();
-        statistics.put("totalOrders", totalOrders);
-        statistics.put("paidOrders", paidOrders);
-        statistics.put("pendingOrders", pendingOrders);
-        statistics.put("totalAmount", totalAmount);
+        BigDecimal paidAmount = orders.stream()
+                .filter(o -> o.getOrderStatus() != null && o.getOrderStatus() == 1)
+                .filter(o -> o.getActualAmount() != null)
+                .map(Order::getActualAmount)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
         
-        return statistics;
+        OrderStatisticsResponse response = new OrderStatisticsResponse();
+        response.setTotalCount(totalOrders);
+        response.setPendingPaymentCount(pendingOrders);
+        response.setPaidCount(paidOrders);
+        response.setTotalAmount(totalAmount);
+        response.setPaidAmount(paidAmount);
+        
+        return response;
     }
 }

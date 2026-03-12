@@ -16,7 +16,7 @@ public class NormCompareDTO {
     private BigDecimal tScore;
     private BigDecimal zScore;
     private BigDecimal percentile;
-   Rank;
+    private String rank;
     private String level;
     private String comparison;
     private NormDataDTO normData;

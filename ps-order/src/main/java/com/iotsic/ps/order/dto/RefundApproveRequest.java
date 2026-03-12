@@ -15,9 +15,4 @@ public class RefundApproveRequest {
      * 退款ID
      */
     private Long refundId;
-
-    /**
-     * 审批意见
-     */
-    private String approvalRemark;
 }

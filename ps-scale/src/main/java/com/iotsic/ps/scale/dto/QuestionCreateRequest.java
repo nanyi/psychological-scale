@@ -19,7 +19,7 @@ public class QuestionCreateRequest {
     /**
      * 维度ID
      */
-    private Long dimensionId;
+    private Integer dimensionId;
 
     /**
      * 题目序号
@@ -39,5 +39,15 @@ public class QuestionCreateRequest {
     /**
      * 必答标识
      */
-    private Integer required;
+    private Boolean required;
+
+    /**
+     * 排序顺序
+     */
+    private Integer sortOrder;
+
+    /**
+     * 选项配置JSON字符串
+     */
+    private String options;
 }

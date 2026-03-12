@@ -2,8 +2,10 @@ package com.iotsic.ps.thirdparty.dto;
 
 import lombok.Data;
 
+import java.util.Map;
+
 /**
- * 答题提交请求DTO
+ * 第三方答案提交请求DTO
  * 
  * @author Ryan
  * @since 2026-03-12
@@ -12,17 +14,32 @@ import lombok.Data;
 public class AnswerSubmitRequest {
 
     /**
-     * 第三方平台ID
+     * 第三方配置ID
      */
-    private Long platformId;
+    private Long configId;
 
     /**
-     * 外部记录ID
+     * 外部用户ID
      */
-    private String externalRecordId;
+    private String externalUserId;
 
     /**
-     * 答题数据JSON
+     * 外部量表ID
      */
-    private String answerData;
+    private String externalScaleId;
+
+    /**
+     * 答题记录ID
+     */
+    private Long recordId;
+
+    /**
+     * 答案数据（JSON格式）
+     */
+    private Map<String, Object> answers;
+
+    /**
+     * 提交时间
+     */
+    private String submitTime;
 }

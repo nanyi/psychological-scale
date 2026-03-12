@@ -2,6 +2,8 @@ package com.iotsic.ps.order.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 /**
  * 配额使用请求DTO
  * 
@@ -12,12 +14,12 @@ import lombok.Data;
 public class QuotaUseRequest {
 
     /**
-     * 配额ID
+     * 企业ID
      */
-    private Long quotaId;
+    private Long enterpriseId;
 
     /**
-     * 使用数量
+     * 量表ID
      */
-    private Integer useCount;
+    private Long scaleId;
 }

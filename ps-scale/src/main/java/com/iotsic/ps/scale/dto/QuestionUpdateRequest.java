@@ -12,16 +12,6 @@ import lombok.Data;
 public class QuestionUpdateRequest {
 
     /**
-     * 题目ID
-     */
-    private Long id;
-
-    /**
-     * 维度ID
-     */
-    private Long dimensionId;
-
-    /**
      * 题目内容
      */
     private String content;
@@ -32,7 +22,22 @@ public class QuestionUpdateRequest {
     private Integer questionType;
 
     /**
-     * 必答标识
+     * 题目选项（JSON格式）
      */
-    private Integer required;
+    private String options;
+
+    /**
+     * 必答标记
+     */
+    private Boolean required;
+
+    /**
+     * 排序号
+     */
+    private Integer sortOrder;
+
+    /**
+     * 题目分组
+     */
+    private String groupName;
 }

@@ -25,4 +25,19 @@ public class OptionScoreCreateRequest {
      * 分值
      */
     private Integer score;
+
+    /**
+     * 维度ID
+     */
+    private Long dimensionId;
+
+    /**
+     * 反向分值
+     */
+    private Integer reverseScore;
+
+    /**
+     * 维度编码
+     */
+    private String dimensionCode;
 }

@@ -215,7 +215,7 @@ public class ExportServiceImpl extends ServiceImpl<ReportExportMapper, ReportExp
         html.append("<p>").append(report.getConclusion() != null ? report.getConclusion() : "").append("</p>");
         
         html.append("<h2>建议指导</h2><ul>");
-        List<String> suggestionList = JsonUtils.parseObject(report.getSuggestions(), List.class);
+        List<String> suggestionList = JsonUtils.fromJson(report.getSuggestions(), List.class);
         if (suggestionList != null) {
             for (String suggestion : suggestionList) {
                 html.append("<li>").append(suggestion).append("</li>");

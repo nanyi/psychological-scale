@@ -12,19 +12,9 @@ import lombok.Data;
 public class ScaleUpdateRequest {
 
     /**
-     * 量表ID
-     */
-    private Long id;
-
-    /**
      * 量表名称
      */
-    private String scaleName;
-
-    /**
-     * 量表分类
-     */
-    private Integer category;
+    private String name;
 
     /**
      * 量表描述
@@ -32,9 +22,34 @@ public class ScaleUpdateRequest {
     private String description;
 
     /**
+     * 量表分类
+     */
+    private Integer category;
+
+    /**
+     * 量表封面图片URL
+     */
+    private String coverImage;
+
+    /**
      * 指导语
      */
     private String instruction;
+
+    /**
+     * 适用人群
+     */
+    private String targetPopulation;
+
+    /**
+     * 施测时长（分钟）
+     */
+    private Integer duration;
+
+    /**
+     * 价格
+     */
+    private java.math.BigDecimal price;
 
     /**
      * 状态

@@ -7,6 +7,7 @@ import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.*;
+import com.iotsic.ps.scale.dto.ExamRecordListRequest;
 import com.iotsic.ps.scale.mapper.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -100,19 +101,19 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     }
 
     @Override
-    public PageResult<ExamRecord> getRecordList(PageRequest request, Map<String, Object> params) {
+    public PageResult<ExamRecord> getRecordList(PageRequest request, ExamRecordListRequest examRecordListRequest) {
         Page<ExamRecord> page = new Page<>(request.getPageNum(), request.getPageSize());
         LambdaQueryWrapper<ExamRecord> wrapper = new LambdaQueryWrapper<>();
         
-        if (params != null) {
-            if (params.containsKey("userId") && params.get("userId") != null) {
-                wrapper.eq(ExamRecord::getUserId, params.get("userId"));
+        if (examRecordListRequest != null) {
+            if (examRecordListRequest.getUserId() != null) {
+                wrapper.eq(ExamRecord::getUserId, examRecordListRequest.getUserId());
             }
-            if (params.containsKey("scaleId") && params.get("scaleId") != null) {
-                wrapper.eq(ExamRecord::getScaleId, params.get("scaleId"));
+            if (examRecordListRequest.getScaleId() != null) {
+                wrapper.eq(ExamRecord::getScaleId, examRecordListRequest.getScaleId());
             }
-            if (params.containsKey("examStatus") && params.get("examStatus") != null) {
-                wrapper.eq(ExamRecord::getExamStatus, params.get("examStatus"));
+            if (examRecordListRequest.getStatus() != null) {
+                wrapper.eq(ExamRecord::getExamStatus, examRecordListRequest.getStatus());
             }
         }
         

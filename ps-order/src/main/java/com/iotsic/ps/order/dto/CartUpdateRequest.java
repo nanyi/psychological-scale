@@ -12,9 +12,14 @@ import lombok.Data;
 public class CartUpdateRequest {
 
     /**
-     * 购物车ID
+     * 用户ID
      */
-    private Long cartId;
+    private Long userId;
+
+    /**
+     * 量表ID
+     */
+    private Long scaleId;
 
     /**
      * 数量

@@ -7,6 +7,7 @@ import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.Enterprise;
+import com.iotsic.ps.user.dto.EnterpriseUpdateRequest;
 import com.iotsic.ps.user.mapper.EnterpriseMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,8 +15,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
+/**
+ * 企业服务实现类
+ * 
+ * @author Ryan
+ * @since 2026-03-12
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -45,7 +51,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Enterprise createEnterprise(String name, String code, String contact, String phone, String email) {
+    public Enterprise createEnterprise(String name, String code, String contactPerson, String contactPhone, String contactEmail) {
         LambdaQueryWrapper<Enterprise> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Enterprise::getEnterpriseCode, code);
         if (enterpriseMapper.selectOne(wrapper) != null) {
@@ -55,9 +61,9 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         Enterprise enterprise = new Enterprise();
         enterprise.setEnterpriseName(name);
         enterprise.setEnterpriseCode(code);
-        enterprise.setContact(contact);
-        enterprise.setPhone(phone);
-        enterprise.setEmail(email);
+        enterprise.setContact(contactPerson);
+        enterprise.setPhone(contactPhone);
+        enterprise.setEmail(contactEmail);
         enterprise.setStatus(0);
         enterprise.setUserCount(0);
         enterprise.setScaleCount(0);
@@ -70,23 +76,26 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateEnterprise(Long id, Map<String, Object> params) {
+    public void updateEnterprise(Long id, EnterpriseUpdateRequest request) {
         Enterprise enterprise = getEnterpriseById(id);
 
-        if (params.containsKey("enterpriseName")) {
-            enterprise.setEnterpriseName((String) params.get("enterpriseName"));
+        if (request.getName() != null) {
+            enterprise.setEnterpriseName(request.getName());
         }
-        if (params.containsKey("contact")) {
-            enterprise.setContact((String) params.get("contact"));
+        if (request.getCreditCode() != null) {
+            enterprise.setEnterpriseCode(request.getCreditCode());
         }
-        if (params.containsKey("phone")) {
-            enterprise.setPhone((String) params.get("phone"));
+        if (request.getContactPerson() != null) {
+            enterprise.setContact(request.getContactPerson());
         }
-        if (params.containsKey("email")) {
-            enterprise.setEmail((String) params.get("email"));
+        if (request.getContactPhone() != null) {
+            enterprise.setPhone(request.getContactPhone());
         }
-        if (params.containsKey("address")) {
-            enterprise.setAddress((String) params.get("address"));
+        if (request.getContactEmail() != null) {
+            enterprise.setEmail(request.getContactEmail());
+        }
+        if (request.getAddress() != null) {
+            enterprise.setAddress(request.getAddress());
         }
 
         enterprise.setUpdateTime(LocalDateTime.now());

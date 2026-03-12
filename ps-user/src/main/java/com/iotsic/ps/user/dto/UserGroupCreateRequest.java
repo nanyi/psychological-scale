@@ -3,7 +3,7 @@ package com.iotsic.ps.user.dto;
 import lombok.Data;
 
 /**
- * 用户分组创建请求DTO
+ * 用户组创建请求DTO
  * 
  * @author Ryan
  * @since 2026-03-12
@@ -12,12 +12,22 @@ import lombok.Data;
 public class UserGroupCreateRequest {
 
     /**
-     * 分组名称
+     * 用户组名称
      */
-    private String groupName;
+    private String name;
 
     /**
-     * 分组描述
+     * 用户组编码
+     */
+    private String code;
+
+    /**
+     * 描述
      */
     private String description;
+
+    /**
+     * 企业ID
+     */
+    private Long enterpriseId;
 }

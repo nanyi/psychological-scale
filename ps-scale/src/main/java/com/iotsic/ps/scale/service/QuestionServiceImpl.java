@@ -6,6 +6,10 @@ import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.core.entity.Dimension;
 import com.iotsic.ps.core.entity.Question;
 import com.iotsic.ps.core.entity.Scale;
+import com.iotsic.ps.scale.dto.DimensionCreateRequest;
+import com.iotsic.ps.scale.dto.DimensionUpdateRequest;
+import com.iotsic.ps.scale.dto.QuestionCreateRequest;
+import com.iotsic.ps.scale.dto.QuestionUpdateRequest;
 import com.iotsic.ps.scale.mapper.DimensionMapper;
 import com.iotsic.ps.scale.mapper.QuestionMapper;
 import com.iotsic.ps.scale.mapper.ScaleMapper;
@@ -16,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -46,10 +49,8 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Question createQuestion(Map<String, Object> params) {
-        Long scaleId = Long.valueOf(params.get("scaleId").toString());
-        
-        Scale scale = scaleMapper.selectById(scaleId);
+    public Question createQuestion(QuestionCreateRequest request) {
+        Scale scale = scaleMapper.selectById(request.getScaleId());
         if (scale == null || scale.getDeleted() == 1) {
             throw BusinessException.of("SCALE_NOT_FOUND", "量表不存在");
         }
@@ -57,18 +58,15 @@ public class QuestionServiceImpl implements QuestionService {
         String questionCode = EncryptUtils.generateUUID().substring(0, 8);
 
         Question question = new Question();
-        question.setScaleId(scaleId);
+        question.setScaleId(request.getScaleId());
         question.setQuestionCode(questionCode);
-        question.setQuestionText((String) params.get("questionText"));
-        question.setQuestionType((Integer) params.get("questionType"));
-        question.setDimensionId((Integer) params.get("dimensionId"));
-        question.setSort((Integer) params.get("sort"));
-        question.setIsRequired((Integer) params.get("isRequired"));
-        question.setHelpText((String) params.get("helpText"));
-        question.setIsReverse((Integer) params.get("isReverse"));
-        question.setOptions((String) params.get("options"));
-        question.setDisplayType((Integer) params.get("displayType"));
-        question.setLogicRule((String) params.get("logicRule"));
+        question.setQuestionText(request.getContent());
+        question.setQuestionType(request.getQuestionType());
+        question.setDimensionId(request.getDimensionId());
+        question.setSort(request.getSortOrder());
+        question.setIsRequired(request.getRequired() ? 1 : 0);
+        question.setOptions(request.getOptions());
+        question.setDisplayType(1);
         question.setCreateTime(LocalDateTime.now());
         question.setUpdateTime(LocalDateTime.now());
 
@@ -82,38 +80,26 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateQuestion(Long id, Map<String, Object> params) {
+    public void updateQuestion(Long id, QuestionUpdateRequest request) {
         Question question = getQuestionById(id);
 
-        if (params.containsKey("questionText")) {
-            question.setQuestionText((String) params.get("questionText"));
+        if (request.getContent() != null) {
+            question.setQuestionText(request.getContent());
         }
-        if (params.containsKey("questionType")) {
-            question.setQuestionType((Integer) params.get("questionType"));
+        if (request.getQuestionType() != null) {
+            question.setQuestionType(request.getQuestionType());
         }
-        if (params.containsKey("dimensionId")) {
-            question.setDimensionId((Integer) params.get("dimensionId"));
+        if (request.getOptions() != null) {
+            question.setOptions(request.getOptions());
         }
-        if (params.containsKey("sort")) {
-            question.setSort((Integer) params.get("sort"));
+        if (request.getRequired() != null) {
+            question.setIsRequired(request.getRequired() ? 1 : 0);
         }
-        if (params.containsKey("isRequired")) {
-            question.setIsRequired((Integer) params.get("isRequired"));
+        if (request.getSortOrder() != null) {
+            question.setSort(request.getSortOrder());
         }
-        if (params.containsKey("helpText")) {
-            question.setHelpText((String) params.get("helpText"));
-        }
-        if (params.containsKey("isReverse")) {
-            question.setIsReverse((Integer) params.get("isReverse"));
-        }
-        if (params.containsKey("options")) {
-            question.setOptions((String) params.get("options"));
-        }
-        if (params.containsKey("displayType")) {
-            question.setDisplayType((Integer) params.get("displayType"));
-        }
-        if (params.containsKey("logicRule")) {
-            question.setLogicRule((String) params.get("logicRule"));
+        if (request.getGroupName() != null) {
+            question.setHelpText(request.getGroupName());
         }
 
         question.setUpdateTime(LocalDateTime.now());
@@ -167,23 +153,18 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Dimension createDimension(Map<String, Object> params) {
-        Long scaleId = Long.valueOf(params.get("scaleId").toString());
-        
-        Scale scale = scaleMapper.selectById(scaleId);
+    public Dimension createDimension(DimensionCreateRequest request) {
+        Scale scale = scaleMapper.selectById(request.getScaleId());
         if (scale == null || scale.getDeleted() == 1) {
             throw BusinessException.of("SCALE_NOT_FOUND", "量表不存在");
         }
 
         Dimension dimension = new Dimension();
-        dimension.setScaleId(scaleId);
-        dimension.setDimensionCode((String) params.get("dimensionCode"));
-        dimension.setDimensionName((String) params.get("dimensionName"));
-        dimension.setDimensionDesc((String) params.get("dimensionDesc"));
-        dimension.setSort((Integer) params.get("sort"));
-        dimension.setFormula((String) params.get("formula"));
-        dimension.setWeight((java.math.BigDecimal) params.get("weight"));
-        dimension.setInterpretation((String) params.get("interpretation"));
+        dimension.setScaleId(request.getScaleId());
+        dimension.setDimensionCode(EncryptUtils.generateUUID().substring(0, 8));
+        dimension.setDimensionName(request.getName());
+        dimension.setDimensionDesc(request.getDescription());
+        dimension.setSort(request.getSortOrder());
         dimension.setCreateTime(LocalDateTime.now());
         dimension.setUpdateTime(LocalDateTime.now());
 
@@ -197,26 +178,17 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateDimension(Long id, Map<String, Object> params) {
+    public void updateDimension(Long id, DimensionUpdateRequest request) {
         Dimension dimension = getDimensionById(id);
 
-        if (params.containsKey("dimensionName")) {
-            dimension.setDimensionName((String) params.get("dimensionName"));
+        if (request.getName() != null) {
+            dimension.setDimensionName(request.getName());
         }
-        if (params.containsKey("dimensionDesc")) {
-            dimension.setDimensionDesc((String) params.get("dimensionDesc"));
+        if (request.getDescription() != null) {
+            dimension.setDimensionDesc(request.getDescription());
         }
-        if (params.containsKey("sort")) {
-            dimension.setSort((Integer) params.get("sort"));
-        }
-        if (params.containsKey("formula")) {
-            dimension.setFormula((String) params.get("formula"));
-        }
-        if (params.containsKey("weight")) {
-            dimension.setWeight((java.math.BigDecimal) params.get("weight"));
-        }
-        if (params.containsKey("interpretation")) {
-            dimension.setInterpretation((String) params.get("interpretation"));
+        if (request.getSortOrder() != null) {
+            dimension.setSort(request.getSortOrder());
         }
 
         dimension.setUpdateTime(LocalDateTime.now());

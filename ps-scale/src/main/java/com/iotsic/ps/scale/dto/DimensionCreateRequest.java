@@ -19,10 +19,15 @@ public class DimensionCreateRequest {
     /**
      * 维度名称
      */
-    private String dimensionName;
+    private String name;
 
     /**
      * 维度描述
      */
     private String description;
+
+    /**
+     * 排序号
+     */
+    private Integer sortOrder;
 }

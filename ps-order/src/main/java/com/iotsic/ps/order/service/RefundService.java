@@ -2,6 +2,7 @@ package com.iotsic.ps.order.service;
 
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
+import com.iotsic.ps.order.dto.RefundListRequest;
 import com.iotsic.ps.order.entity.Refund;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface RefundService {
 
     void rejectRefund(Long refundId, String reason);
 
-    PageResult<Refund> getRefundList(PageRequest request, Map<String, Object> params);
+    PageResult<Refund> getRefundList(PageRequest request, RefundListRequest params);
 
     void processRefundCallback(Map<String, Object> params);
 }

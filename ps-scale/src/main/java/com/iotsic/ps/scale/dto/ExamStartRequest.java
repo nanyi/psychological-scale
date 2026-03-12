@@ -20,4 +20,14 @@ public class ExamStartRequest {
      * 量表ID
      */
     private Long scaleId;
+
+    /**
+     * IP地址
+     */
+    private String ipAddress;
+
+    /**
+     * 设备信息
+     */
+    private String deviceInfo;
 }
