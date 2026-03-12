@@ -1,6 +1,7 @@
 package com.iotsic.ps.user.controller;
 
 import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.user.dto.AuthResultDTO;
 import com.iotsic.ps.user.dto.TokenRefreshResponse;
 import com.iotsic.ps.user.dto.UserLoginRequest;
 import com.iotsic.ps.user.dto.UserLoginResponse;
@@ -11,9 +12,6 @@ import com.iotsic.ps.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 用户控制器
@@ -71,7 +69,7 @@ public class UserController {
      */
     @PostMapping("/register")
     public RestResult<UserRegisterResponse> register(@RequestBody UserRegisterRequest request) {
-        Map<String, Object> result = userService.register(
+        AuthResultDTO result = userService.register(
                 request.getUsername(),
                 request.getPassword(),
                 request.getPhone(),
@@ -79,7 +77,7 @@ public class UserController {
         );
 
         UserRegisterResponse response = new UserRegisterResponse();
-        response.setUserId((Long) result.get("userId"));
+        response.setUserId(result.getUserId());
         response.setUsername(request.getUsername());
 
         return RestResult.success(response);
@@ -93,16 +91,16 @@ public class UserController {
      */
     @PostMapping("/login")
     public RestResult<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
-        Map<String, Object> result = userService.login(
+        AuthResultDTO result = userService.login(
                 request.getUsername(),
                 request.getPassword(),
                 null
         );
 
         UserLoginResponse response = new UserLoginResponse();
-        response.setUserId((Long) result.get("userId"));
-        response.setUsername((String) result.get("username"));
-        response.setToken((String) result.get("token"));
+        response.setUserId(result.getUserId());
+        response.setUsername(result.getUsername());
+        response.setToken(result.getToken());
 
         return RestResult.success(response);
     }
@@ -127,12 +125,12 @@ public class UserController {
      */
     @PostMapping("/refresh-token")
     public RestResult<TokenRefreshResponse> refreshToken(@RequestParam String refreshToken) {
-        Map<String, Object> result = userService.refreshToken(refreshToken);
+        AuthResultDTO result = userService.refreshToken(refreshToken);
         
         TokenRefreshResponse response = new TokenRefreshResponse();
-        response.setAccessToken((String) result.get("accessToken"));
-        response.setRefreshToken((String) result.get("refreshToken"));
-        response.setExpiresIn((Long) result.get("expiresIn"));
+        response.setAccessToken(result.getToken());
+        response.setRefreshToken(result.getRefreshToken());
+        response.setExpiresIn(result.getExpiresIn());
         
         return RestResult.success(response);
     }

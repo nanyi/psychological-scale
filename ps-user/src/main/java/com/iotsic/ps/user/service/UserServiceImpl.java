@@ -6,6 +6,7 @@ import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.core.entity.User;
 import com.iotsic.ps.core.enums.UserTypeEnum;
+import com.iotsic.ps.user.dto.AuthResultDTO;
 import com.iotsic.ps.user.vo.UserVO;
 import com.iotsic.ps.security.service.JwtService;
 import com.iotsic.ps.user.mapper.UserMapper;
@@ -15,8 +16,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -29,7 +28,7 @@ public class UserServiceImpl implements UserService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public Map<String, Object> register(String username, String password, String phone, String email) {
+    public AuthResultDTO register(String username, String password, String phone, String email) {
         if (getUserByUsername(username) != null) {
             throw BusinessException.of("USER_EXIST", "用户名已存在");
         }
@@ -55,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> login(String username, String password, String loginIp) {
+    public AuthResultDTO login(String username, String password, String loginIp) {
         User user = getUserByUsername(username);
         if (user == null) {
             throw BusinessException.of("USER_NOT_FOUND", "用户不存在");
@@ -86,7 +85,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> refreshToken(String refreshToken) {
+    public AuthResultDTO refreshToken(String refreshToken) {
         if (!jwtService.isRefreshToken(refreshToken)) {
             throw BusinessException.of("TOKEN_INVALID", "无效的刷新令牌");
         }
@@ -137,7 +136,7 @@ public class UserServiceImpl implements UserService {
         return vo;
     }
 
-    private Map<String, Object> generateAuthResult(Long userId, String username) {
+    private AuthResultDTO generateAuthResult(Long userId, String username) {
         String token = jwtService.generateToken(userId, username, null);
         String refreshToken = jwtService.generateRefreshToken(userId, username);
 
@@ -147,12 +146,12 @@ public class UserServiceImpl implements UserService {
         redisTemplate.opsForValue().set(tokenKey, token, 2, TimeUnit.HOURS);
         redisTemplate.opsForValue().set(userKey, getUserById(userId), 24, TimeUnit.HOURS);
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("token", token);
-        result.put("refreshToken", refreshToken);
-        result.put("expireTime", jwtService.getExpire());
-        result.put("userId", userId);
-        result.put("username", username);
+        AuthResultDTO result = new AuthResultDTO();
+        result.setToken(token);
+        result.setRefreshToken(refreshToken);
+        result.setExpiresIn(jwtService.getExpire());
+        result.setUserId(userId);
+        result.setUsername(username);
 
         return result;
     }

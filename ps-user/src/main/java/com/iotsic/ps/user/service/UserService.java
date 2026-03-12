@@ -1,9 +1,8 @@
 package com.iotsic.ps.user.service;
 
 import com.iotsic.ps.core.entity.User;
+import com.iotsic.ps.user.dto.AuthResultDTO;
 import com.iotsic.ps.user.vo.UserVO;
-
-import java.util.Map;
 
 /**
  * 用户服务接口
@@ -21,9 +20,9 @@ public interface UserService {
      * @param password 密码
      * @param phone 手机号
      * @param email 邮箱
-     * @return 注册结果
+     * @return 认证结果
      */
-    Map<String, Object> register(String username, String password, String phone, String email);
+    AuthResultDTO register(String username, String password, String phone, String email);
 
     /**
      * 用户登录
@@ -31,9 +30,9 @@ public interface UserService {
      * @param username 用户名
      * @param password 密码
      * @param loginIp 登录IP
-     * @return 登录结果
+     * @return 认证结果
      */
-    Map<String, Object> login(String username, String password, String loginIp);
+    AuthResultDTO login(String username, String password, String loginIp);
 
     /**
      * 用户登出
@@ -46,9 +45,9 @@ public interface UserService {
      * 刷新Token
      *
      * @param refreshToken 刷新令牌
-     * @return 新的Token信息
+     * @return 新的认证结果
      */
-    Map<String, Object> refreshToken(String refreshToken);
+    AuthResultDTO refreshToken(String refreshToken);
 
     /**
      * 根据ID获取用户
