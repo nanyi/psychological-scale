@@ -1,4 +1,4 @@
-# Psychological Scale 后端服务
+# Psychological Scale 心理测评系统 - 后端服务
 
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Java](https://img.shields.io/badge/Java-21-blue)](https://openjdk.org/)
@@ -6,7 +6,7 @@
 
 ## 项目介绍
 
-Psychological Scale 后端服务，基于 Spring Boot 3.2.2 + Java 21 构建，提供心理测评系统的核心业务能力，包括用户管理、量表管理、订单支付、第三方对接、报告生成和数据分析等功能。
+Psychological Scale 心理测评系统 - 后端服务，基于 Spring Boot 3.2.2 + Java 21 构建，提供心理测评系统的核心业务能力，包括用户管理、量表管理、订单支付、第三方对接、报告生成和数据分析等功能。
 
 ## 技术架构
 
@@ -122,4 +122,4 @@ mvn test
 
 ---
 
-*Psychological Scale 后端服务 - 专业的心理测评解决方案*
+*Psychological Scale 专业的心理测评解决方案*
