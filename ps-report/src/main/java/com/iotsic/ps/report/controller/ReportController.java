@@ -3,6 +3,7 @@ package com.iotsic.ps.report.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.report.dto.ReportDownloadResponse;
 import com.iotsic.ps.report.dto.ReportExportRequest;
 import com.iotsic.ps.report.dto.ReportExportResponse;
 import com.iotsic.ps.report.dto.ReportGenerateRequest;
@@ -105,7 +106,7 @@ public class ReportController {
      */
     @PostMapping("/export/word")
     public RestResult<ReportExportResponse> exportWord(@RequestBody ReportExportRequest request) {
-        Map<String, Object> result = exportService.exportWord(
+        ReportExportResponse result = exportService.exportWord(
                 request.getReportId(), 
                 request.getTemplateId(), 
                 request.getWatermark()
@@ -151,14 +152,15 @@ public class ReportController {
      * @return 下载链接
      */
     @GetMapping("/download")
-    public RestResult<Map<String, String>> downloadReport(
+    public RestResult<ReportDownloadResponse> downloadReport(
             @RequestParam String filePath,
             @RequestParam Long userId) {
         
         String downloadUrl = exportService.getDownloadUrl(filePath, userId);
-        
-        Map<String, String> result = new HashMap<>();
-        result.put("downloadUrl", downloadUrl);
+
+        ReportDownloadResponse result = new ReportDownloadResponse();
+        result.setDownloadUrl(downloadUrl);
+        result.setFileName(filePath.substring(filePath.lastIndexOf("/") + 1));
         
         return RestResult.success(result);
     }

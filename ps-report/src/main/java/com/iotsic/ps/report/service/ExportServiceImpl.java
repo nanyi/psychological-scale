@@ -3,6 +3,7 @@ package com.iotsic.ps.report.service;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.utils.JsonUtils;
+import com.iotsic.ps.report.dto.ReportExportResponse;
 import com.iotsic.ps.report.entity.Report;
 import com.iotsic.ps.report.entity.ReportExport;
 import com.iotsic.ps.report.mapper.ReportExportMapper;
@@ -34,7 +35,7 @@ public class ExportServiceImpl extends ServiceImpl<ReportExportMapper, ReportExp
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public Map<String, Object> exportWord(Long reportId, Long templateId, String watermark) {
+    public ReportExportResponse exportWord(Long reportId, Long templateId, String watermark) {
         Report report = reportService.getReportDetail(reportId);
         if (report == null) {
             throw new BusinessException("报告不存在");
@@ -54,10 +55,10 @@ public class ExportServiceImpl extends ServiceImpl<ReportExportMapper, ReportExp
             exportRecord.setCreateTime(LocalDateTime.now());
             this.save(exportRecord);
 
-            Map<String, Object> result = new HashMap<>();
-            result.put("downloadUrl", exportRecord.getFileUrl());
-            result.put("fileName", fileName);
-            result.put("expireTime", LocalDateTime.now().plusDays(7));
+            ReportExportResponse result = new ReportExportResponse();
+            result.setDownloadUrl(exportRecord.getFileUrl());
+            result.setFileName(fileName);
+            result.setExpireTime(LocalDateTime.now().plusDays(7));
 
             return result;
         } catch (Exception e) {
