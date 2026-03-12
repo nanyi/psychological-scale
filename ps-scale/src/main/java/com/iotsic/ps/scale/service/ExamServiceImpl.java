@@ -10,6 +10,10 @@ import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.core.entity.*;
 import com.iotsic.ps.scale.dto.ExamProgressResponse;
 import com.iotsic.ps.scale.dto.ExamSubmitResultResponse;
+import com.iotsic.ps.scale.dto.ScoreCalculateRequest;
+import com.iotsic.ps.scale.dto.ScoreCalculateResponse;
+import com.iotsic.ps.scale.dto.ScoreInterpretRequest;
+import com.iotsic.ps.scale.dto.ScoreInterpretResponse;
 import com.iotsic.ps.scale.mapper.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -138,9 +142,17 @@ public class ExamServiceImpl implements ExamService {
             answerMap.put(answer.getQuestionId(), answer.getAnswer());
         }
 
-        Map<String, Object> scoreResult = scoringService.calculateScore(record.getScaleId(), answerMap);
-        BigDecimal totalScore = (BigDecimal) scoreResult.get("totalScore");
-        Map<String, Object> dimensionScores = (Map<String, Object>) scoreResult.get("dimensionScores");
+        ScoreCalculateRequest calculateRequest = new ScoreCalculateRequest();
+        calculateRequest.setScaleId(record.getScaleId());
+        calculateRequest.setAnswers(answerMap);
+        ScoreCalculateResponse scoreResult = scoringService.calculateScore(calculateRequest);
+        BigDecimal totalScore = BigDecimal.valueOf(scoreResult.getTotalScore());
+        Map<String, Object> dimensionScores = new HashMap<>();
+        if (scoreResult.getDimensionScores() != null) {
+            for (Map.Entry<String, BigDecimal> entry : scoreResult.getDimensionScores().entrySet()) {
+                dimensionScores.put(entry.getKey(), entry.getValue());
+            }
+        }
 
         record.setTotalScore(totalScore.intValue());
         record.setScore(totalScore);
@@ -149,14 +161,18 @@ public class ExamServiceImpl implements ExamService {
         record.setUpdateTime(LocalDateTime.now());
         examRecordMapper.updateById(record);
 
-        String interpretation = scoringService.interpretScore(record.getScaleId(), dimensionScores);
+        ScoreInterpretRequest interpretRequest = new ScoreInterpretRequest();
+        interpretRequest.setScaleId(record.getScaleId());
+        interpretRequest.setDimensionScores(dimensionScores);
+        interpretRequest.setTotalScore(totalScore.intValue());
+        ScoreInterpretResponse interpretationResult = scoringService.interpretScore(interpretRequest);
 
         ExamSubmitResultResponse result = new ExamSubmitResultResponse();
         result.setRecordId(recordId);
         result.setRecordNo(record.getRecordNo());
         result.setTotalScore(totalScore);
         result.setDimensionScores(dimensionScores);
-        result.setInterpretation(interpretation);
+        result.setInterpretation(interpretationResult.getInterpretation());
         result.setSubmitTime(record.getSubmitTime());
 
         return result;

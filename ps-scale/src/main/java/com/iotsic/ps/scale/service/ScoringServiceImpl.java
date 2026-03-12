@@ -5,6 +5,10 @@ import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.core.entity.*;
 import com.iotsic.ps.scale.dto.OptionScoreCreateRequest;
 import com.iotsic.ps.scale.dto.OptionScoreUpdateRequest;
+import com.iotsic.ps.scale.dto.ScoreCalculateRequest;
+import com.iotsic.ps.scale.dto.ScoreCalculateResponse;
+import com.iotsic.ps.scale.dto.ScoreInterpretRequest;
+import com.iotsic.ps.scale.dto.ScoreInterpretResponse;
 import com.iotsic.ps.scale.dto.ScoringRuleCreateRequest;
 import com.iotsic.ps.scale.dto.ScoringRuleUpdateRequest;
 import com.iotsic.ps.scale.mapper.*;
@@ -163,8 +167,11 @@ public class ScoringServiceImpl implements ScoringService {
     }
 
     @Override
-    public Map<String, Object> calculateScore(Long scaleId, Map<Long, String> answers) {
-        Map<String, Object> result = new HashMap<>();
+    public ScoreCalculateResponse calculateScore(ScoreCalculateRequest request) {
+        Long scaleId = request.getScaleId();
+        Map<Long, String> answers = request.getAnswers();
+        
+        ScoreCalculateResponse result = new ScoreCalculateResponse();
         
         List<Dimension> dimensions = dimensionMapper.selectList(
                 new LambdaQueryWrapper<Dimension>().eq(Dimension::getScaleId, scaleId)
@@ -206,14 +213,18 @@ public class ScoringServiceImpl implements ScoringService {
             }
         }
 
-        result.put("totalScore", totalScore);
-        result.put("dimensionScores", dimensionScores);
+        result.setTotalScore(totalScore.intValue());
+        result.setDimensionScores(dimensionScores);
         
         return result;
     }
 
     @Override
-    public String interpretScore(Long scaleId, Map<String, Object> dimensionScores) {
+    public ScoreInterpretResponse interpretScore(ScoreInterpretRequest request) {
+        Long scaleId = request.getScaleId();
+        Map<String, Object> dimensionScores = request.getDimensionScores();
+        
+        ScoreInterpretResponse response = new ScoreInterpretResponse();
         StringBuilder interpretation = new StringBuilder();
         
         List<Dimension> dimensions = dimensionMapper.selectList(
@@ -232,6 +243,7 @@ public class ScoringServiceImpl implements ScoringService {
             }
         }
 
-        return interpretation.toString();
+        response.setInterpretation(interpretation.toString());
+        return response;
     }
 }

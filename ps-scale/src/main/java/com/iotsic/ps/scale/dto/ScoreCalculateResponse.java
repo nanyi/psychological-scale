@@ -2,6 +2,7 @@ package com.iotsic.ps.scale.dto;
 
 import lombok.Data;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -21,7 +22,7 @@ public class ScoreCalculateResponse {
     /**
      * 各维度得分
      */
-    private Map<String, Integer> dimensionScores;
+    private Map<String, BigDecimal> dimensionScores;
 
     /**
      * 得分等级

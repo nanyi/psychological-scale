@@ -5,7 +5,9 @@ import com.iotsic.ps.core.entity.OptionScore;
 import com.iotsic.ps.core.entity.ScoringRule;
 import com.iotsic.ps.scale.dto.OptionScoreCreateRequest;
 import com.iotsic.ps.scale.dto.OptionScoreUpdateRequest;
+import com.iotsic.ps.scale.dto.ScoreCalculateRequest;
 import com.iotsic.ps.scale.dto.ScoreCalculateResponse;
+import com.iotsic.ps.scale.dto.ScoreInterpretRequest;
 import com.iotsic.ps.scale.dto.ScoreInterpretResponse;
 import com.iotsic.ps.scale.dto.ScoringRuleCreateRequest;
 import com.iotsic.ps.scale.dto.ScoringRuleUpdateRequest;
@@ -142,43 +144,24 @@ public class ScoringController {
     /**
      * 计算分数
      * 
-     * @param scaleId 量表ID
-     * @param answers 答案
+     * @param request 分数计算请求
      * @return 分数计算结果
      */
     @PostMapping("/calculate")
-    public RestResult<ScoreCalculateResponse> calculateScore(
-            @RequestParam Long scaleId,
-            @RequestParam Map<Long, String> answers) {
-        Map<String, Object> result = scoringService.calculateScore(scaleId, answers);
-        
-        ScoreCalculateResponse response = new ScoreCalculateResponse();
-        response.setTotalScore((Integer) result.get("totalScore"));
-        @SuppressWarnings("unchecked")
-        Map<String, Integer> dimensionScores = (Map<String, Integer>) result.get("dimensionScores");
-        response.setDimensionScores(dimensionScores);
-        response.setLevel((String) result.get("level"));
-        response.setSuggestion((String) result.get("suggestion"));
-        
+    public RestResult<ScoreCalculateResponse> calculateScore(@RequestBody ScoreCalculateRequest request) {
+        ScoreCalculateResponse response = scoringService.calculateScore(request);
         return RestResult.success(response);
     }
 
     /**
      * 解读分数
      * 
-     * @param scaleId 量表ID
-     * @param dimensionScores 维度分数
+     * @param request 分数解读请求
      * @return 分数解读结果
      */
     @PostMapping("/interpret")
-    public RestResult<ScoreInterpretResponse> interpretScore(
-            @RequestParam Long scaleId,
-            @RequestParam Map<String, Object> dimensionScores) {
-        String interpretation = scoringService.interpretScore(scaleId, dimensionScores);
-        
-        ScoreInterpretResponse response = new ScoreInterpretResponse();
-        response.setInterpretation(interpretation);
-        
+    public RestResult<ScoreInterpretResponse> interpretScore(@RequestBody ScoreInterpretRequest request) {
+        ScoreInterpretResponse response = scoringService.interpretScore(request);
         return RestResult.success(response);
     }
 }

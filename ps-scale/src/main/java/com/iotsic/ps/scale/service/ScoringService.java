@@ -4,11 +4,14 @@ import com.iotsic.ps.core.entity.OptionScore;
 import com.iotsic.ps.core.entity.ScoringRule;
 import com.iotsic.ps.scale.dto.OptionScoreCreateRequest;
 import com.iotsic.ps.scale.dto.OptionScoreUpdateRequest;
+import com.iotsic.ps.scale.dto.ScoreCalculateRequest;
+import com.iotsic.ps.scale.dto.ScoreCalculateResponse;
+import com.iotsic.ps.scale.dto.ScoreInterpretRequest;
+import com.iotsic.ps.scale.dto.ScoreInterpretResponse;
 import com.iotsic.ps.scale.dto.ScoringRuleCreateRequest;
 import com.iotsic.ps.scale.dto.ScoringRuleUpdateRequest;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 计分服务接口
@@ -92,18 +95,16 @@ public interface ScoringService {
     /**
      * 计算分数
      *
-     * @param scaleId 量表ID
-     * @param answers 答案列表（题目ID -> 答案）
+     * @param request 分数计算请求
      * @return 计算结果
      */
-    Map<String, Object> calculateScore(Long scaleId, Map<Long, String> answers);
+    ScoreCalculateResponse calculateScore(ScoreCalculateRequest request);
 
     /**
      * 解读分数
      *
-     * @param scaleId 量表ID
-     * @param dimensionScores 维度分数
+     * @param request 分数解读请求
      * @return 解读结果
      */
-    String interpretScore(Long scaleId, Map<String, Object> dimensionScores);
+    ScoreInterpretResponse interpretScore(ScoreInterpretRequest request);
 }

@@ -2,6 +2,8 @@ package com.iotsic.ps.scale.dto;
 
 import lombok.Data;
 
+import java.util.Map;
+
 /**
  * 评分计算请求DTO
  * 
@@ -17,7 +19,17 @@ public class ScoreCalculateRequest {
     private Long recordId;
 
     /**
+     * 量表ID
+     */
+    private Long scaleId;
+
+    /**
      * 维度ID
      */
     private Long dimensionId;
+
+    /**
+     * 答案列表（题目ID -> 答案）
+     */
+    private Map<Long, String> answers;
 }
