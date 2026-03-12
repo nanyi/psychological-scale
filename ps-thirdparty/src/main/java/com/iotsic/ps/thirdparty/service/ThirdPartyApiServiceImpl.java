@@ -1,10 +1,16 @@
 package com.iotsic.ps.thirdparty.service;
 
+import com.iotsic.ps.thirdparty.dto.PlatformAnswerResponse;
+import com.iotsic.ps.thirdparty.dto.PlatformQuestionsResponse;
+import com.iotsic.ps.thirdparty.dto.PlatformReportResponse;
 import com.iotsic.ps.thirdparty.entity.ThirdPartyConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +24,7 @@ public class ThirdPartyApiServiceImpl implements ThirdPartyApiService {
     private final ThirdPartyConfigService thirdPartyConfigService;
 
     @Override
-    public Map<String, Object> getQuestionsFromPlatform(Long configId, String externalScaleId) {
+    public PlatformQuestionsResponse getQuestionsFromPlatform(Long configId, String externalScaleId) {
         ThirdPartyConfig config = thirdPartyConfigService.getConfigById(configId);
         
         log.info("从第三方平台获取题目: platformCode={}, externalScaleId={}", 
@@ -52,17 +58,18 @@ public class ThirdPartyApiServiceImpl implements ThirdPartyApiService {
         
         questions.add(question2);
         
-        Map<String, Object> result = new HashMap<>();
-        result.put("externalScaleId", externalScaleId);
-        result.put("scaleName", "第三方量表-" + externalScaleId);
-        result.put("questionCount", questions.size());
-        result.put("questions", questions);
+        PlatformQuestionsResponse response = new PlatformQuestionsResponse();
+        response.setPlatformCode(config.getPlatformCode());
+        response.setExternalScaleId(externalScaleId);
+        response.setScaleName("第三方量表-" + externalScaleId);
+        response.setQuestionCount(questions.size());
+        response.setQuestions(questions);
         
-        return result;
+        return response;
     }
 
     @Override
-    public Map<String, Object> submitAnswersToPlatform(Long configId, Map<String, Object> params) {
+    public PlatformAnswerResponse submitAnswersToPlatform(Long configId, Map<String, Object> params) {
         ThirdPartyConfig config = thirdPartyConfigService.getConfigById(configId);
         
         String externalScaleId = (String) params.get("externalScaleId");
@@ -73,27 +80,27 @@ public class ThirdPartyApiServiceImpl implements ThirdPartyApiService {
         
         String externalRecordId = "REC" + System.currentTimeMillis();
         
-        Map<String, Object> result = new HashMap<>();
-        result.put("externalRecordId", externalRecordId);
-        result.put("submitStatus", "success");
-        result.put("submitTime", System.currentTimeMillis());
+        PlatformAnswerResponse response = new PlatformAnswerResponse();
+        response.setExternalRecordId(externalRecordId);
+        response.setSubmitStatus("success");
+        response.setSubmitTime(LocalDateTime.now());
         
-        return result;
+        return response;
     }
 
     @Override
-    public Map<String, Object> getReportFromPlatform(Long configId, String externalRecordId) {
+    public PlatformReportResponse getReportFromPlatform(Long configId, String externalRecordId) {
         ThirdPartyConfig config = thirdPartyConfigService.getConfigById(configId);
         
         log.info("从第三方平台获取报告: platformCode={}, externalRecordId={}", 
                 config.getPlatformCode(), externalRecordId);
         
-        Map<String, Object> result = new HashMap<>();
-        result.put("externalRecordId", externalRecordId);
-        result.put("reportStatus", "completed");
-        result.put("reportUrl", "https://thirdparty.com/report/" + externalRecordId);
-        result.put("reportContent", "这是第三方平台的测评报告内容");
+        PlatformReportResponse response = new PlatformReportResponse();
+        response.setExternalRecordId(externalRecordId);
+        response.setReportStatus("completed");
+        response.setReportUrl("https://thirdparty.com/report/" + externalRecordId);
+        response.setReportContent("这是第三方平台的测评报告内容");
         
-        return result;
+        return response;
     }
 }

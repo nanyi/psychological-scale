@@ -2,6 +2,10 @@ package com.iotsic.ps.thirdparty.controller;
 
 import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.thirdparty.dto.AnswerSubmitRequest;
+import com.iotsic.ps.thirdparty.dto.CallbackResponse;
+import com.iotsic.ps.thirdparty.dto.PlatformAnswerResponse;
+import com.iotsic.ps.thirdparty.dto.PlatformQuestionsResponse;
+import com.iotsic.ps.thirdparty.dto.PlatformReportResponse;
 import com.iotsic.ps.thirdparty.entity.ThirdPartyCallback;
 import com.iotsic.ps.thirdparty.service.CallbackService;
 import com.iotsic.ps.thirdparty.service.ThirdPartyApiService;
@@ -36,7 +40,7 @@ public class ThirdPartyApiController {
      * @return 题目数据
      */
     @GetMapping("/questions/by-config/{configId}/scale/{externalScaleId}")
-    public RestResult<Map<String, Object>> getQuestions(
+    public RestResult<PlatformQuestionsResponse> getQuestions(
             @PathVariable Long configId,
             @PathVariable String externalScaleId) {
         return RestResult.success(thirdPartyApiService.getQuestionsFromPlatform(configId, externalScaleId));
@@ -50,7 +54,7 @@ public class ThirdPartyApiController {
      * @return 提交结果
      */
     @PostMapping("/answers/by-config/{configId}")
-    public RestResult<Map<String, Object>> submitAnswers(
+    public RestResult<PlatformAnswerResponse> submitAnswers(
             @PathVariable Long configId,
             @RequestBody AnswerSubmitRequest request) {
         return RestResult.success(thirdPartyApiService.submitAnswersToPlatform(configId, request.getAnswers()));
@@ -64,7 +68,7 @@ public class ThirdPartyApiController {
      * @return 报告数据
      */
     @GetMapping("/report/by-config/{configId}/record/{externalRecordId}")
-    public RestResult<Map<String, Object>> getReport(
+    public RestResult<PlatformReportResponse> getReport(
             @PathVariable Long configId,
             @PathVariable String externalRecordId) {
         return RestResult.success(thirdPartyApiService.getReportFromPlatform(configId, externalRecordId));
@@ -78,11 +82,30 @@ public class ThirdPartyApiController {
      * @return 处理结果
      */
     @PostMapping("/callback/by-config/{configId}")
-    public RestResult<Map<String, Object>> handleCallback(
+    public RestResult<CallbackResponse> handleCallback(
             @PathVariable Long configId,
             @RequestBody Map<String, Object> params) {
         log.info("收到第三方平台回调: configId={}, params={}", configId, params);
-        return RestResult.success(callbackService.handleReportCallback(configId, params));
+        
+        Map<String, Object> callbackResult = callbackService.handleReportCallback(configId, params);
+        
+        CallbackResponse response = new CallbackResponse();
+        response.setCallbackId(((Number) callbackResult.get("callbackId")).longValue());
+        response.setStatus((Integer) callbackResult.get("status"));
+        
+        Integer status = response.getStatus();
+        if (status == 1) {
+            response.setStatusDesc("成功");
+            response.setMessage("回调处理成功");
+        } else if (status == 2) {
+            response.setStatusDesc("失败");
+            response.setMessage((String) callbackResult.getOrDefault("errorMessage", "回调处理失败"));
+        } else {
+            response.setStatusDesc("待处理");
+            response.setMessage("回调待处理");
+        }
+        
+        return RestResult.success(response);
     }
 
     /**
