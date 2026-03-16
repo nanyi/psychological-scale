@@ -1,5 +1,6 @@
 package com.iotsic.ps.user.dto;
 
+import com.iotsic.ps.user.vo.LoginUserVO;
 import lombok.Data;
 
 /**
@@ -12,14 +13,9 @@ import lombok.Data;
 public class UserLoginResponse {
 
     /**
-     * 用户ID
+     * 用户信息
      */
-    private Long userId;
-
-    /**
-     * 用户名
-     */
-    private String username;
+    private LoginUserVO user;
 
     /**
      * Token

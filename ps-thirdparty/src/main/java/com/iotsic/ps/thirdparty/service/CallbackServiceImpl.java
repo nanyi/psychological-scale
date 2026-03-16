@@ -1,6 +1,7 @@
 package com.iotsic.ps.thirdparty.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.utils.JsonUtils;
 import com.iotsic.ps.thirdparty.entity.ThirdPartyCallback;
@@ -75,7 +76,7 @@ public class CallbackServiceImpl implements CallbackService {
     public ThirdPartyCallback getCallbackById(Long id) {
         ThirdPartyCallback callback = callbackMapper.selectById(id);
         if (callback == null || callback.getDeleted() == 1) {
-            throw BusinessException.of("CALLBACK_NOT_FOUND", "回调记录不存在");
+            throw BusinessException.of(ErrorCodeEnum.CALLBACK_NOT_FOUND.getCode(), "回调记录不存在");
         }
         return callback;
     }

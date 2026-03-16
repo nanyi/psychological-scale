@@ -1,6 +1,7 @@
 package com.iotsic.ps.order.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.order.dto.PaymentResponse;
 import com.iotsic.ps.order.entity.Order;
@@ -130,7 +131,7 @@ public class PaymentServiceImpl implements PaymentService {
     public Map<String, Object> queryPaymentStatus(Long orderId) {
         Order order = orderMapper.selectById(orderId);
         if (order == null) {
-            throw BusinessException.of("ORDER_NOT_FOUND", "订单不存在");
+            throw BusinessException.of(ErrorCodeEnum.ORDER_NOT_FOUND.getCode(), "订单不存在");
         }
 
         Map<String, Object> result = new HashMap<>();
@@ -149,11 +150,11 @@ public class PaymentServiceImpl implements PaymentService {
     public void cancelPayment(Long orderId) {
         Order order = orderMapper.selectById(orderId);
         if (order == null) {
-            throw BusinessException.of("ORDER_NOT_FOUND", "订单不存在");
+            throw BusinessException.of(ErrorCodeEnum.ORDER_NOT_FOUND.getCode(), "订单不存在");
         }
 
         if (order.getOrderStatus() != 0) {
-            throw BusinessException.of("ORDER_CANNOT_CANCEL", "订单状态不允许取消");
+            throw BusinessException.of(ErrorCodeEnum.ORDER_CANNOT_CANCEL.getCode(), "订单状态不允许取消");
         }
 
         order.setOrderStatus(2);
@@ -167,15 +168,15 @@ public class PaymentServiceImpl implements PaymentService {
     private Order getOrderForPayment(Long orderId) {
         Order order = orderMapper.selectById(orderId);
         if (order == null || order.getDeleted() == 1) {
-            throw BusinessException.of("ORDER_NOT_FOUND", "订单不存在");
+            throw BusinessException.of(ErrorCodeEnum.ORDER_NOT_FOUND.getCode(), "订单不存在");
         }
 
         if (order.getOrderStatus() != 0) {
-            throw BusinessException.of("ORDER_PAID", "订单已支付或已取消");
+            throw BusinessException.of(ErrorCodeEnum.ORDER_PAID.getCode(), "订单已支付或已取消");
         }
 
         if (order.getExpireTime() != null && order.getExpireTime().isBefore(LocalDateTime.now())) {
-            throw BusinessException.of("ORDER_EXPIRED", "订单已过期");
+            throw BusinessException.of(ErrorCodeEnum.ORDER_EXPIRED.getCode(), "订单已过期");
         }
 
         return order;

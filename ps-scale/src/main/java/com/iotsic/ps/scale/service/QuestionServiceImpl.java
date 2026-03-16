@@ -1,6 +1,7 @@
 package com.iotsic.ps.scale.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.core.entity.Dimension;
@@ -34,7 +35,7 @@ public class QuestionServiceImpl implements QuestionService {
     public Question getQuestionById(Long id) {
         Question question = questionMapper.selectById(id);
         if (question == null || question.getDeleted() == 1) {
-            throw BusinessException.of("QUESTION_NOT_FOUND", "题目不存在");
+            throw BusinessException.of(ErrorCodeEnum.QUESTION_NOT_FOUND.getCode(), "题目不存在");
         }
         return question;
     }
@@ -52,7 +53,7 @@ public class QuestionServiceImpl implements QuestionService {
     public Question createQuestion(QuestionCreateRequest request) {
         Scale scale = scaleMapper.selectById(request.getScaleId());
         if (scale == null || scale.getDeleted() == 1) {
-            throw BusinessException.of("SCALE_NOT_FOUND", "量表不存在");
+            throw BusinessException.of(ErrorCodeEnum.SCALE_NOT_FOUND.getCode(), "量表不存在");
         }
 
         String questionCode = EncryptUtils.generateUUID().substring(0, 8);
@@ -138,7 +139,7 @@ public class QuestionServiceImpl implements QuestionService {
     public Dimension getDimensionById(Long id) {
         Dimension dimension = dimensionMapper.selectById(id);
         if (dimension == null || dimension.getDeleted() == 1) {
-            throw BusinessException.of("DIMENSION_NOT_FOUND", "维度不存在");
+            throw BusinessException.of(ErrorCodeEnum.DIMENSION_NOT_FOUND.getCode(), "维度不存在");
         }
         return dimension;
     }
@@ -156,7 +157,7 @@ public class QuestionServiceImpl implements QuestionService {
     public Dimension createDimension(DimensionCreateRequest request) {
         Scale scale = scaleMapper.selectById(request.getScaleId());
         if (scale == null || scale.getDeleted() == 1) {
-            throw BusinessException.of("SCALE_NOT_FOUND", "量表不存在");
+            throw BusinessException.of(ErrorCodeEnum.SCALE_NOT_FOUND.getCode(), "量表不存在");
         }
 
         Dimension dimension = new Dimension();

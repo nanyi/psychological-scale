@@ -1,5 +1,6 @@
 package com.iotsic.ps.security.handler;
 
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.common.utils.JsonUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -26,7 +27,7 @@ public class AccessDeniedHandlerImpl implements AccessDeniedHandler {
         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
         response.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
-        RestResult<Void> result = RestResult.fail("FORBIDDEN", "Permission denied");
+        RestResult<Void> result = RestResult.fail(ErrorCodeEnum.FORBIDDEN.getCode(), "Permission denied");
         response.getWriter().write(JsonUtils.toJson(result));
     }
 }

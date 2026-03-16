@@ -2,6 +2,7 @@ package com.iotsic.ps.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.constant.SystemConstant;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.core.entity.User;
@@ -30,11 +31,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public AuthResultDTO register(String username, String password, String phone, String email) {
         if (getUserByUsername(username) != null) {
-            throw BusinessException.of("USER_EXIST", "用户名已存在");
+            throw BusinessException.of(ErrorCodeEnum.USER_EXIST.getCode(), "用户名已存在");
         }
 
         if (phone != null && getUserByPhone(phone) != null) {
-            throw BusinessException.of("PHONE_EXIST", "手机号已存在");
+            throw BusinessException.of(ErrorCodeEnum.PHONE_EXIST.getCode(), "手机号已存在");
         }
 
         User user = new User();
@@ -57,15 +58,15 @@ public class UserServiceImpl implements UserService {
     public AuthResultDTO login(String username, String password, String loginIp) {
         User user = getUserByUsername(username);
         if (user == null) {
-            throw BusinessException.of("USER_NOT_FOUND", "用户不存在");
+            throw BusinessException.of(ErrorCodeEnum.USER_NOT_FOUND.getCode(), "用户不存在");
         }
 
         if (!EncryptUtils.bcryptCheck(password, user.getPassword())) {
-            throw BusinessException.of("PASSWORD_ERROR", "密码错误");
+            throw BusinessException.of(ErrorCodeEnum.PASSWORD_ERROR.getCode(), "密码错误");
         }
 
-        if (user.getStatus() != null && user.getStatus() == 1) {
-            throw BusinessException.of("USER_DISABLED", "账户已被禁用");
+        if (user.getStatus() != null && user.getStatus() == 0) {
+            throw BusinessException.of(ErrorCodeEnum.USER_DISABLED.getCode(), "账户已被禁用");
         }
 
         user.setLastLoginIp(loginIp);
@@ -87,7 +88,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AuthResultDTO refreshToken(String refreshToken) {
         if (!jwtService.isRefreshToken(refreshToken)) {
-            throw BusinessException.of("TOKEN_INVALID", "无效的刷新令牌");
+            throw BusinessException.of(ErrorCodeEnum.TOKEN_INVALID.getCode(), "无效的刷新令牌");
         }
 
         Long userId = jwtService.getUserId(refreshToken);
@@ -119,7 +120,7 @@ public class UserServiceImpl implements UserService {
     public UserVO getUserInfo(Long userId) {
         User user = userMapper.selectById(userId);
         if (user == null) {
-            throw BusinessException.of("USER_NOT_FOUND", "用户不存在");
+            throw BusinessException.of(ErrorCodeEnum.USER_NOT_FOUND.getCode(), "用户不存在");
         }
 
         UserVO vo = new UserVO();
@@ -136,6 +137,12 @@ public class UserServiceImpl implements UserService {
         return vo;
     }
 
+    /**
+     * 生成认证结果
+     * @param userId 用户ID
+     * @param username 用户名
+     * @return 认证结果
+     */
     private AuthResultDTO generateAuthResult(Long userId, String username) {
         String token = jwtService.generateToken(userId, username, null);
         String refreshToken = jwtService.generateRefreshToken(userId, username);

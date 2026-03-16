@@ -3,6 +3,7 @@ package com.iotsic.ps.user.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
@@ -33,7 +34,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     public Enterprise getEnterpriseById(Long id) {
         Enterprise enterprise = enterpriseMapper.selectById(id);
         if (enterprise == null || enterprise.getDeleted() == 1) {
-            throw BusinessException.of("ENTERPRISE_NOT_FOUND", "企业不存在");
+            throw BusinessException.of(ErrorCodeEnum.ENTERPRISE_NOT_FOUND.getCode(), "企业不存在");
         }
         return enterprise;
     }
@@ -44,7 +45,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         wrapper.eq(Enterprise::getEnterpriseCode, enterpriseCode);
         Enterprise enterprise = enterpriseMapper.selectOne(wrapper);
         if (enterprise == null || enterprise.getDeleted() == 1) {
-            throw BusinessException.of("ENTERPRISE_NOT_FOUND", "企业不存在");
+            throw BusinessException.of(ErrorCodeEnum.ENTERPRISE_NOT_FOUND.getCode(), "企业不存在");
         }
         return enterprise;
     }
@@ -55,7 +56,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         LambdaQueryWrapper<Enterprise> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Enterprise::getEnterpriseCode, code);
         if (enterpriseMapper.selectOne(wrapper) != null) {
-            throw BusinessException.of("ENTERPRISE_EXIST", "企业代码已存在");
+            throw BusinessException.of(ErrorCodeEnum.ENTERPRISE_EXIST.getCode(), "企业代码已存在");
         }
 
         Enterprise enterprise = new Enterprise();
@@ -122,8 +123,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public PageResult<Enterprise> getEnterpriseList(PageRequest request) {
-        Page<Enterprise> page = new Page<>(request.getPageNum(), request.getPageSize());
+        Page<Enterprise> page = new Page<>(request.getCurrent(), request.getSize());
         IPage<Enterprise> result = enterpriseMapper.selectPage(page, null);
-        return PageResult.of(result.getRecords(), result.getTotal(), request.getPageNum(), request.getPageSize());
+        return PageResult.of(result.getRecords(), result.getTotal());
     }
 }

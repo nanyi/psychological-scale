@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.constant.BusinessConstant;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
@@ -54,7 +55,7 @@ public class OrderServiceImpl implements OrderService {
     public Order getOrderById(Long id) {
         Order order = orderMapper.selectById(id);
         if (order == null || order.getDeleted() == 1) {
-            throw BusinessException.of("ORDER_NOT_FOUND", "订单不存在");
+            throw BusinessException.of(ErrorCodeEnum.ORDER_NOT_FOUND.getCode(), "订单不存在");
         }
         return order;
     }
@@ -65,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
         wrapper.eq(Order::getOrderNo, orderNo);
         Order order = orderMapper.selectOne(wrapper);
         if (order == null || order.getDeleted() == 1) {
-            throw BusinessException.of("ORDER_NOT_FOUND", "订单不存在");
+            throw BusinessException.of(ErrorCodeEnum.ORDER_NOT_FOUND.getCode(), "订单不存在");
         }
         return order;
     }
@@ -76,7 +77,7 @@ public class OrderServiceImpl implements OrderService {
         Order order = getOrderById(orderId);
         
         if (order.getOrderStatus() != 0) {
-            throw BusinessException.of("ORDER_CANNOT_CANCEL", "订单状态不允许取消");
+            throw BusinessException.of(ErrorCodeEnum.ORDER_CANNOT_CANCEL.getCode(), "订单状态不允许取消");
         }
 
         order.setOrderStatus(2);
@@ -87,17 +88,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageResult<Order> getUserOrders(PageRequest request, Long userId) {
-        Page<Order> page = new Page<>(request.getPageNum(), request.getPageSize());
+        Page<Order> page = new Page<>(request.getCurrent(), request.getSize());
         LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Order::getUserId, userId)
                 .orderByDesc(Order::getCreateTime);
         IPage<Order> result = orderMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal(), request.getPageNum(), request.getPageSize());
+        return PageResult.of(result.getRecords(), result.getTotal());
     }
 
     @Override
     public PageResult<Order> getOrderList(PageRequest request, OrderListRequest params) {
-        Page<Order> page = new Page<>(request.getPageNum(), request.getPageSize());
+        Page<Order> page = new Page<>(request.getCurrent(), request.getSize());
         LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
         
         if (params != null) {
@@ -114,7 +115,7 @@ public class OrderServiceImpl implements OrderService {
         
         wrapper.orderByDesc(Order::getCreateTime);
         IPage<Order> result = orderMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal(), request.getPageNum(), request.getPageSize());
+        return PageResult.of(result.getRecords(), result.getTotal());
     }
 
     @Override

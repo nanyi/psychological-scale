@@ -3,6 +3,7 @@ package com.iotsic.ps.scale.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
@@ -30,7 +31,7 @@ public class ScaleServiceImpl implements ScaleService {
     public Scale getScaleById(Long id) {
         Scale scale = scaleMapper.selectById(id);
         if (scale == null || scale.getDeleted() == 1) {
-            throw BusinessException.of("SCALE_NOT_FOUND", "量表不存在");
+            throw BusinessException.of(ErrorCodeEnum.SCALE_NOT_FOUND.getCode(), "量表不存在");
         }
         return scale;
     }
@@ -41,7 +42,7 @@ public class ScaleServiceImpl implements ScaleService {
         wrapper.eq(Scale::getScaleCode, code);
         Scale scale = scaleMapper.selectOne(wrapper);
         if (scale == null || scale.getDeleted() == 1) {
-            throw BusinessException.of("SCALE_NOT_FOUND", "量表不存在");
+            throw BusinessException.of(ErrorCodeEnum.SCALE_NOT_FOUND.getCode(), "量表不存在");
         }
         return scale;
     }
@@ -143,7 +144,7 @@ public class ScaleServiceImpl implements ScaleService {
 
     @Override
     public PageResult<Scale> getScaleList(PageRequest request, Integer category, Integer status) {
-        Page<Scale> page = new Page<>(request.getPageNum(), request.getPageSize());
+        Page<Scale> page = new Page<>(request.getCurrent(), request.getSize());
         LambdaQueryWrapper<Scale> wrapper = new LambdaQueryWrapper<>();
         
         if (category != null) {
@@ -155,7 +156,7 @@ public class ScaleServiceImpl implements ScaleService {
         
         wrapper.orderByDesc(Scale::getCreateTime);
         IPage<Scale> result = scaleMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal(), request.getPageNum(), request.getPageSize());
+        return PageResult.of(result.getRecords(), result.getTotal());
     }
 
     @Override

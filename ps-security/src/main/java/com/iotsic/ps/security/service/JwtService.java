@@ -1,6 +1,7 @@
 package com.iotsic.ps.security.service;
 
 import com.iotsic.ps.common.constant.SystemConstant;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
@@ -72,10 +73,10 @@ public class JwtService {
                     .getPayload();
         } catch (ExpiredJwtException e) {
             log.error("Token expired: {}", e.getMessage());
-            throw BusinessException.of("TOKEN_EXPIRED", "Token已过期");
+            throw BusinessException.of(ErrorCodeEnum.TOKEN_EXPIRED.getCode(), "Token已过期");
         } catch (JwtException e) {
             log.error("Token invalid: {}", e.getMessage());
-            throw BusinessException.of("TOKEN_INVALID", "Token无效");
+            throw BusinessException.of(ErrorCodeEnum.TOKEN_INVALID.getCode(), "Token无效");
         }
     }
 

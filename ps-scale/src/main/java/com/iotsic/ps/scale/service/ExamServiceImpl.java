@@ -3,6 +3,7 @@ package com.iotsic.ps.scale.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
@@ -42,10 +43,10 @@ public class ExamServiceImpl implements ExamService {
     public ExamRecord startExam(Long userId, Long scaleId, String ipAddress, String deviceInfo) {
         Scale scale = scaleMapper.selectById(scaleId);
         if (scale == null || scale.getDeleted() == 1) {
-            throw BusinessException.of("SCALE_NOT_FOUND", "量表不存在");
+            throw BusinessException.of(ErrorCodeEnum.SCALE_NOT_FOUND.getCode(), "量表不存在");
         }
         if (scale.getStatus() != 1) {
-            throw BusinessException.of("SCALE_OFFLINE", "量表未发布");
+            throw BusinessException.of(ErrorCodeEnum.SCALE_OFFLINE.getCode(), "量表未发布");
         }
 
         ExamRecord record = new ExamRecord();
@@ -71,7 +72,7 @@ public class ExamServiceImpl implements ExamService {
     public ExamRecord getExamRecordById(Long id) {
         ExamRecord record = examRecordMapper.selectById(id);
         if (record == null || record.getDeleted() == 1) {
-            throw BusinessException.of("RECORD_NOT_FOUND", "测评记录不存在");
+            throw BusinessException.of(ErrorCodeEnum.RECORD_NOT_FOUND.getCode(), "测评记录不存在");
         }
         return record;
     }
@@ -82,7 +83,7 @@ public class ExamServiceImpl implements ExamService {
         wrapper.eq(ExamRecord::getRecordNo, recordNo);
         ExamRecord record = examRecordMapper.selectOne(wrapper);
         if (record == null || record.getDeleted() == 1) {
-            throw BusinessException.of("RECORD_NOT_FOUND", "测评记录不存在");
+            throw BusinessException.of(ErrorCodeEnum.RECORD_NOT_FOUND.getCode(), "测评记录不存在");
         }
         return record;
     }
@@ -92,7 +93,7 @@ public class ExamServiceImpl implements ExamService {
     public void saveAnswer(Long recordId, Map<Long, String> answers) {
         ExamRecord record = getExamRecordById(recordId);
         if (record.getExamStatus() != 0) {
-            throw BusinessException.of("EXAM_FINISHED", "测评已结束");
+            throw BusinessException.of(ErrorCodeEnum.EXAM_FINISHED.getCode(), "测评已结束");
         }
 
         for (Map.Entry<Long, String> entry : answers.entrySet()) {
@@ -130,7 +131,7 @@ public class ExamServiceImpl implements ExamService {
     public ExamSubmitResultResponse submitExam(Long recordId) {
         ExamRecord record = getExamRecordById(recordId);
         if (record.getExamStatus() == 1) {
-            throw BusinessException.of("EXAM_FINISHED", "测评已提交");
+            throw BusinessException.of(ErrorCodeEnum.EXAM_FINISHED.getCode(), "测评已提交");
         }
 
         LambdaQueryWrapper<ExamAnswer> wrapper = new LambdaQueryWrapper<>();
@@ -183,7 +184,7 @@ public class ExamServiceImpl implements ExamService {
     public void pauseExam(Long recordId) {
         ExamRecord record = getExamRecordById(recordId);
         if (record.getExamStatus() != 0) {
-            throw BusinessException.of("EXAM_FINISHED", "测评已结束");
+            throw BusinessException.of(ErrorCodeEnum.EXAM_FINISHED.getCode(), "测评已结束");
         }
         record.setExamStatus(2);
         record.setUpdateTime(LocalDateTime.now());
@@ -195,7 +196,7 @@ public class ExamServiceImpl implements ExamService {
     public void resumeExam(Long recordId) {
         ExamRecord record = getExamRecordById(recordId);
         if (record.getExamStatus() != 2) {
-            throw BusinessException.of("EXAM_NOT_PAUSED", "测评未暂停");
+            throw BusinessException.of(ErrorCodeEnum.EXAM_NOT_PAUSED.getCode(), "测评未暂停");
         }
         record.setExamStatus(0);
         record.setUpdateTime(LocalDateTime.now());
@@ -204,12 +205,12 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public PageResult<ExamRecord> getUserExamRecords(PageRequest request, Long userId) {
-        Page<ExamRecord> page = new Page<>(request.getPageNum(), request.getPageSize());
+        Page<ExamRecord> page = new Page<>(request.getCurrent(), request.getSize());
         LambdaQueryWrapper<ExamRecord> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ExamRecord::getUserId, userId)
                 .orderByDesc(ExamRecord::getCreateTime);
         IPage<ExamRecord> result = examRecordMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal(), request.getPageNum(), request.getPageSize());
+        return PageResult.of(result.getRecords(), result.getTotal());
     }
 
     @Override

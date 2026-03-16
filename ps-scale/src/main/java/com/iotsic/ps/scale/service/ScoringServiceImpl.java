@@ -1,6 +1,7 @@
 package com.iotsic.ps.scale.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.core.entity.*;
 import com.iotsic.ps.scale.dto.OptionScoreCreateRequest;
@@ -38,7 +39,7 @@ public class ScoringServiceImpl implements ScoringService {
     public ScoringRule createScoringRule(ScoringRuleCreateRequest request) {
         Scale scale = scaleMapper.selectById(request.getScaleId());
         if (scale == null || scale.getDeleted() == 1) {
-            throw BusinessException.of("SCALE_NOT_FOUND", "量表不存在");
+            throw BusinessException.of(ErrorCodeEnum.SCALE_NOT_FOUND.getCode(), "量表不存在");
         }
 
         ScoringRule rule = new ScoringRule();
@@ -60,7 +61,7 @@ public class ScoringServiceImpl implements ScoringService {
     public void updateScoringRule(Long id, ScoringRuleUpdateRequest request) {
         ScoringRule rule = scoringRuleMapper.selectById(id);
         if (rule == null || rule.getDeleted() == 1) {
-            throw BusinessException.of("RULE_NOT_FOUND", "评分规则不存在");
+            throw BusinessException.of(ErrorCodeEnum.RULE_NOT_FOUND.getCode(), "评分规则不存在");
         }
 
         if (request.getScoringType() != null) {
@@ -82,7 +83,7 @@ public class ScoringServiceImpl implements ScoringService {
     public void deleteScoringRule(Long id) {
         ScoringRule rule = scoringRuleMapper.selectById(id);
         if (rule == null) {
-            throw BusinessException.of("RULE_NOT_FOUND", "评分规则不存在");
+            throw BusinessException.of(ErrorCodeEnum.RULE_NOT_FOUND.getCode(), "评分规则不存在");
         }
         rule.setDeleted(1);
         rule.setUpdateTime(LocalDateTime.now());
@@ -109,7 +110,7 @@ public class ScoringServiceImpl implements ScoringService {
     public OptionScore createOptionScore(OptionScoreCreateRequest request) {
         Question question = questionMapper.selectById(request.getQuestionId());
         if (question == null || question.getDeleted() == 1) {
-            throw BusinessException.of("QUESTION_NOT_FOUND", "题目不存在");
+            throw BusinessException.of(ErrorCodeEnum.QUESTION_NOT_FOUND.getCode(), "题目不存在");
         }
 
         OptionScore optionScore = new OptionScore();
@@ -130,7 +131,7 @@ public class ScoringServiceImpl implements ScoringService {
     public void updateOptionScore(Long id, OptionScoreUpdateRequest request) {
         OptionScore optionScore = optionScoreMapper.selectById(id);
         if (optionScore == null || optionScore.getDeleted() == 1) {
-            throw BusinessException.of("OPTION_NOT_FOUND", "选项分数不存在");
+            throw BusinessException.of(ErrorCodeEnum.OPTION_NOT_FOUND.getCode(), "选项分数不存在");
         }
 
         if (request.getScore() != null) {
@@ -152,7 +153,7 @@ public class ScoringServiceImpl implements ScoringService {
     public void deleteOptionScore(Long id) {
         OptionScore optionScore = optionScoreMapper.selectById(id);
         if (optionScore == null) {
-            throw BusinessException.of("OPTION_NOT_FOUND", "选项分数不存在");
+            throw BusinessException.of(ErrorCodeEnum.OPTION_NOT_FOUND.getCode(), "选项分数不存在");
         }
         optionScore.setDeleted(1);
         optionScore.setUpdateTime(LocalDateTime.now());
@@ -189,7 +190,9 @@ public class ScoringServiceImpl implements ScoringService {
             String answer = entry.getValue();
 
             Question question = questionMapper.selectById(questionId);
-            if (question == null) continue;
+            if (question == null) {
+                continue;
+            }
 
             LambdaQueryWrapper<OptionScore> wrapper = new LambdaQueryWrapper<>();
             wrapper.eq(OptionScore::getQuestionId, questionId)

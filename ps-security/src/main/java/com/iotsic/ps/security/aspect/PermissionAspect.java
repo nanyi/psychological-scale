@@ -18,7 +18,7 @@ import java.util.Arrays;
 @Component
 public class PermissionAspect {
 
-    @Around("@annotation(annotation.com.iotsic.ps.security.RequireLogin) || @within(annotation.com.iotsic.ps.security.RequireLogin)")
+    @Around("@annotation(com.iotsic.ps.security.annotation.RequireLogin) || @within(com.iotsic.ps.security.annotation.RequireLogin)")
     public Object checkLogin(ProceedingJoinPoint joinPoint) throws Throwable {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication == null || !authentication.isAuthenticated() || "anonymousUser".equals(authentication.getPrincipal())) {
@@ -27,7 +27,7 @@ public class PermissionAspect {
         return joinPoint.proceed();
     }
 
-    @Around("@annotation(annotation.com.iotsic.ps.security.RequirePermission)")
+    @Around("@annotation(com.iotsic.ps.security.annotation.RequirePermission)")
     public Object checkPermission(ProceedingJoinPoint joinPoint) throws Throwable {
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();
         Method method = signature.getMethod();

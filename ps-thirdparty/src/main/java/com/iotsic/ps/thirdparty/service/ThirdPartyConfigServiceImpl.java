@@ -1,6 +1,7 @@
 package com.iotsic.ps.thirdparty.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.thirdparty.dto.ThirdPartyConfigCreateRequest;
 import com.iotsic.ps.thirdparty.dto.ThirdPartyConfigUpdateRequest;
@@ -31,7 +32,7 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
         LambdaQueryWrapper<ThirdPartyConfig> existWrapper = new LambdaQueryWrapper<>();
         existWrapper.eq(ThirdPartyConfig::getPlatformCode, platformCode);
         if (thirdPartyConfigMapper.selectOne(existWrapper) != null) {
-            throw BusinessException.of("PLATFORM_EXIST", "平台代码已存在");
+            throw BusinessException.of(ErrorCodeEnum.PLATFORM_EXIST.getCode(), "平台代码已存在");
         }
 
         ThirdPartyConfig config = new ThirdPartyConfig();
@@ -102,7 +103,7 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
     public ThirdPartyConfig getConfigById(Long id) {
         ThirdPartyConfig config = thirdPartyConfigMapper.selectById(id);
         if (config == null || config.getDeleted() == 1) {
-            throw BusinessException.of("CONFIG_NOT_FOUND", "配置不存在");
+            throw BusinessException.of(ErrorCodeEnum.CONFIG_NOT_FOUND.getCode(), "配置不存在");
         }
         return config;
     }
@@ -115,7 +116,7 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
         
         ThirdPartyConfig config = thirdPartyConfigMapper.selectOne(wrapper);
         if (config == null) {
-            throw BusinessException.of("CONFIG_NOT_FOUND", "平台配置不存在或未启用");
+            throw BusinessException.of(ErrorCodeEnum.CONFIG_NOT_FOUND.getCode(), "平台配置不存在或未启用");
         }
         return config;
     }

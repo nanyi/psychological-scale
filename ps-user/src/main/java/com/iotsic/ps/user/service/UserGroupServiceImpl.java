@@ -3,6 +3,7 @@ package com.iotsic.ps.user.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
@@ -34,7 +35,7 @@ public class UserGroupServiceImpl implements UserGroupService {
     public UserGroup getGroupById(Long id) {
         UserGroup group = userGroupMapper.selectById(id);
         if (group == null || group.getDeleted() == 1) {
-            throw BusinessException.of("GROUP_NOT_FOUND", "分组不存在");
+            throw BusinessException.of(ErrorCodeEnum.GROUP_NOT_FOUND.getCode(), "分组不存在");
         }
         return group;
     }
@@ -54,7 +55,7 @@ public class UserGroupServiceImpl implements UserGroupService {
         wrapper.eq(UserGroup::getGroupCode, code)
                 .eq(UserGroup::getEnterpriseId, enterpriseId);
         if (userGroupMapper.selectOne(wrapper) != null) {
-            throw BusinessException.of("GROUP_EXIST", "分组代码已存在");
+            throw BusinessException.of(ErrorCodeEnum.GROUP_EXIST.getCode(), "分组代码已存在");
         }
 
         UserGroup group = new UserGroup();
@@ -101,14 +102,14 @@ public class UserGroupServiceImpl implements UserGroupService {
         LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
         userWrapper.eq(User::getId, userId);
         if (userMapper.selectOne(userWrapper) == null) {
-            throw BusinessException.of("USER_NOT_FOUND", "用户不存在");
+            throw BusinessException.of(ErrorCodeEnum.USER_NOT_FOUND.getCode(), "用户不存在");
         }
 
         LambdaQueryWrapper<UserGroupMember> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(UserGroupMember::getGroupId, groupId)
                 .eq(UserGroupMember::getUserId, userId);
         if (userGroupMemberMapper.selectOne(wrapper) != null) {
-            throw BusinessException.of("MEMBER_EXIST", "用户已在分组中");
+            throw BusinessException.of(ErrorCodeEnum.GROUP_MEMBER_EXIST.getCode(), "用户已在分组中");
         }
 
         UserGroupMember member = new UserGroupMember();
@@ -151,13 +152,13 @@ public class UserGroupServiceImpl implements UserGroupService {
 
     @Override
     public PageResult<UserGroup> getGroupList(PageRequest request, Long enterpriseId) {
-        Page<UserGroup> page = new Page<>(request.getPageNum(), request.getPageSize());
+        Page<UserGroup> page = new Page<>(request.getCurrent(), request.getSize());
         LambdaQueryWrapper<UserGroup> wrapper = new LambdaQueryWrapper<>();
         if (enterpriseId != null) {
             wrapper.eq(UserGroup::getEnterpriseId, enterpriseId);
         }
         wrapper.orderByAsc(UserGroup::getSort);
         IPage<UserGroup> result = userGroupMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal(), request.getPageNum(), request.getPageSize());
+        return PageResult.of(result.getRecords(), result.getTotal());
     }
 }

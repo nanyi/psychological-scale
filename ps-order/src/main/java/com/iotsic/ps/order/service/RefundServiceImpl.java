@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.constant.BusinessConstant;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
@@ -43,25 +44,25 @@ public class RefundServiceImpl implements RefundService {
         );
         
         if (order == null || order.getDeleted() == 1) {
-            throw BusinessException.of("ORDER_NOT_FOUND", "订单不存在");
+            throw BusinessException.of(ErrorCodeEnum.ORDER_NOT_FOUND.getCode(), "订单不存在");
         }
 
         if (order.getOrderStatus() != 1) {
-            throw BusinessException.of("REFUND_NOT_ALLOWED", "只有已支付的订单才能退款");
+            throw BusinessException.of(ErrorCodeEnum.REFUND_NOT_ALLOWED.getCode(), "只有已支付的订单才能退款");
         }
 
         if (orderItemIds == null || orderItemIds.isEmpty()) {
-            throw BusinessException.of("REFUND_ITEM_EMPTY", "请选择要退款的量表");
+            throw BusinessException.of(ErrorCodeEnum.REFUND_ITEM_EMPTY.getCode(), "请选择要退款的量表");
         }
 
         BigDecimal refundAmount = BigDecimal.ZERO;
         for (Long itemId : orderItemIds) {
             OrderItem item = orderItemMapper.selectById(itemId);
             if (item == null || !item.getOrderNo().equals(orderNo)) {
-                throw BusinessException.of("REFUND_ITEM_INVALID", "订单项不匹配");
+                throw BusinessException.of(ErrorCodeEnum.REFUND_ITEM_INVALID.getCode(), "订单项不匹配");
             }
             if (item.getRefundStatus() != null && item.getRefundStatus() == 1) {
-                throw BusinessException.of("REFUND_ITEM_EXIST", "该量表已退款");
+                throw BusinessException.of(ErrorCodeEnum.REFUND_ITEM_EXIST.getCode(), "该量表已退款");
             }
             refundAmount = refundAmount.add(item.getAmount());
         }
@@ -71,7 +72,7 @@ public class RefundServiceImpl implements RefundService {
             daysSincePay = java.time.Duration.between(order.getPayTime(), LocalDateTime.now()).toDays();
         }
         if (daysSincePay > BusinessConstant.REFUND_DAYS) {
-            throw BusinessException.of("REFUND_EXCEED", "已超过退款时限（" + BusinessConstant.REFUND_DAYS + "天）");
+            throw BusinessException.of(ErrorCodeEnum.REFUND_EXCEED.getCode(), "已超过退款时限（" + BusinessConstant.REFUND_DAYS + "天）");
         }
 
         Refund refund = new Refund();
@@ -144,11 +145,11 @@ public class RefundServiceImpl implements RefundService {
     public void approveRefund(Long refundId) {
         Refund refund = refundMapper.selectById(refundId);
         if (refund == null) {
-            throw BusinessException.of("REFUND_NOT_FOUND", "退款记录不存在");
+            throw BusinessException.of(ErrorCodeEnum.REFUND_NOT_FOUND.getCode(), "退款记录不存在");
         }
 
         if (refund.getRefundStatus() != 0) {
-            throw BusinessException.of("REFUND_STATUS_ERROR", "退款状态不正确");
+            throw BusinessException.of(ErrorCodeEnum.REFUND_STATUS_ERROR.getCode(), "退款状态不正确");
         }
 
         refund.setRefundStatus(1);
@@ -173,7 +174,7 @@ public class RefundServiceImpl implements RefundService {
     public void rejectRefund(Long refundId, String reason) {
         Refund refund = refundMapper.selectById(refundId);
         if (refund == null) {
-            throw BusinessException.of("REFUND_NOT_FOUND", "退款记录不存在");
+            throw BusinessException.of(ErrorCodeEnum.REFUND_NOT_FOUND.getCode(), "退款记录不存在");
         }
 
         refund.setRefundStatus(3);
@@ -213,11 +214,11 @@ public class RefundServiceImpl implements RefundService {
         wrapper.orderByDesc(Refund::getCreateTime);
         
         IPage<Refund> page = refundMapper.selectPage(
-            new Page<>(request.getPageNum(), request.getPageSize()),
+            new Page<>(request.getCurrent(), request.getSize()),
             wrapper
         );
         
-        return new PageResult<>(page.getRecords(), page.getTotal(), request.getPageNum(), request.getPageSize());
+        return PageResult.of(page.getRecords(), page.getTotal());
     }
 
     @Override

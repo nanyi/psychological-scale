@@ -1,6 +1,7 @@
 package com.iotsic.ps.order.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.order.entity.Cart;
 import com.iotsic.ps.order.mapper.CartMapper;
@@ -58,7 +59,7 @@ public class CartServiceImpl implements CartService {
     public void updateCartQuantity(Long userId, Long scaleId, Integer quantity) {
         Cart cart = getCartItem(userId, scaleId);
         if (cart == null) {
-            throw BusinessException.of("CART_ITEM_NOT_FOUND", "购物车商品不存在");
+            throw BusinessException.of(ErrorCodeEnum.CART_ITEM_NOT_FOUND.getCode(), "购物车商品不存在");
         }
 
         if (quantity <= 0) {

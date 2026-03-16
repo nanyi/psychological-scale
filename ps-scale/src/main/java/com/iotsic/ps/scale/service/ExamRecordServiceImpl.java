@@ -3,6 +3,7 @@ package com.iotsic.ps.scale.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
@@ -36,7 +37,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     public ExamRecord getRecordById(Long id) {
         ExamRecord record = examRecordMapper.selectById(id);
         if (record == null || record.getDeleted() == 1) {
-            throw BusinessException.of("RECORD_NOT_FOUND", "答题记录不存在");
+            throw BusinessException.of(ErrorCodeEnum.RECORD_NOT_FOUND.getCode(), "答题记录不存在");
         }
         return record;
     }
@@ -104,7 +105,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
 
     @Override
     public PageResult<ExamRecord> getRecordList(PageRequest request, ExamRecordListRequest examRecordListRequest) {
-        Page<ExamRecord> page = new Page<>(request.getPageNum(), request.getPageSize());
+        Page<ExamRecord> page = new Page<>(request.getCurrent(), request.getSize());
         LambdaQueryWrapper<ExamRecord> wrapper = new LambdaQueryWrapper<>();
         
         if (examRecordListRequest != null) {
@@ -129,7 +130,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
             }
         }
         
-        return PageResult.of(result.getRecords(), result.getTotal(), request.getPageNum(), request.getPageSize());
+        return PageResult.of(result.getRecords(), result.getTotal());
     }
 
     @Override

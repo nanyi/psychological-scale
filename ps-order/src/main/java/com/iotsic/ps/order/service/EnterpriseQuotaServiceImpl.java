@@ -3,6 +3,7 @@ package com.iotsic.ps.order.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
@@ -59,7 +60,7 @@ public class EnterpriseQuotaServiceImpl implements EnterpriseQuotaService {
     public EnterpriseQuota getQuotaById(Long id) {
         EnterpriseQuota quota = enterpriseQuotaMapper.selectById(id);
         if (quota == null || quota.getDeleted() == 1) {
-            throw BusinessException.of("QUOTA_NOT_FOUND", "配额不存在");
+            throw BusinessException.of(ErrorCodeEnum.QUOTA_NOT_FOUND.getCode(), "配额不存在");
         }
         return quota;
     }
@@ -73,11 +74,11 @@ public class EnterpriseQuotaServiceImpl implements EnterpriseQuotaService {
         
         EnterpriseQuota quota = enterpriseQuotaMapper.selectOne(wrapper);
         if (quota == null) {
-            throw BusinessException.of("QUOTA_NOT_FOUND", "企业配额不存在");
+            throw BusinessException.of(ErrorCodeEnum.QUOTA_NOT_FOUND.getCode(), "企业配额不存在");
         }
         
         if (quota.getRemainingQuota() <= 0) {
-            throw BusinessException.of("QUOTA_INSUFFICIENT", "企业配额不足");
+            throw BusinessException.of(ErrorCodeEnum.QUOTA_INSUFFICIENT.getCode(), "企业配额不足");
         }
         
         return quota;
@@ -129,7 +130,7 @@ public class EnterpriseQuotaServiceImpl implements EnterpriseQuotaService {
 
     @Override
     public PageResult<EnterpriseQuota> getEnterpriseQuotas(PageRequest request, Long enterpriseId) {
-        Page<EnterpriseQuota> page = new Page<>(request.getPageNum(), request.getPageSize());
+        Page<EnterpriseQuota> page = new Page<>(request.getCurrent(), request.getSize());
         LambdaQueryWrapper<EnterpriseQuota> wrapper = new LambdaQueryWrapper<>();
         
         if (enterpriseId != null) {
@@ -138,7 +139,7 @@ public class EnterpriseQuotaServiceImpl implements EnterpriseQuotaService {
         
         wrapper.orderByDesc(EnterpriseQuota::getCreateTime);
         IPage<EnterpriseQuota> result = enterpriseQuotaMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal(), request.getPageNum(), request.getPageSize());
+        return PageResult.of(result.getRecords(), result.getTotal());
     }
     /**
      * 停用企业配额
