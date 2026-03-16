@@ -1,5 +1,7 @@
 package com.iotsic.ps.user.service;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.core.entity.User;
 import com.iotsic.ps.user.dto.AuthResultDTO;
 import com.iotsic.ps.user.vo.UserVO;
@@ -12,6 +14,17 @@ import com.iotsic.ps.user.vo.UserVO;
  * @since 2026-03-12
  */
 public interface UserService {
+
+    /**
+     * 获取用户分页列表
+     *
+     * @param page 分页参数
+     * @param username 用户名（模糊查询）
+     * @param phone 手机号（模糊查询）
+     * @param status 状态
+     * @return 用户分页列表
+     */
+    IPage<User> getUserList(Page<User> page, String username, String phone, Integer status);
 
     /**
      * 用户注册
@@ -80,4 +93,27 @@ public interface UserService {
      * @return 用户视图对象
      */
     UserVO getUserInfo(Long userId);
+
+    /**
+     * 更新用户信息
+     *
+     * @param userId 用户ID
+     * @param user 用户信息
+     */
+    void updateUser(Long userId, User user);
+
+    /**
+     * 更新用户状态
+     *
+     * @param userId 用户ID
+     * @param status 状态
+     */
+    void updateUserStatus(Long userId, Integer status);
+
+    /**
+     * 删除用户
+     *
+     * @param userId 用户ID
+     */
+    void deleteUser(Long userId);
 }

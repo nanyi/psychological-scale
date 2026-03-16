@@ -1,6 +1,8 @@
 package com.iotsic.ps.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.constant.SystemConstant;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
@@ -27,6 +29,16 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
     private final JwtService jwtService;
     private final RedisTemplate<String, Object> redisTemplate;
+
+    @Override
+    public IPage<User> getUserList(Page<User> page, String username, String phone, Integer status) {
+        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
+        wrapper.like(username != null, User::getUsername, username)
+                .like(phone != null, User::getPhone, phone)
+                .eq(status != null, User::getStatus, status)
+                .orderByDesc(User::getCreateTime);
+        return userMapper.selectPage(page, wrapper);
+    }
 
     @Override
     public AuthResultDTO register(String username, String password, String phone, String email) {
@@ -161,5 +173,39 @@ public class UserServiceImpl implements UserService {
         result.setUsername(username);
 
         return result;
+    }
+
+    @Override
+    public void updateUser(Long userId, User user) {
+        User existUser = getUserById(userId);
+        if (existUser == null) {
+            throw BusinessException.of(ErrorCodeEnum.USER_NOT_FOUND.getCode(), "用户不存在");
+        }
+        user.setId(userId);
+        user.setPassword(null);
+        user.setUpdateTime(LocalDateTime.now());
+        userMapper.updateById(user);
+    }
+
+    @Override
+    public void updateUserStatus(Long userId, Integer status) {
+        User existUser = getUserById(userId);
+        if (existUser == null) {
+            throw BusinessException.of(ErrorCodeEnum.USER_NOT_FOUND.getCode(), "用户不存在");
+        }
+        User user = new User();
+        user.setId(userId);
+        user.setStatus(status);
+        user.setUpdateTime(LocalDateTime.now());
+        userMapper.updateById(user);
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        User existUser = getUserById(userId);
+        if (existUser == null) {
+            throw BusinessException.of(ErrorCodeEnum.USER_NOT_FOUND.getCode(), "用户不存在");
+        }
+        userMapper.deleteById(userId);
     }
 }

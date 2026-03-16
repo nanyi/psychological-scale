@@ -33,7 +33,7 @@ spring:
       routes:
         # 用户服务
         - id: ps-user
-          uri: lb://ps-user
+          uri: http://localhost:8081
           predicates:
             - Path=/api/user/**,/api/auth/**
           filters:
@@ -87,7 +87,7 @@ spring:
     redis:
       host: ${REDIS_HOST:127.0.0.1}
       port: ${REDIS_PORT:6379}
-      password: ${REDIS_PASSWORD:}
+      password: ${REDIS_PASSWORD:redis123}
       database: 0
 
 # JWT配置
