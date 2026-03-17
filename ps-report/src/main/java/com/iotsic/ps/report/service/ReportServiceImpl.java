@@ -7,7 +7,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
-import com.iotsic.ps.common.utils.JsonUtils;
+import com.iotsic.ps.common.utils.json.JsonUtils;
 import com.iotsic.ps.core.entity.ExamRecord;
 import com.iotsic.ps.report.entity.Report;
 import com.iotsic.ps.report.mapper.ReportMapper;

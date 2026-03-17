@@ -1,5 +1,6 @@
 package com.iotsic.ps.scale.controller;
 
+import com.iotsic.ps.api.dto.ScaleResponse;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.result.RestResult;
@@ -119,7 +120,7 @@ public class ScaleController {
      * @return 量表分页列表
      */
     @GetMapping("/list")
-    public RestResult<PageResult<Scale>> getScaleList(
+    public RestResult<PageResult<ScaleResponse>> getScaleList(
             PageRequest request,
             @RequestParam(value = "categoryId", required = false) Long categoryId,
             @RequestParam(value = "status", required = false) Integer status) {

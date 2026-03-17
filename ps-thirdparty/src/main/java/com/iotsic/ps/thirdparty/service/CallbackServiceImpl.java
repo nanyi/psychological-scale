@@ -3,7 +3,7 @@ package com.iotsic.ps.thirdparty.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.utils.JsonUtils;
+import com.iotsic.ps.common.utils.json.JsonUtils;
 import com.iotsic.ps.thirdparty.entity.ThirdPartyCallback;
 import com.iotsic.ps.thirdparty.entity.ThirdPartyConfig;
 import com.iotsic.ps.thirdparty.mapper.CallbackMapper;

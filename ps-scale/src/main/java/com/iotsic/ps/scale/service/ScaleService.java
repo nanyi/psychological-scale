@@ -1,5 +1,6 @@
 package com.iotsic.ps.scale.service;
 
+import com.iotsic.ps.api.dto.ScaleResponse;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.Scale;
@@ -76,7 +77,7 @@ public interface ScaleService {
      * @param status 量表状态
      * @return 量表分页结果
      */
-    PageResult<Scale> getScaleList(PageRequest request, Long categoryId, Integer status);
+    PageResult<ScaleResponse> getScaleList(PageRequest request, Long categoryId, Integer status);
 
     /**
      * 增加量表浏览次数

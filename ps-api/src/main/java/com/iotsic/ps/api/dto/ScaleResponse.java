@@ -27,9 +27,14 @@ public class ScaleResponse {
     private String scaleCode;
 
     /**
-     * 量表分类
+     * 量表分类ID
      */
-    private Integer category;
+    private Long categoryId;
+
+    /**
+     * 量表分类名称
+     */
+    private String categoryName;
 
     /**
      * 量表描述

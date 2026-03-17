@@ -1,12 +1,15 @@
-package com.iotsic.ps.common.utils;
+package com.iotsic.ps.common.utils.json;
 
 import cn.hutool.core.util.StrUtil;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.StreamReadFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.iotsic.ps.common.utils.json.jackson.SmartJavaNumberModule;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
@@ -20,8 +23,20 @@ public class JsonUtils {
 
     static {
         OBJECT_MAPPER.registerModule(new JavaTimeModule());
+        // 对于空的对象转json的时候不抛出错误
+        OBJECT_MAPPER.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        // 禁用遇到未知属性抛出异常
         OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        // 值为null，不抛出异常
+        OBJECT_MAPPER.configure(DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES, false);
+        // 禁用时间戳格式化
         OBJECT_MAPPER.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+        // 忽略 null 值
+        OBJECT_MAPPER.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+        // 抛出引发错误的 JSON 片段
+        OBJECT_MAPPER.configure(StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION.mappedFeature(), true);
+        // 解决 Long 的序列化
+        OBJECT_MAPPER.registerModules(new SmartJavaNumberModule());
     }
 
     private JsonUtils() {

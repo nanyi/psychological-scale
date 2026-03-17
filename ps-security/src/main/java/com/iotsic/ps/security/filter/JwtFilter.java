@@ -1,7 +1,7 @@
 package com.iotsic.ps.security.filter;
 
 import com.iotsic.ps.common.constant.SystemConstant;
-import com.iotsic.ps.common.utils.JsonUtils;
+import com.iotsic.ps.common.utils.json.JsonUtils;
 import com.iotsic.ps.security.service.JwtService;
 import com.iotsic.ps.security.service.UserDetailsImpl;
 import jakarta.servlet.FilterChain;
