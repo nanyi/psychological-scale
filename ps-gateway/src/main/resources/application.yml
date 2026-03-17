@@ -42,7 +42,7 @@ spring:
         - id: ps-scale
           uri: http://localhost:8082
           predicates:
-            - Path=/api/scale/**
+            - Path=/api/scale/**,/api/scale-category/**
           filters:
             - StripPrefix=0
         # 订单服务

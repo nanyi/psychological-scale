@@ -55,8 +55,8 @@ public class AnalysisController {
      */
     @GetMapping("/report/scale")
     public RestResult<List<ScaleUsageReportResponse>> getScaleUsageReport(
-            @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
-            @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
+            @RequestParam(value = "startDate", required = false, defaultValue = "2026-01-01") String startDate,
+            @RequestParam(value = "endDate", required = false, defaultValue = "2026-03-11") String endDate) {
         List<ScaleUsageReportResponse> data = analysisService.getScaleUsageReport(startDate, endDate);
         return RestResult.success(data);
     }
@@ -70,8 +70,8 @@ public class AnalysisController {
      */
     @GetMapping("/report/user")
     public RestResult<List<UserExamReportResponse>> getUserExamReport(
-            @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
-            @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
+            @RequestParam(value = "startDate", required = false, defaultValue = "2026-01-01") String startDate,
+            @RequestParam(value = "endDate", required = false, defaultValue = "2026-03-11") String endDate) {
         List<UserExamReportResponse> data = analysisService.getUserExamReport(startDate, endDate);
         return RestResult.success(data);
     }
@@ -85,8 +85,8 @@ public class AnalysisController {
      */
     @GetMapping("/report/income")
     public RestResult<IncomeReportResponse> getIncomeReport(
-            @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
-            @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
+            @RequestParam(value = "startDate", required = false, defaultValue = "2026-01-01") String startDate,
+            @RequestParam(value = "endDate", required = false, defaultValue = "2026-03-11") String endDate) {
         IncomeReportResponse data = analysisService.getIncomeReport(startDate, endDate);
         return RestResult.success(data);
     }
@@ -102,8 +102,8 @@ public class AnalysisController {
     @GetMapping("/report/result")
     public RestResult<ResultDistributionResponse> getResultDistributionReport(
             @RequestParam(value = "scaleId") Long scaleId,
-            @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
-            @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
+            @RequestParam(value = "startDate", required = false, defaultValue = "2026-01-01") String startDate,
+            @RequestParam(value = "endDate", required = false, defaultValue = "2026-03-11") String endDate) {
         ResultDistributionResponse data = analysisService.getResultDistributionReport(scaleId, startDate, endDate);
         return RestResult.success(data);
     }
@@ -117,8 +117,8 @@ public class AnalysisController {
      */
     @GetMapping("/report/enterprise")
     public RestResult<List<EnterpriseUsageResponse>> getEnterpriseUsageReport(
-            @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
-            @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
+            @RequestParam(value = "startDate", required = false, defaultValue = "2026-01-01") String startDate,
+            @RequestParam(value = "endDate", required = false, defaultValue = "2026-03-11") String endDate) {
         List<EnterpriseUsageResponse> data = analysisService.getEnterpriseUsageReport(startDate, endDate);
         return RestResult.success(data);
     }
@@ -134,8 +134,8 @@ public class AnalysisController {
     @GetMapping("/trend/group")
     public RestResult<List<TrendDataResponse>> getGroupTrendAnalysis(
             @RequestParam(value = "dimension") String dimension,
-            @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
-            @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
+            @RequestParam(value = "startDate", required = false, defaultValue = "2026-01-01") String startDate,
+            @RequestParam(value = "endDate", required = false, defaultValue = "2026-03-11") String endDate) {
         List<TrendDataResponse> data = analysisService.getGroupTrendAnalysis(dimension, startDate, endDate);
         return RestResult.success(data);
     }
