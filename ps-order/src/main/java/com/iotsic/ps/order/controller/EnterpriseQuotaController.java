@@ -103,7 +103,7 @@ public class EnterpriseQuotaController {
     @GetMapping("/list")
     public RestResult<PageResult<EnterpriseQuota>> getEnterpriseQuotas(
             PageRequest request,
-            @RequestParam(required = false) Long enterpriseId) {
+            @RequestParam(value = "enterpriseId", required = false) Long enterpriseId) {
         return RestResult.success(enterpriseQuotaService.getEnterpriseQuotas(request, enterpriseId));
     }
 

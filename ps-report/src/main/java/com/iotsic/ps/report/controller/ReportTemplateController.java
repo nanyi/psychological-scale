@@ -3,6 +3,7 @@ package com.iotsic.ps.report.controller;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.report.entity.ReportTemplate;
 import com.iotsic.ps.report.service.ReportTemplateService;
@@ -29,13 +30,12 @@ public class ReportTemplateController {
     }
 
     @GetMapping("/list")
-    public RestResult<IPage<ReportTemplate>> getTemplateList(
+    public RestResult<PageResult<ReportTemplate>> getTemplateList(
             PageRequest request,
-            @RequestParam(required = false) Long scaleId,
-            @RequestParam(required = false) Integer status) {
-        
-        Page<ReportTemplate> page = new Page<>(request.getCurrent(), request.getSize());
-        IPage<ReportTemplate> result = reportTemplateService.getTemplateList(page, scaleId, status);
+            @RequestParam(value = "scaleId", required = false) Long scaleId,
+            @RequestParam(value = "status", required = false) Integer status) {
+
+        PageResult<ReportTemplate> result = reportTemplateService.getTemplateList(request, scaleId, status);
         
         return RestResult.success(result);
     }

@@ -3,6 +3,8 @@ package com.iotsic.ps.report.service;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.report.entity.Report;
 
 public interface ReportService extends IService<Report> {
@@ -11,7 +13,7 @@ public interface ReportService extends IService<Report> {
 
     Report getReportByTaskId(Long taskId);
 
-    IPage<Report> getReportList(Page<Report> page, Long userId, Long scaleId, Integer status);
+    PageResult<Report> getReportList(PageRequest request, Long userId, Long scaleId, Integer status);
 
     Report getReportDetail(Long reportId);
 

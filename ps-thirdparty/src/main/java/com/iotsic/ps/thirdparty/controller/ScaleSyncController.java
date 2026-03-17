@@ -35,8 +35,8 @@ public class ScaleSyncController {
 
     @GetMapping("/logs")
     public RestResult<List<SyncLog>> getSyncLogs(
-            @RequestParam(required = false) Long configId,
-            @RequestParam(required = false) Integer syncType) {
+            @RequestParam(value = "configId", required = false) Long configId,
+            @RequestParam(value = "syncType", required = false) Integer syncType) {
         return RestResult.success(scaleSyncService.getSyncLogs(configId, syncType));
     }
 

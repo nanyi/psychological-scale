@@ -2,6 +2,8 @@ package com.iotsic.ps.api.scale;
 
 import com.iotsic.ps.api.config.FeignConfig;
 import com.iotsic.ps.api.dto.*;
+import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.result.RestResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,8 +21,7 @@ public interface ScaleApi {
     RestResult<ScaleResponse> getScaleByCode(@PathVariable("code") String code);
 
     @GetMapping("/api/scale/list")
-    RestResult<ScaleListResponse> getScaleList(@RequestParam("pageNum") Integer pageNum,
-                                                @RequestParam("pageSize") Integer pageSize);
+    RestResult<PageResult<ScaleListResponse>> getScaleList(PageRequest request);
 
     @GetMapping("/api/scale/dimensions/{scaleId}")
     RestResult<DimensionListResponse> getDimensionsByScaleId(@PathVariable("scaleId") Long scaleId);

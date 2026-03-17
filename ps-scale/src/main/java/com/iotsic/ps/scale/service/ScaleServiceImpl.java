@@ -55,10 +55,11 @@ public class ScaleServiceImpl implements ScaleService {
         Scale scale = new Scale();
         scale.setScaleCode(scaleCode);
         scale.setScaleName(request.getName());
-        scale.setScaleDesc(request.getDescription());
-        scale.setCategory(request.getCategory());
+        scale.setScaleNameEn(request.getNameEn());
+        scale.setCategoryId(request.getCategoryId());
+        scale.setDescription(request.getDescription());
         scale.setCover(request.getCoverImage());
-        scale.setEstimatedTime(request.getDuration());
+        scale.setDuration(request.getDuration());
         
         if (request.getPrice() != null) {
             scale.setPrice(request.getPrice());
@@ -66,7 +67,7 @@ public class ScaleServiceImpl implements ScaleService {
             scale.setPrice(BigDecimal.ZERO);
         }
 
-        scale.setInstructions(request.getInstruction());
+        scale.setInstruction(request.getInstruction());
         scale.setAttention(null);
         scale.setStatus(0);
         scale.setIsFree(request.getPrice() == null || request.getPrice().compareTo(BigDecimal.ZERO) == 0 ? 1 : 0);
@@ -87,24 +88,27 @@ public class ScaleServiceImpl implements ScaleService {
         if (request.getName() != null) {
             scale.setScaleName(request.getName());
         }
-        if (request.getDescription() != null) {
-            scale.setScaleDesc(request.getDescription());
+        if (request.getNameEn() != null) {
+            scale.setScaleNameEn(request.getNameEn());
         }
-        if (request.getCategory() != null) {
-            scale.setCategory(request.getCategory());
+        if (request.getDescription() != null) {
+            scale.setDescription(request.getDescription());
+        }
+        if (request.getCategoryId() != null) {
+            scale.setCategoryId(request.getCategoryId());
         }
         if (request.getCoverImage() != null) {
             scale.setCover(request.getCoverImage());
         }
         if (request.getDuration() != null) {
-            scale.setEstimatedTime(request.getDuration());
+            scale.setDuration(request.getDuration());
         }
         if (request.getPrice() != null) {
             scale.setPrice(request.getPrice());
             scale.setIsFree(request.getPrice().compareTo(BigDecimal.ZERO) == 0 ? 1 : 0);
         }
         if (request.getInstruction() != null) {
-            scale.setInstructions(request.getInstruction());
+            scale.setInstruction(request.getInstruction());
         }
         if (request.getStatus() != null) {
             scale.setStatus(request.getStatus());
@@ -143,12 +147,12 @@ public class ScaleServiceImpl implements ScaleService {
     }
 
     @Override
-    public PageResult<Scale> getScaleList(PageRequest request, Integer category, Integer status) {
+    public PageResult<Scale> getScaleList(PageRequest request, Long categoryId, Integer status) {
         Page<Scale> page = new Page<>(request.getCurrent(), request.getSize());
         LambdaQueryWrapper<Scale> wrapper = new LambdaQueryWrapper<>();
         
-        if (category != null) {
-            wrapper.eq(Scale::getCategory, category);
+        if (categoryId != null) {
+            wrapper.eq(Scale::getCategoryId, categoryId);
         }
         if (status != null) {
             wrapper.eq(Scale::getStatus, status);

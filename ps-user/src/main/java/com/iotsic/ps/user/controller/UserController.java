@@ -1,7 +1,5 @@
 package com.iotsic.ps.user.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.result.RestResult;
@@ -48,17 +46,11 @@ public class UserController {
     @GetMapping("/list")
     public RestResult<PageResult<User>> getUserList(
             PageRequest request,
-            @RequestParam(required = false) String username,
-            @RequestParam(required = false) String phone,
-            @RequestParam(required = false) Integer status) {
-        Page<User> page = new Page<>(request.getPageNum(), request.getPageSize());
-        IPage<User> result = userService.getUserList(page, username, phone, status);
-        PageResult<User> pageResult = new PageResult<>();
-        pageResult.setRecords(result.getRecords());
-        pageResult.setTotal(result.getTotal());
-        pageResult.setPageNum((int) result.getCurrent());
-        pageResult.setPageSize((int) result.getSize());
-        return RestResult.success(pageResult);
+            @RequestParam(value = "username", required = false) String username,
+            @RequestParam(value = "phone", required = false) String phone,
+            @RequestParam(value = "status", required = false) Integer status) {
+        PageResult<User> result = userService.getUserList(request, username, phone, status);
+        return RestResult.success(result);
     }
 
     /**

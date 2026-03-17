@@ -14,22 +14,32 @@ import java.util.List;
 public class ScaleListResponse {
 
     /**
-     * 量表列表
+     * 量表ID
      */
-    private List<ScaleResponse> scales;
+    private Long id;
 
     /**
-     * 总数
+     * 量表名称
      */
-    private Long total;
+    private String scaleName;
 
     /**
-     * 当前页码
+     * 量表编码
      */
-    private Integer pageNum;
+    private String scaleCode;
 
     /**
-     * 每页大小
+     * 量表分类
      */
-    private Integer pageSize;
+    private Integer category;
+
+    /**
+     * 量表描述
+     */
+    private String description;
+
+    /**
+     * 状态：0-禁用，1-启用
+     */
+    private Integer status;
 }

@@ -40,8 +40,8 @@ public class AnalysisController {
      */
     @GetMapping("/dashboard")
     public RestResult<DashboardDTO> getDashboard(
-            @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
-            @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
+            @RequestParam(value = "startDate", required = false, defaultValue = "2026-01-01") String startDate,
+            @RequestParam(value = "endDate", required = false, defaultValue = "2026-03-11") String endDate) {
         DashboardDTO data = analysisService.getDashboardData(startDate, endDate);
         return RestResult.success(data);
     }
@@ -101,7 +101,7 @@ public class AnalysisController {
      */
     @GetMapping("/report/result")
     public RestResult<ResultDistributionResponse> getResultDistributionReport(
-            @RequestParam Long scaleId,
+            @RequestParam(value = "scaleId") Long scaleId,
             @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
             @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
         ResultDistributionResponse data = analysisService.getResultDistributionReport(scaleId, startDate, endDate);
@@ -133,7 +133,7 @@ public class AnalysisController {
      */
     @GetMapping("/trend/group")
     public RestResult<List<TrendDataResponse>> getGroupTrendAnalysis(
-            @RequestParam String dimension,
+            @RequestParam(value = "dimension") String dimension,
             @RequestParam(required = false, defaultValue = "2026-01-01") String startDate,
             @RequestParam(required = false, defaultValue = "2026-03-11") String endDate) {
         List<TrendDataResponse> data = analysisService.getGroupTrendAnalysis(dimension, startDate, endDate);
@@ -149,8 +149,8 @@ public class AnalysisController {
      */
     @GetMapping("/norm/compare")
     public RestResult<NormCompareDTO> compareWithNorm(
-            @RequestParam Long reportId,
-            @RequestParam(required = false) Long normGroupId) {
+            @RequestParam(value = "reportId") Long reportId,
+            @RequestParam(value = "normGroupId", required = false) Long normGroupId) {
         NormCompareDTO data = analysisService.compareWithNorm(reportId, normGroupId);
         return RestResult.success(data);
     }
@@ -164,7 +164,7 @@ public class AnalysisController {
      */
     @PostMapping("/export")
     public RestResult<ExportDataResponse> exportReportData(
-            @RequestParam String reportType,
+            @RequestParam(value = "reportType") String reportType,
             @RequestBody ReportExportRequest request) {
         ExportDataResponse data = analysisService.exportReportData(reportType, request);
         return RestResult.success(data);

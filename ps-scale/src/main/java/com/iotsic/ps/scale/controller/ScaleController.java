@@ -114,16 +114,16 @@ public class ScaleController {
      * 获取量表列表
      * 
      * @param request 分页请求
-     * @param category 量表分类
+     * @param categoryId 分类ID
      * @param status 状态
      * @return 量表分页列表
      */
     @GetMapping("/list")
     public RestResult<PageResult<Scale>> getScaleList(
             PageRequest request,
-            @RequestParam(required = false) Integer category,
-            @RequestParam(required = false) Integer status) {
-        return RestResult.success(scaleService.getScaleList(request, category, status));
+            @RequestParam(value = "categoryId", required = false) Long categoryId,
+            @RequestParam(value = "status", required = false) Integer status) {
+        return RestResult.success(scaleService.getScaleList(request, categoryId, status));
     }
 
     /**

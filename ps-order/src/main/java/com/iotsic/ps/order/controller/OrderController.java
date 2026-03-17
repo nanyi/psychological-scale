@@ -77,7 +77,7 @@ public class OrderController {
      * @return 操作结果
      */
     @PostMapping("/cancel")
-    public RestResult<Void> cancelOrder(@RequestParam Long orderId, @RequestParam(required = false) String reason) {
+    public RestResult<Void> cancelOrder(@RequestParam(value = "orderId") Long orderId, @RequestParam(value = "reason", required = false) String reason) {
         orderService.cancelOrder(orderId, reason);
         return RestResult.success();
     }

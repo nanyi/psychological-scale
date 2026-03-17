@@ -38,6 +38,10 @@
         <spring-cloud.version>2023.0.0</spring-cloud.version>
         <spring-cloud-alibaba.version>2023.0.1.0</spring-cloud-alibaba.version>
         <mybatis-plus.version>3.5.11</mybatis-plus.version>
+
+        <springdoc.version>2.8.6</springdoc.version>
+        <swagger.core.version>2.2.29</swagger.core.version>
+
         <mysql.version>8.0.33</mysql.version>
         <redis.version>3.2.1</redis.version>
         <jwt.version>0.12.3</jwt.version>
@@ -80,6 +84,17 @@
                 <groupId>com.baomidou</groupId>
                 <artifactId>mybatis-plus-jsqlparser-4.9</artifactId>
                 <version>${mybatis-plus.version}</version>
+            </dependency>
+            <!-- SpringDoc -->
+            <dependency>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+                <version>${springdoc.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger.core.v3</groupId>
+                <artifactId>swagger-annotations-jakarta</artifactId>
+                <version>${swagger.core.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.mybatis</groupId>
@@ -161,6 +176,16 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.11.0</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                        <parameters>true</parameters>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

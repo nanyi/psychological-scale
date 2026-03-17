@@ -1,5 +1,6 @@
 package com.iotsic.ps.common.request;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.iotsic.ps.common.constant.BusinessConstant;
 import lombok.Data;
 
@@ -13,18 +14,19 @@ public class PageRequest implements Serializable {
     private Integer current = 1;
     private Integer size = BusinessConstant.DEFAULT_PAGE_SIZE;
 
-    public void setPageNum(Integer current) {
+    public void setCurrent(Integer current) {
         if (current != null && current > 0) {
             this.current = current;
         }
     }
 
-    public void setPageSize(Integer pageSize) {
-        if (pageSize != null && pageSize > 0) {
-            this.size = Math.min(pageSize, BusinessConstant.MAX_PAGE_SIZE);
+    public void setSize(Integer size) {
+        if (size != null && size > 0) {
+            this.size = Math.min(size, BusinessConstant.MAX_PAGE_SIZE);
         }
     }
 
+    @JsonIgnore
     public Integer getOffset() {
         return (current - 1) * size;
     }

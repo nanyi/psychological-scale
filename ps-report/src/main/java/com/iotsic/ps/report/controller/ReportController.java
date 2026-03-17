@@ -2,6 +2,8 @@ package com.iotsic.ps.report.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.report.dto.ReportDownloadResponse;
 import com.iotsic.ps.report.dto.ReportExportRequest;
@@ -59,8 +61,8 @@ public class ReportController {
      */
     @GetMapping("/detail")
     public RestResult<Report> getReportDetail(
-            @RequestParam(required = false) Long reportId,
-            @RequestParam(required = false) Long taskId) {
+            @RequestParam(value = "reportId", required = false) Long reportId,
+            @RequestParam(value = "taskId", required = false) Long taskId) {
         
         Report report;
         if (reportId != null) {
@@ -77,23 +79,20 @@ public class ReportController {
     /**
      * 获取报告列表
      * 
-     * @param pageNum 页码
-     * @param pageSize 每页数量
+     * @param request 分页参数
      * @param userId 用户ID
      * @param scaleId 量表ID
      * @param status 状态
      * @return 报告分页列表
      */
     @GetMapping("/list")
-    public RestResult<IPage<Report>> getReportList(
-            @RequestParam(defaultValue = "1") Integer pageNum,
-            @RequestParam(defaultValue = "10") Integer pageSize,
-            @RequestParam(required = false) Long userId,
-            @RequestParam(required = false) Long scaleId,
-            @RequestParam(required = false) Integer status) {
-        
-        Page<Report> page = new Page<>(pageNum, pageSize);
-        IPage<Report> result = reportService.getReportList(page, userId, scaleId, status);
+    public RestResult<PageResult<Report>> getReportList(
+            PageRequest request,
+            @RequestParam(value = "userId", required = false) Long userId,
+            @RequestParam(value = "scaleId", required = false) Long scaleId,
+            @RequestParam(value = "status", required = false) Integer status) {
+
+        PageResult<Report> result = reportService.getReportList(request, userId, scaleId, status);
         
         return RestResult.success(result);
     }

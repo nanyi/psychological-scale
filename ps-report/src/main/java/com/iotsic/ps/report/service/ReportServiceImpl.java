@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.iotsic.ps.common.exception.BusinessException;
+import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.utils.JsonUtils;
 import com.iotsic.ps.core.entity.ExamRecord;
 import com.iotsic.ps.report.entity.Report;
@@ -182,7 +184,8 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
     }
 
     @Override
-    public IPage<Report> getReportList(Page<Report> page, Long userId, Long scaleId, Integer status) {
+    public PageResult<Report> getReportList(PageRequest request, Long userId, Long scaleId, Integer status) {
+        Page<Report> page = new Page<>(request.getCurrent(), request.getSize());
         LambdaQueryWrapper<Report> wrapper = new LambdaQueryWrapper<>();
         if (userId != null) {
             wrapper.eq(Report::getUserId, userId);
@@ -194,7 +197,8 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
             wrapper.eq(Report::getStatus, status);
         }
         wrapper.orderByDesc(Report::getCreateTime);
-        return this.page(page, wrapper);
+        IPage<Report> result = this.page(page, wrapper);
+        return PageResult.of(result.getRecords(), result.getTotal());
     }
 
     @Override

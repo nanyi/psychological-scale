@@ -149,7 +149,7 @@ public class UserGroupController {
      */
     @GetMapping("/list")
     public RestResult<PageResult<UserGroup>> getGroupList(PageRequest request,
-                                                          @RequestParam(required = false) Long enterpriseId) {
+                                                          @RequestParam(value = "enterpriseId", required = false) Long enterpriseId) {
         return RestResult.success(userGroupService.getGroupList(request, enterpriseId));
     }
 }

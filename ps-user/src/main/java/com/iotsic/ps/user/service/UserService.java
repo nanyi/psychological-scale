@@ -2,6 +2,8 @@ package com.iotsic.ps.user.service;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.User;
 import com.iotsic.ps.user.dto.AuthResultDTO;
 import com.iotsic.ps.user.vo.UserVO;
@@ -18,13 +20,13 @@ public interface UserService {
     /**
      * 获取用户分页列表
      *
-     * @param page 分页参数
+     * @param request 分页参数
      * @param username 用户名（模糊查询）
      * @param phone 手机号（模糊查询）
      * @param status 状态
      * @return 用户分页列表
      */
-    IPage<User> getUserList(Page<User> page, String username, String phone, Integer status);
+    PageResult<User> getUserList(PageRequest request, String username, String phone, Integer status);
 
     /**
      * 用户注册

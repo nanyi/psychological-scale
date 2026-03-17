@@ -6,10 +6,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 
-@SpringBootApplication(scanBasePackages = "com.iotsic.ps")
-@MapperScan("com.iotsic.ps.payment.mapper")
+@SpringBootApplication(scanBasePackages = {"com.iotsic.ps"})
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = "com.iotsic.ps.api")
+@EnableFeignClients(basePackages = {"com.iotsic.ps.api"})
 public class PsPaymentApplication {
 
     public static void main(String[] args) {

@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.constant.SystemConstant;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
+import com.iotsic.ps.common.request.PageRequest;
+import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.core.entity.User;
 import com.iotsic.ps.core.enums.UserTypeEnum;
@@ -31,13 +33,15 @@ public class UserServiceImpl implements UserService {
     private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
-    public IPage<User> getUserList(Page<User> page, String username, String phone, Integer status) {
+    public PageResult<User> getUserList(PageRequest request, String username, String phone, Integer status) {
+        Page<User> page = new Page<>(request.getCurrent(), request.getSize());
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(username != null, User::getUsername, username)
                 .like(phone != null, User::getPhone, phone)
                 .eq(status != null, User::getStatus, status)
                 .orderByDesc(User::getCreateTime);
-        return userMapper.selectPage(page, wrapper);
+        IPage<User> result = userMapper.selectPage(page, wrapper);
+        return PageResult.of(result.getRecords(), result.getTotal());
     }
 
     @Override

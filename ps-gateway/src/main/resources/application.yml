@@ -40,46 +40,46 @@ spring:
             - StripPrefix=0
         # 量表服务
         - id: ps-scale
-          uri: lb://ps-scale
+          uri: http://localhost:8082
           predicates:
             - Path=/api/scale/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
         # 订单服务
         - id: ps-order
           uri: lb://ps-order
           predicates:
             - Path=/api/order/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
         # 支付服务
         - id: ps-payment
           uri: lb://ps-payment
           predicates:
             - Path=/api/payment/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
         # 报告服务
         - id: ps-report
           uri: lb://ps-report
           predicates:
             - Path=/api/report/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
         # 第三方服务
         - id: ps-thirdparty
           uri: lb://ps-thirdparty
           predicates:
             - Path=/api/thirdparty/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
         # 分析服务
         - id: ps-analysis
-          uri: lb://ps-analysis
+          uri: http://localhost:8083
           predicates:
             - Path=/api/analysis/**
           filters:
-            - StripPrefix=1
+            - StripPrefix=0
   config:
     import:
       optional: nacos
@@ -90,9 +90,9 @@ spring:
       password: ${REDIS_PASSWORD:redis123}
       database: 0
 
-# JWT配置
+# JWT 配置
 jwt:
-  secret: ${JWT_SECRET:psychological-scale-secret-key-change-in-production}
+  secret: ${JWT_SECRET:psychological-scale-secret-key-2026}
   issuer: ${JWT_ISSUER:psychological-scale}
   access-token-validity: 7200
   refresh-token-validity: 604800
@@ -111,9 +111,9 @@ sentinel:
 logging:
   level:
     root: INFO
-    org.springframework.cloud.gateway: DEBUG
-    org.springframework.cloud.gateway.route: DEBUG
-    org.springframework.cloud.gateway.handler: DEBUG
+    # org.springframework.cloud.gateway: DEBUG
+    #　org.springframework.cloud.gateway.route: DEBUG
+    # org.springframework.cloud.gateway.handler: DEBUG
     com.iotsic.ps.gateway: DEBUG
-    com.alibaba.cloud.nacos: DEBUG
-    org.springframework.cloud.loadbalancer: DEBUG
+    # com.alibaba.cloud.nacos: DEBUG
+    # org.springframework.cloud.loadbalancer: DEBUG

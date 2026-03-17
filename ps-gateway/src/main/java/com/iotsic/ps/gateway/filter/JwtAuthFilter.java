@@ -30,7 +30,7 @@ import java.nio.charset.StandardCharsets;
 @Component
 public class JwtAuthFilter implements GlobalFilter, Ordered {
 
-    @Value("${jwt.secret:psychological-scale-secret-key-change-in-production}")
+    @Value("${jwt.secret:psychological-scale-secret-key-2026}")
     private String jwtSecret;
 
     @Value("${jwt.issuer:psychological-scale}")
@@ -46,19 +46,18 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
 
-        if (path.startsWith("/api/auth/") || path.startsWith("/api/user/login") 
-            || path.startsWith("/api/user/register")) {
+        if (path.startsWith("/api/auth/") || path.startsWith("/api/user/register")) {
             return chain.filter(exchange);
         }
 
         String authHeader = request.getHeaders().getFirst(AUTH_HEADER);
-        
+
         if (!StringUtils.hasText(authHeader) || !authHeader.startsWith(BEARER_PREFIX)) {
             return unauthorized(exchange.getResponse(), "Missing or invalid Authorization header");
         }
 
         String token = authHeader.substring(BEARER_PREFIX.length());
-        
+
         try {
             SecretKey key = Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
             Claims claims = Jwts.parser()
@@ -68,22 +67,22 @@ public class JwtAuthFilter implements GlobalFilter, Ordered {
                     .parseSignedClaims(token)
                     .getPayload();
 
-            String userId = claims.getSubject();
-            String username = claims.get("username", String.class);
+            Long userId = claims.get("userId", Long.class);
+            String username = claims.getSubject();
 
-            if (!StringUtils.hasText(userId)) {
-                return unauthorized(exchange.getResponse(), "Invalid token: missing user id");
+            if (!StringUtils.hasText(username)) {
+                return unauthorized(exchange.getResponse(), "Invalid token: missing username");
             }
 
             ServerHttpRequest mutatedRequest = request.mutate()
-                    .header(USER_ID_HEADER, userId)
-                    .header(USER_NAME_HEADER, username != null ? username : "")
+                    .header(USER_ID_HEADER, userId.toString())
+                    .header(USER_NAME_HEADER, username)
                     .build();
 
             log.debug("Authenticated user: {} for path: {}", userId, path);
-            
+
             return chain.filter(exchange.mutate().request(mutatedRequest).build());
-            
+
         } catch (Exception e) {
             log.warn("JWT validation failed for path: {}, error: {}", path, e.getMessage());
             return unauthorized(exchange.getResponse(), "Invalid or expired token");

@@ -72,11 +72,11 @@ public interface ScaleService {
      * 获取量表列表
      *
      * @param request 分页请求
-     * @param category 量表分类
+     * @param categoryId 分类ID
      * @param status 量表状态
      * @return 量表分页结果
      */
-    PageResult<Scale> getScaleList(PageRequest request, Integer category, Integer status);
+    PageResult<Scale> getScaleList(PageRequest request, Long categoryId, Integer status);
 
     /**
      * 增加量表浏览次数

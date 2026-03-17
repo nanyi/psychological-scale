@@ -28,6 +28,9 @@ public class JwtService {
     @Value("${jwt.refresh-expire:#{T(com.iotsic.ps.common.constant.SystemConstant).REFRESH_TOKEN_EXPIRE_TIME}}")
     private Long refreshExpire;
 
+    @Value("${jwt.issuer:psychological-scale}")
+    private String issuer;
+
     private SecretKey getSecretKey() {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
@@ -43,6 +46,7 @@ public class JwtService {
         return Jwts.builder()
                 .claims(claims)
                 .subject(username)
+                .issuer(issuer)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + expire))
                 .signWith(getSecretKey())
@@ -58,6 +62,7 @@ public class JwtService {
         return Jwts.builder()
                 .claims(claims)
                 .subject(username)
+                .issuer(issuer)
                 .issuedAt(new Date())
                 .expiration(new Date(System.currentTimeMillis() + refreshExpire))
                 .signWith(getSecretKey())

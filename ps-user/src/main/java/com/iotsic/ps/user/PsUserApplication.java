@@ -9,7 +9,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication(scanBasePackages = {"com.iotsic.ps"})
 @EnableDiscoveryClient
 @EnableFeignClients(basePackages = {"com.iotsic.ps.api"})
-@MapperScan("com.iotsic.ps.user.mapper")
 public class PsUserApplication {
 
     public static void main(String[] args) {

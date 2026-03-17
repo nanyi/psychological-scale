@@ -17,14 +17,19 @@ public class ScaleUpdateRequest {
     private String name;
 
     /**
+     * 量表英文名称
+     */
+    private String nameEn;
+
+    /**
      * 量表描述
      */
     private String description;
 
     /**
-     * 量表分类
+     * 分类ID
      */
-    private Integer category;
+    private Long categoryId;
 
     /**
      * 量表封面图片URL

@@ -19,9 +19,9 @@ public class ScaleCreateRequest {
     private String scaleName;
 
     /**
-     * 量表分类
+     * 分类ID
      */
-    private Integer category;
+    private Long categoryId;
 
     /**
      * 量表描述
@@ -42,6 +42,11 @@ public class ScaleCreateRequest {
      * 量表名称（前端传入的字段名）
      */
     private String name;
+
+    /**
+     * 量表名称（英文）
+     */
+    private String nameEn;
 
     /**
      * 封面图片
