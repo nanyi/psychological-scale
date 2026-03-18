@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("exam_answer")
+@TableName("ps_answer_record")
 public class ExamAnswer extends BaseEntity {
 
     private Long recordId;

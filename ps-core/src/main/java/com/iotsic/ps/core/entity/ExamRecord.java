@@ -15,9 +15,13 @@ import java.time.LocalDateTime;
 @TableName("ps_exam_record")
 public class ExamRecord extends BaseEntity {
 
+    private Long taskId;
+
     private Long userId;
 
     private Long scaleId;
+
+    private Long enterpriseId;
 
     private String recordNo;
 
@@ -44,8 +48,6 @@ public class ExamRecord extends BaseEntity {
     private String deviceInfo;
 
     private String source;
-
-    private Long enterpriseId;
 
     private String dimensionScores;
 
