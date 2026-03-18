@@ -9,11 +9,14 @@ import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.utils.EncryptUtils;
+import com.iotsic.ps.core.entity.Role;
 import com.iotsic.ps.core.entity.User;
+import com.iotsic.ps.core.entity.UserRole;
 import com.iotsic.ps.core.enums.UserTypeEnum;
 import com.iotsic.ps.security.service.JwtService;
 import com.iotsic.ps.user.dto.AuthResultDTO;
 import com.iotsic.ps.user.mapper.UserMapper;
+import com.iotsic.ps.user.mapper.UserRoleMapper;
 import com.iotsic.ps.user.vo.UserVO;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,16 +24,22 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
+    private static final String SUPER_ADMIN_CODE = "SUPER_ADMIN";
+
     private final UserMapper userMapper;
+    private final UserRoleMapper userRoleMapper;
     private final JwtService jwtService;
     private final RedisTemplate<String, Object> redisTemplate;
+    private final RoleService roleService;
 
     @Override
     public PageResult<User> getUserList(PageRequest request, String username, String phone, Integer status) {
@@ -186,12 +195,10 @@ public class UserServiceImpl implements UserService {
             throw BusinessException.of(ErrorCodeEnum.USER_NOT_FOUND.getCode(), "用户不存在");
         }
         
-        // 如果是将管理员改为其他角色，检查是否还有效的管理员
-        if (existUser.getUserType() != null && existUser.getUserType() == 1 
-                && user.getUserType() != null && user.getUserType() != 1) {
-            long adminCount = countActiveAdmins();
-            if (adminCount <= 1) {
-                throw BusinessException.of(ErrorCodeEnum.SYSTEM_ERROR.getCode(), "系统至少需要保留1个管理员");
+        if (hasSuperAdminRole(userId) && !hasSuperAdminRoleByUser(user)) {
+            long superAdminCount = countSuperAdminUsers();
+            if (superAdminCount <= 1) {
+                throw BusinessException.of(ErrorCodeEnum.SYSTEM_ERROR.getCode(), "系统至少需要保留1个超级管理员");
             }
         }
         
@@ -208,11 +215,10 @@ public class UserServiceImpl implements UserService {
             throw BusinessException.of(ErrorCodeEnum.USER_NOT_FOUND.getCode(), "用户不存在");
         }
         
-        // 如果是禁用管理员用户，检查是否还有效的管理员
-        if (existUser.getUserType() != null && existUser.getUserType() == 1 && status == 0) {
-            long adminCount = countActiveAdmins();
-            if (adminCount <= 1) {
-                throw BusinessException.of(ErrorCodeEnum.SYSTEM_ERROR.getCode(), "系统至少需要保留1个管理员，无法禁用");
+        if (hasSuperAdminRole(userId) && status == 0) {
+            long superAdminCount = countSuperAdminUsers();
+            if (superAdminCount <= 1) {
+                throw BusinessException.of(ErrorCodeEnum.SYSTEM_ERROR.getCode(), "系统至少需要保留1个超级管理员，无法禁用");
             }
         }
         
@@ -230,26 +236,56 @@ public class UserServiceImpl implements UserService {
             throw BusinessException.of(ErrorCodeEnum.USER_NOT_FOUND.getCode(), "用户不存在");
         }
         
-        // 如果是删除管理员用户，检查是否还有效的管理员
-        if (existUser.getUserType() != null && existUser.getUserType() == 1) {
-            long adminCount = countActiveAdmins();
-            if (adminCount <= 1) {
-                throw BusinessException.of(ErrorCodeEnum.SYSTEM_ERROR.getCode(), "系统至少需要保留1个管理员，无法删除");
+        if (hasSuperAdminRole(userId)) {
+            long superAdminCount = countSuperAdminUsers();
+            if (superAdminCount <= 1) {
+                throw BusinessException.of(ErrorCodeEnum.SYSTEM_ERROR.getCode(), "系统至少需要保留1个超级管理员，无法删除");
             }
         }
         
         userMapper.deleteById(userId);
     }
     
-    /**
-     * 统计有效管理员数量
-     * @return 有效管理员数量
-     */
-    private long countActiveAdmins() {
-        LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(User::getUserType, 1)
-               .eq(User::getStatus, 1)
-               .eq(User::getDeleted, 0);
-        return userMapper.selectCount(wrapper);
+    private boolean hasSuperAdminRole(Long userId) {
+        Role superAdminRole = roleService.getRoleByCode(SUPER_ADMIN_CODE);
+        if (superAdminRole == null) {
+            return false;
+        }
+        
+        LambdaQueryWrapper<UserRole> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(UserRole::getUserId, userId)
+               .eq(UserRole::getRoleId, superAdminRole.getId())
+               .eq(UserRole::getDeleted, 0);
+        return userRoleMapper.selectCount(wrapper) > 0;
+    }
+    
+    private boolean hasSuperAdminRoleByUser(User user) {
+        return user != null && user.getId() != null && hasSuperAdminRole(user.getId());
+    }
+    
+    private long countSuperAdminUsers() {
+        Role superAdminRole = roleService.getRoleByCode(SUPER_ADMIN_CODE);
+        if (superAdminRole == null) {
+            return 0;
+        }
+        
+        LambdaQueryWrapper<UserRole> urWrapper = new LambdaQueryWrapper<>();
+        urWrapper.eq(UserRole::getRoleId, superAdminRole.getId())
+                 .eq(UserRole::getDeleted, 0);
+        List<UserRole> userRoles = userRoleMapper.selectList(urWrapper);
+        
+        if (userRoles.isEmpty()) {
+            return 0;
+        }
+        
+        List<Long> userIds = userRoles.stream()
+                .map(UserRole::getUserId)
+                .collect(Collectors.toList());
+        
+        LambdaQueryWrapper<User> userWrapper = new LambdaQueryWrapper<>();
+        userWrapper.in(User::getId, userIds)
+                   .eq(User::getStatus, 1)
+                   .eq(User::getDeleted, 0);
+        return userMapper.selectCount(userWrapper);
     }
 }
