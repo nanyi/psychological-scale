@@ -1,7 +1,8 @@
 package com.iotsic.ps.scale.service;
 
-import com.baomidou.mybatisplus.extension.service.IService;
 import com.iotsic.ps.core.entity.ScaleCategory;
+import com.iotsic.ps.scale.dto.ScaleCategoryRequest;
+import com.iotsic.ps.scale.dto.ScaleCategoryUpdateRequest;
 
 import java.util.List;
 
@@ -11,7 +12,28 @@ import java.util.List;
  * @author Ryan
  * @since 2026-03-17
  */
-public interface ScaleCategoryService extends IService<ScaleCategory> {
+public interface ScaleCategoryService {
+
+    /**
+     * 新增分类
+     *
+     * @param request 分类信息
+     */
+    void createCategory(ScaleCategoryRequest request);
+
+    /**
+     * 更新分类
+     *
+     * @param category 分类信息
+     */
+    void updateCategory(ScaleCategoryUpdateRequest category);
+
+    /**
+     * 删除分类
+     *
+     * @param id 分类ID
+     */
+    void deleteCategory(Long id);
 
     /**
      * 获取分类树形列表

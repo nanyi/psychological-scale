@@ -1,14 +1,21 @@
 package com.iotsic.ps.scale.controller;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.iotsic.ps.core.entity.ScaleCategory;
 import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.core.entity.ScaleCategory;
 import com.iotsic.ps.scale.dto.ScaleCategoryRequest;
+import com.iotsic.ps.scale.dto.ScaleCategoryUpdateRequest;
 import com.iotsic.ps.scale.service.ScaleCategoryService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
@@ -41,50 +48,21 @@ public class ScaleCategoryController {
     @PostMapping("/create")
     @Operation(summary = "新增分类")
     public RestResult<Void> createCategory(@RequestBody ScaleCategoryRequest request) {
-        ScaleCategory category = new ScaleCategory();
-        category.setCategoryName(request.getCategoryName());
-        category.setParentId(request.getParentId() == null ? 0L : request.getParentId());
-        category.setSortOrder(request.getSortOrder() == null ? 0 : request.getSortOrder());
-        category.setRemark(request.getRemark());
-        category.setStatus(request.getStatus() == null ? 1 : request.getStatus());
-        scaleCategoryService.save(category);
+        scaleCategoryService.createCategory(request);
         return RestResult.success();
     }
 
     @PutMapping("/update/{id}")
     @Operation(summary = "更新分类")
-    public RestResult<Void> updateCategory(@PathVariable Long id, @RequestBody ScaleCategoryRequest request) {
-        ScaleCategory category = scaleCategoryService.getById(id);
-        if (category == null) {
-            return RestResult.fail("分类不存在");
-        }
-        category.setCategoryName(request.getCategoryName());
-        if (request.getParentId() != null) {
-            category.setParentId(request.getParentId());
-        }
-        if (request.getSortOrder() != null) {
-            category.setSortOrder(request.getSortOrder());
-        }
-        category.setRemark(request.getRemark());
-        if (request.getStatus() != null) {
-            category.setStatus(request.getStatus());
-        }
-        scaleCategoryService.updateById(category);
+    public RestResult<Void> updateCategory(@PathVariable Long id, @RequestBody ScaleCategoryUpdateRequest request) {
+        scaleCategoryService.updateCategory(request);
         return RestResult.success();
     }
 
     @DeleteMapping("/delete/{id}")
     @Operation(summary = "删除分类")
     public RestResult<Void> deleteCategory(@PathVariable Long id) {
-        // 检查是否有子分类
-        long childCount = scaleCategoryService.count(
-            new LambdaQueryWrapper<ScaleCategory>()
-                .eq(ScaleCategory::getParentId, id)
-        );
-        if (childCount > 0) {
-            return RestResult.fail("该分类下有子分类，无法删除");
-        }
-        scaleCategoryService.removeById(id);
+        scaleCategoryService.deleteCategory(id);
         return RestResult.success();
     }
 }

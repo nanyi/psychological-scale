@@ -1,16 +1,18 @@
 package com.iotsic.ps.report.service;
 
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.utils.json.JsonUtils;
+import com.iotsic.ps.core.entity.Report;
 import com.iotsic.ps.report.dto.ReportDownloadResponse;
 import com.iotsic.ps.report.dto.ReportExportResponse;
-import com.iotsic.ps.report.entity.Report;
 import com.iotsic.ps.report.entity.ReportExport;
 import com.iotsic.ps.report.mapper.ReportExportMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.xwpf.usermodel.*;
+import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.apache.poi.xwpf.usermodel.XWPFRun;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.FileOutputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.List;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class ExportServiceImpl extends ServiceImpl<ReportExportMapper, ReportExport> implements ExportService {
+public class ExportServiceImpl implements ExportService {
 
     @Value("${report.export.path:/tmp/reports}")
     private String exportPath;
@@ -32,6 +34,7 @@ public class ExportServiceImpl extends ServiceImpl<ReportExportMapper, ReportExp
     private String urlPrefix;
 
     private final ReportService reportService;
+    private final ReportExportMapper reportExportMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -53,7 +56,7 @@ public class ExportServiceImpl extends ServiceImpl<ReportExportMapper, ReportExp
             exportRecord.setExportType(1);
             exportRecord.setFileUrl(urlPrefix + "/" + fileName);
             exportRecord.setCreateTime(LocalDateTime.now());
-            this.save(exportRecord);
+            reportExportMapper.insert(exportRecord);
 
             ReportExportResponse result = new ReportExportResponse();
             result.setDownloadUrl(exportRecord.getFileUrl());
@@ -87,7 +90,7 @@ public class ExportServiceImpl extends ServiceImpl<ReportExportMapper, ReportExp
             exportRecord.setExportType(2);
             exportRecord.setFileUrl(urlPrefix + "/" + fileName);
             exportRecord.setCreateTime(LocalDateTime.now());
-            this.save(exportRecord);
+            reportExportMapper.insert(exportRecord);
 
             ReportExportResponse result = new ReportExportResponse();
             result.setDownloadUrl(exportRecord.getFileUrl());

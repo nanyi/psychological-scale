@@ -2,9 +2,6 @@ package com.iotsic.ps.report.service;
 
 import com.iotsic.ps.report.dto.ReportDownloadResponse;
 import com.iotsic.ps.report.dto.ReportExportResponse;
-import com.iotsic.ps.report.entity.Report;
-
-import java.util.Map;
 
 public interface ExportService {
 

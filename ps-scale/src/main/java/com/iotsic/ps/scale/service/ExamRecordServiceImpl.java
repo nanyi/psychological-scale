@@ -7,11 +7,18 @@ import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
-import com.iotsic.ps.core.entity.*;
+import com.iotsic.ps.core.entity.ExamAnswer;
+import com.iotsic.ps.core.entity.ExamRecord;
+import com.iotsic.ps.core.entity.Question;
+import com.iotsic.ps.core.entity.Scale;
 import com.iotsic.ps.scale.dto.ExamRecordListRequest;
 import com.iotsic.ps.scale.dto.RecordDetailResponse;
 import com.iotsic.ps.scale.dto.RecordStatisticsResponse;
-import com.iotsic.ps.scale.mapper.*;
+import com.iotsic.ps.scale.mapper.DimensionMapper;
+import com.iotsic.ps.scale.mapper.ExamAnswerMapper;
+import com.iotsic.ps.scale.mapper.ExamRecordMapper;
+import com.iotsic.ps.scale.mapper.QuestionMapper;
+import com.iotsic.ps.scale.mapper.ScaleMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -19,7 +26,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j

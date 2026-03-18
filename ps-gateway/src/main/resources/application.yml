@@ -47,7 +47,7 @@ spring:
             - StripPrefix=0
         # 订单服务
         - id: ps-order
-          uri: lb://ps-order
+          uri: http://localhost:8084
           predicates:
             - Path=/api/order/**
           filters:
@@ -61,7 +61,7 @@ spring:
             - StripPrefix=0
         # 报告服务
         - id: ps-report
-          uri: lb://ps-report
+          uri: http://localhost:8085
           predicates:
             - Path=/api/report/**
           filters:

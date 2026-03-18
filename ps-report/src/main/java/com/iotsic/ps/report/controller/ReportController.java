@@ -1,23 +1,23 @@
 package com.iotsic.ps.report.controller;
 
-import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.ps.core.entity.Report;
 import com.iotsic.ps.report.dto.ReportDownloadResponse;
 import com.iotsic.ps.report.dto.ReportExportRequest;
 import com.iotsic.ps.report.dto.ReportExportResponse;
 import com.iotsic.ps.report.dto.ReportGenerateRequest;
 import com.iotsic.ps.report.dto.ReportGenerateResponse;
-import com.iotsic.ps.report.entity.Report;
-import com.iotsic.ps.report.service.ReportService;
 import com.iotsic.ps.report.service.ExportService;
+import com.iotsic.ps.report.service.ReportService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 报告控制器

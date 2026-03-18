@@ -3,28 +3,33 @@ package com.iotsic.ps.report.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.common.utils.json.JsonUtils;
 import com.iotsic.ps.core.entity.ExamRecord;
-import com.iotsic.ps.report.entity.Report;
+import com.iotsic.ps.core.entity.Report;
 import com.iotsic.ps.report.mapper.ReportMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> implements ReportService {
+public class ReportServiceImpl implements ReportService {
 
     private final ReportTemplateService reportTemplateService;
+    private final ReportMapper reportMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -63,7 +68,7 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
         report.setStatus(1);
         report.setGenerateTime(LocalDateTime.now());
 
-        this.save(report);
+        reportMapper.insert(report);
         return report;
     }
 
@@ -177,7 +182,7 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
 
     @Override
     public Report getReportByTaskId(Long taskId) {
-        return this.getOne(new LambdaQueryWrapper<Report>()
+        return reportMapper.selectOne(new LambdaQueryWrapper<Report>()
                 .eq(Report::getTaskId, taskId)
                 .orderByDesc(Report::getCreateTime)
                 .last("LIMIT 1"));
@@ -197,13 +202,13 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
             wrapper.eq(Report::getStatus, status);
         }
         wrapper.orderByDesc(Report::getCreateTime);
-        IPage<Report> result = this.page(page, wrapper);
+        IPage<Report> result = reportMapper.selectPage(page, wrapper);
         return PageResult.of(result.getRecords(), result.getTotal());
     }
 
     @Override
     public Report getReportDetail(Long reportId) {
-        return this.getById(reportId);
+        return reportMapper.selectById(reportId);
     }
 
     @Override
@@ -212,6 +217,6 @@ public class ReportServiceImpl extends ServiceImpl<ReportMapper, Report> impleme
         report.setId(reportId);
         report.setStatus(status);
         report.setUpdateTime(LocalDateTime.now());
-        this.updateById(report);
+        reportMapper.updateById(report);
     }
 }

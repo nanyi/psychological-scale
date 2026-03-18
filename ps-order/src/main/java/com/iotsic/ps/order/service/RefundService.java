@@ -2,8 +2,9 @@ package com.iotsic.ps.order.service;
 
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
+import com.iotsic.ps.order.dto.RefundCreateResponse;
 import com.iotsic.ps.order.dto.RefundListRequest;
-import com.iotsic.ps.order.entity.Refund;
+import com.iotsic.ps.order.entity.OrderRefund;
 
 import java.util.List;
 import java.util.Map;
@@ -18,14 +19,14 @@ import java.util.Map;
 public interface RefundService {
 
     /**
-     * 创建退款
+     * 创建退款申请
      *
      * @param orderNo 订单号
      * @param orderItemIds 订单项ID列表
      * @param reason 退款原因
      * @return 退款实体
      */
-    Refund createRefund(String orderNo, List<Long> orderItemIds, String reason);
+    RefundCreateResponse createRefund(String orderNo, List<Long> orderItemIds, String reason);
 
     /**
      * 根据ID获取退款
@@ -33,7 +34,7 @@ public interface RefundService {
      * @param id 退款ID
      * @return 退款实体
      */
-    Refund getRefundById(Long id);
+    OrderRefund getRefundById(Long id);
 
     /**
      * 根据订单号获取退款
@@ -41,7 +42,7 @@ public interface RefundService {
      * @param orderNo 订单号
      * @return 退款实体
      */
-    Refund getRefundByOrderNo(String orderNo);
+    OrderRefund getRefundByOrderNo(String orderNo);
 
     /**
      * 审批退款
@@ -65,7 +66,7 @@ public interface RefundService {
      * @param params 查询参数
      * @return 退款分页结果
      */
-    PageResult<Refund> getRefundList(PageRequest request, RefundListRequest params);
+    PageResult<OrderRefund> getRefundList(PageRequest request, RefundListRequest params);
 
     /**
      * 处理退款回调

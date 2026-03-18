@@ -3,21 +3,23 @@ package com.iotsic.ps.report.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.iotsic.ps.common.request.PageRequest;
 import com.iotsic.ps.common.response.PageResult;
-import com.iotsic.ps.core.entity.UserGroup;
 import com.iotsic.ps.report.entity.ReportTemplate;
 import com.iotsic.ps.report.mapper.ReportTemplateMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-public class ReportTemplateServiceImpl extends ServiceImpl<ReportTemplateMapper, ReportTemplate> implements ReportTemplateService {
+public class ReportTemplateServiceImpl implements ReportTemplateService {
+
+    private final ReportTemplateMapper reportTemplateMapper;
 
     @Override
     @Transactional(rollbackFor = Exception.class)
@@ -25,7 +27,7 @@ public class ReportTemplateServiceImpl extends ServiceImpl<ReportTemplateMapper,
         template.setStatus(0);
         template.setCreateTime(LocalDateTime.now());
         template.setUpdateTime(LocalDateTime.now());
-        this.save(template);
+        reportTemplateMapper.insert(template);
         return template;
     }
 
@@ -33,7 +35,7 @@ public class ReportTemplateServiceImpl extends ServiceImpl<ReportTemplateMapper,
     @Transactional(rollbackFor = Exception.class)
     public ReportTemplate updateTemplate(ReportTemplate template) {
         template.setUpdateTime(LocalDateTime.now());
-        this.updateById(template);
+        reportTemplateMapper.updateById(template);
         return template;
     }
 
@@ -48,18 +50,18 @@ public class ReportTemplateServiceImpl extends ServiceImpl<ReportTemplateMapper,
             wrapper.eq(ReportTemplate::getStatus, status);
         }
         wrapper.orderByDesc(ReportTemplate::getCreateTime);
-        IPage<ReportTemplate> result = this.page(page, wrapper);
+        IPage<ReportTemplate> result = reportTemplateMapper.selectPage(page, wrapper);
         return PageResult.of(result.getRecords(), result.getTotal());
     }
 
     @Override
     public ReportTemplate getTemplateById(Long templateId) {
-        return this.getById(templateId);
+        return reportTemplateMapper.selectById(templateId);
     }
 
     @Override
     public ReportTemplate getDefaultTemplate(Long scaleId) {
-        return this.getOne(new LambdaQueryWrapper<ReportTemplate>()
+        return reportTemplateMapper.selectOne(new LambdaQueryWrapper<ReportTemplate>()
                 .eq(ReportTemplate::getScaleId, scaleId)
                 .eq(ReportTemplate::getStatus, 1)
                 .orderByDesc(ReportTemplate::getTemplateType)

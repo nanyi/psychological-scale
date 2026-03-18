@@ -1,6 +1,7 @@
 package com.iotsic.ps.order.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.iotsic.ps.core.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -9,7 +10,7 @@ import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("order_info")
+@TableName("ps_order")
 public class Order extends BaseEntity {
 
     private String orderNo;
