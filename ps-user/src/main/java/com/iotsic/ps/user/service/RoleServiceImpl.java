@@ -1,6 +1,8 @@
 package com.iotsic.ps.user.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.core.entity.*;
 import com.iotsic.ps.user.dto.UserPermissionsResponse;
 import com.iotsic.ps.user.mapper.*;
@@ -9,6 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,6 +25,24 @@ public class RoleServiceImpl implements RoleService {
     private final PermissionMapper permissionMapper;
     private final UserRoleMapper userRoleMapper;
     private final RolePermissionMapper rolePermissionMapper;
+
+    @Override
+    public IPage<Role> getRolePage(Page<Role> page, String roleName, Integer status) {
+        LambdaQueryWrapper<Role> wrapper = new LambdaQueryWrapper<>();
+        if (roleName != null && !roleName.isEmpty()) {
+            wrapper.like(Role::getRoleName, roleName);
+        }
+        if (status != null) {
+            wrapper.eq(Role::getStatus, status);
+        }
+        wrapper.orderByDesc(Role::getCreateTime);
+        return roleMapper.selectPage(page, wrapper);
+    }
+
+    @Override
+    public List<Role> getAllRoles() {
+        return roleMapper.selectList(null);
+    }
 
     @Override
     public Role getRoleById(Long id) {
@@ -47,6 +68,36 @@ public class RoleServiceImpl implements RoleService {
 
         List<Long> roleIds = userRoles.stream().map(UserRole::getRoleId).collect(Collectors.toList());
         return roleMapper.selectBatchIds(roleIds);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Role createRole(Role role) {
+        role.setCreateTime(LocalDateTime.now());
+        role.setUpdateTime(LocalDateTime.now());
+        roleMapper.insert(role);
+        return role;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Role updateRole(Long id, Role role) {
+        Role existing = roleMapper.selectById(id);
+        if (existing != null) {
+            existing.setRoleName(role.getRoleName());
+            existing.setRoleDesc(role.getRoleDesc());
+            existing.setRoleType(role.getRoleType());
+            existing.setStatus(role.getStatus());
+            existing.setUpdateTime(LocalDateTime.now());
+            roleMapper.updateById(existing);
+        }
+        return existing;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteRole(Long id) {
+        roleMapper.deleteById(id);
     }
 
     @Override
@@ -150,5 +201,32 @@ public class RoleServiceImpl implements RoleService {
         response.setPermissions(permissionDTOs);
 
         return response;
+    }
+
+    @Override
+    public List<Long> getPermissionsByRole(Long roleId) {
+        LambdaQueryWrapper<RolePermission> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(RolePermission::getRoleId, roleId);
+        List<RolePermission> rolePermissions = rolePermissionMapper.selectList(wrapper);
+        return rolePermissions.stream()
+                .map(RolePermission::getPermissionId)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void assignPermissions(Long roleId, List<Long> permissionIds) {
+        LambdaQueryWrapper<RolePermission> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(RolePermission::getRoleId, roleId);
+        rolePermissionMapper.delete(wrapper);
+
+        if (permissionIds != null && !permissionIds.isEmpty()) {
+            for (Long permissionId : permissionIds) {
+                RolePermission rp = new RolePermission();
+                rp.setRoleId(roleId);
+                rp.setPermissionId(permissionId);
+                rolePermissionMapper.insert(rp);
+            }
+        }
     }
 }

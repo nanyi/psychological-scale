@@ -35,21 +35,21 @@ spring:
         - id: ps-user
           uri: http://localhost:8081
           predicates:
-            - Path=/api/user/**,/api/auth/**
+            - Path=/api/user/**,/api/auth/**,/api/role/**,/api/permission/**,/api/enterprise/**
           filters:
             - StripPrefix=0
         # 量表服务
         - id: ps-scale
           uri: http://localhost:8082
           predicates:
-            - Path=/api/scale/**,/api/scale-category/**
+            - Path=/api/scale/**,/api/scale-category/**,/api/thirdparty/**,/api/exam/**,/api/exam-record/**
           filters:
             - StripPrefix=0
         # 订单服务
         - id: ps-order
           uri: http://localhost:8084
           predicates:
-            - Path=/api/order/**
+            - Path=/api/order/**,/api/cart/**,/api/enterprise-quota/**
           filters:
             - StripPrefix=0
         # 支付服务

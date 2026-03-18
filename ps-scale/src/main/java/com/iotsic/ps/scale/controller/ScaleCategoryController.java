@@ -55,6 +55,9 @@ public class ScaleCategoryController {
     @PutMapping("/update/{id}")
     @Operation(summary = "更新分类")
     public RestResult<Void> updateCategory(@PathVariable Long id, @RequestBody ScaleCategoryUpdateRequest request) {
+        if (request.getId() == null) {
+            request.setId(id);
+        }
         scaleCategoryService.updateCategory(request);
         return RestResult.success();
     }

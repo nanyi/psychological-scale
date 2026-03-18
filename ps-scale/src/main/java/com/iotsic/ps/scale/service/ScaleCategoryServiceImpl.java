@@ -80,7 +80,6 @@ public class ScaleCategoryServiceImpl implements ScaleCategoryService {
     public List<ScaleCategory> getCategoryTree() {
         List<ScaleCategory> allCategories = scaleCategoryMapper.selectList(
             new LambdaQueryWrapper<ScaleCategory>()
-                .eq(ScaleCategory::getStatus, 1)
                 .orderByAsc(ScaleCategory::getSortOrder)
         );
         
