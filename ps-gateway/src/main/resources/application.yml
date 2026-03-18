@@ -35,7 +35,7 @@ spring:
         - id: ps-user
           uri: http://localhost:8081
           predicates:
-            - Path=/api/user/**,/api/auth/**,/api/role/**,/api/permission/**,/api/enterprise/**
+            - Path=/api/user/**,/api/auth/**,/api/role/**,/api/permission/**,/api/enterprise/**,/api/user-group/**
           filters:
             - StripPrefix=0
         # 量表服务

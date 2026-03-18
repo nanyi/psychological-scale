@@ -1,8 +1,11 @@
 package com.iotsic.ps.core.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+import java.util.List;
 
 /**
  * 部门实体类
@@ -59,4 +62,10 @@ public class Department extends BaseEntity {
      * 描述
      */
     private String description;
+
+    /**
+     * 子部门（不映射到数据库）
+     */
+    @TableField(exist = false)
+    private List<Department> children;
 }
