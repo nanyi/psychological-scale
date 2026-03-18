@@ -1,15 +1,18 @@
 package com.iotsic.ps.payment.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
+import com.iotsic.ps.core.entity.BaseEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Data
-@TableName("ps_refund_record")
-public class RefundRecord implements Serializable {
+@TableName("ps_refund")
+@EqualsAndHashCode(callSuper = true)
+public class RefundRecord extends BaseEntity {
 
     private static final long serialVersionUID = 1L;
 
@@ -54,14 +57,4 @@ public class RefundRecord implements Serializable {
 
     @TableField("status")
     private Integer status;
-
-    @TableField(value = "create_time", fill = FieldFill.INSERT)
-    private LocalDateTime createTime;
-
-    @TableField(value = "update_time", fill = FieldFill.INSERT_UPDATE)
-    private LocalDateTime updateTime;
-
-    @TableLogic
-    @TableField("deleted")
-    private Integer deleted;
 }

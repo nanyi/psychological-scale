@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("ps_order_refund")
-public class OrderRefund extends BaseEntity {
+@TableName("ps_refund")
+public class Refund extends BaseEntity {
 
     @TableField("order_no")
     private String orderNo;

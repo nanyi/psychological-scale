@@ -8,7 +8,7 @@ import com.iotsic.ps.order.dto.RefundCreateRequest;
 import com.iotsic.ps.order.dto.RefundCreateResponse;
 import com.iotsic.ps.order.dto.RefundListRequest;
 import com.iotsic.ps.order.dto.RefundRejectRequest;
-import com.iotsic.ps.order.entity.OrderRefund;
+import com.iotsic.ps.order.entity.Refund;
 import com.iotsic.ps.order.service.RefundService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -54,7 +54,7 @@ public class RefundController {
      * @return 退款信息
      */
     @GetMapping("/detail/{id}")
-    public RestResult<OrderRefund> getRefundById(@PathVariable Long id) {
+    public RestResult<Refund> getRefundById(@PathVariable Long id) {
         return RestResult.success(refundService.getRefundById(id));
     }
 
@@ -65,7 +65,7 @@ public class RefundController {
      * @return 退款信息
      */
     @GetMapping("/by-order/{orderNo}")
-    public RestResult<OrderRefund> getRefundByOrderNo(@PathVariable String orderNo) {
+    public RestResult<Refund> getRefundByOrderNo(@PathVariable String orderNo) {
         return RestResult.success(refundService.getRefundByOrderNo(orderNo));
     }
 
@@ -101,7 +101,7 @@ public class RefundController {
      * @return 退款分页列表
      */
     @GetMapping("/list")
-    public RestResult<PageResult<OrderRefund>> getRefundList(
+    public RestResult<PageResult<Refund>> getRefundList(
             PageRequest request,
             RefundListRequest refundListRequest) {
         return RestResult.success(refundService.getRefundList(request, refundListRequest));

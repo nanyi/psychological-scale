@@ -1,4 +1,4 @@
-package com.iotsic.ps.scale.service.impl;
+package com.iotsic.ps.scale.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.exception.BusinessException;
