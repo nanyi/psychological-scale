@@ -85,7 +85,7 @@ public class RoleServiceImpl implements RoleService {
         Role existing = roleMapper.selectById(id);
         if (existing != null) {
             existing.setRoleName(role.getRoleName());
-            existing.setRoleDesc(role.getRoleDesc());
+            existing.setDescription(role.getDescription());
             existing.setRoleType(role.getRoleType());
             existing.setStatus(role.getStatus());
             existing.setUpdateTime(LocalDateTime.now());

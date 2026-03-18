@@ -25,7 +25,7 @@ public class Permission extends BaseEntity {
 
     private Long parentId;
 
-    private Integer sort;
+    private Integer sortOrder;
 
     private String icon;
 

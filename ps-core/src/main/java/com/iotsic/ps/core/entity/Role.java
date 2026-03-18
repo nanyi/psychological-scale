@@ -13,7 +13,7 @@ public class Role extends BaseEntity {
 
     private String roleName;
 
-    private String roleDesc;
+    private String description;
 
     private Integer roleType;
 

@@ -68,4 +68,28 @@ public class ScaleCategoryController {
         scaleCategoryService.deleteCategory(id);
         return RestResult.success();
     }
+
+    /**
+     * 启用分类
+     *
+     * @param id 分类ID
+     * @return 操作结果
+     */
+    @PutMapping("/enable/{id}")
+    public RestResult<Void> enableCategory(@PathVariable Long id) {
+        scaleCategoryService.enableCategory(id);
+        return RestResult.success();
+    }
+
+    /**
+     * 禁用分类
+     *
+     * @param id 分类ID
+     * @return 操作结果
+     */
+    @PutMapping("/disable/{id}")
+    public RestResult<Void> disableCategory(@PathVariable Long id) {
+        scaleCategoryService.disableCategory(id);
+        return RestResult.success();
+    }
 }

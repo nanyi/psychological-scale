@@ -77,6 +77,32 @@ public class ScaleCategoryServiceImpl implements ScaleCategoryService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void enableCategory(Long id) {
+        ScaleCategory category = scaleCategoryMapper.selectById(id);
+        if (category == null) {
+            throw new BusinessException("分类不存在");
+        }
+        category = new ScaleCategory();
+        category.setId(id);
+        category.setStatus(1);
+        scaleCategoryMapper.updateById(category);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void disableCategory(Long id) {
+        ScaleCategory category = scaleCategoryMapper.selectById(id);
+        if (category == null) {
+            throw new BusinessException("分类不存在");
+        }
+        category = new ScaleCategory();
+        category.setId(id);
+        category.setStatus(0);
+        scaleCategoryMapper.updateById(category);
+    }
+
+    @Override
     public List<ScaleCategory> getCategoryTree() {
         List<ScaleCategory> allCategories = scaleCategoryMapper.selectList(
             new LambdaQueryWrapper<ScaleCategory>()

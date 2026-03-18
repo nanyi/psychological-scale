@@ -36,6 +36,20 @@ public interface ScaleCategoryService {
     void deleteCategory(Long id);
 
     /**
+     * 启用分类
+     *
+     * @param id 分类ID
+     */
+    void enableCategory(Long id);
+
+    /**
+     * 禁用分类
+     *
+     * @param id 分类ID
+     */
+    void disableCategory(Long id);
+
+    /**
      * 获取分类树形列表
      * 
      * @return 分类树
