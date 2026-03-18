@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Data
 @EqualsAndHashCode(callSuper = true)
-@TableName("scale_question")
+@TableName("ps_question")
 public class Question extends BaseEntity {
 
     private Long scaleId;
