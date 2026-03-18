@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-@TableName("exam_record")
+@TableName("ps_exam_record")
 public class ExamRecord extends BaseEntity {
 
     private Long userId;
