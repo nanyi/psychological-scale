@@ -21,8 +21,6 @@
         <module>ps-scale</module>
         <module>ps-order</module>
         <module>ps-payment</module>
-        <module>ps-report</module>
-        <module>ps-thirdparty</module>
         <module>ps-analysis</module>
     </modules>
 
