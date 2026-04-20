@@ -1,10 +1,10 @@
 package com.iotsic.ps.scale.service;
 
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.ExamRecord;
 import com.iotsic.ps.scale.dto.ExamProgressResponse;
 import com.iotsic.ps.scale.dto.ExamSubmitResultResponse;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
 
 import java.util.Map;
 

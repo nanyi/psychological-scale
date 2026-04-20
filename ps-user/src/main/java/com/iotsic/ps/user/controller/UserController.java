@@ -1,14 +1,14 @@
 package com.iotsic.ps.user.controller;
 
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
-import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.core.entity.User;
 import com.iotsic.ps.user.dto.AuthResultDTO;
 import com.iotsic.ps.user.dto.UserRegisterRequest;
 import com.iotsic.ps.user.dto.UserRegisterResponse;
 import com.iotsic.ps.user.service.UserService;
 import com.iotsic.ps.user.vo.UserVO;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.result.RestResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;

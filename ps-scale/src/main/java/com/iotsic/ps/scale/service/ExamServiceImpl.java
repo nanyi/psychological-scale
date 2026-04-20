@@ -5,9 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
-import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.core.entity.ExamAnswer;
 import com.iotsic.ps.core.entity.ExamRecord;
 import com.iotsic.ps.core.entity.Question;
@@ -22,6 +19,9 @@ import com.iotsic.ps.scale.mapper.ExamAnswerMapper;
 import com.iotsic.ps.scale.mapper.ExamRecordMapper;
 import com.iotsic.ps.scale.mapper.QuestionMapper;
 import com.iotsic.ps.scale.mapper.ScaleMapper;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.encrypt.utils.EncryptUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,7 +48,7 @@ public class ExamServiceImpl implements ExamService {
     @Transactional(rollbackFor = Exception.class)
     public ExamRecord startExam(Long userId, Long scaleId, String ipAddress, String deviceInfo) {
         Scale scale = scaleMapper.selectById(scaleId);
-        if (scale == null || scale.getDeleted() == 1) {
+        if (scale == null || scale.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.SCALE_NOT_FOUND.getCode(), "量表不存在");
         }
         if (scale.getStatus() != 1) {
@@ -77,7 +77,7 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public ExamRecord getExamRecordById(Long id) {
         ExamRecord record = examRecordMapper.selectById(id);
-        if (record == null || record.getDeleted() == 1) {
+        if (record == null || record.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.RECORD_NOT_FOUND.getCode(), "测评记录不存在");
         }
         return record;
@@ -88,7 +88,7 @@ public class ExamServiceImpl implements ExamService {
         LambdaQueryWrapper<ExamRecord> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ExamRecord::getRecordNo, recordNo);
         ExamRecord record = examRecordMapper.selectOne(wrapper);
-        if (record == null || record.getDeleted() == 1) {
+        if (record == null || record.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.RECORD_NOT_FOUND.getCode(), "测评记录不存在");
         }
         return record;

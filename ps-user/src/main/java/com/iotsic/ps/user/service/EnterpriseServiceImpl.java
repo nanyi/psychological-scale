@@ -5,11 +5,11 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.Enterprise;
 import com.iotsic.ps.user.dto.EnterpriseUpdateRequest;
 import com.iotsic.ps.user.mapper.EnterpriseMapper;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -33,7 +33,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
     @Override
     public Enterprise getEnterpriseById(Long id) {
         Enterprise enterprise = enterpriseMapper.selectById(id);
-        if (enterprise == null || enterprise.getDeleted() == 1) {
+        if (enterprise == null || enterprise.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.ENTERPRISE_NOT_FOUND.getCode(), "企业不存在");
         }
         return enterprise;
@@ -44,7 +44,7 @@ public class EnterpriseServiceImpl implements EnterpriseService {
         LambdaQueryWrapper<Enterprise> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Enterprise::getEnterpriseCode, enterpriseCode);
         Enterprise enterprise = enterpriseMapper.selectOne(wrapper);
-        if (enterprise == null || enterprise.getDeleted() == 1) {
+        if (enterprise == null || enterprise.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.ENTERPRISE_NOT_FOUND.getCode(), "企业不存在");
         }
         return enterprise;

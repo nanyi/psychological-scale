@@ -82,6 +82,15 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.iotsic.smart</groupId>
+            <artifactId>smart-framework-common</artifactId>
+        </dependency>
+
+        <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

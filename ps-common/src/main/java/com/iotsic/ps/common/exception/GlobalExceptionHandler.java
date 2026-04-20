@@ -1,7 +1,7 @@
 package com.iotsic.ps.common.exception;
 
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
-import com.iotsic.ps.common.result.RestResult;
+import com.iotsic.smart.framework.common.result.RestResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +17,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.NoHandlerFoundException;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @RestControllerAdvice

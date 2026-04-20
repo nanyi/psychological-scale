@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.order.entity.EnterpriseQuota;
 import com.iotsic.ps.order.mapper.EnterpriseQuotaMapper;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -59,7 +59,7 @@ public class EnterpriseQuotaServiceImpl implements EnterpriseQuotaService {
     @Override
     public EnterpriseQuota getQuotaById(Long id) {
         EnterpriseQuota quota = enterpriseQuotaMapper.selectById(id);
-        if (quota == null || quota.getDeleted() == 1) {
+        if (quota == null || quota.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.QUOTA_NOT_FOUND.getCode(), "配额不存在");
         }
         return quota;

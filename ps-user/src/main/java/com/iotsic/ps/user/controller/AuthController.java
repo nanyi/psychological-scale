@@ -1,13 +1,14 @@
 package com.iotsic.ps.user.controller;
 
-import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.user.dto.AuthResultDTO;
 import com.iotsic.ps.user.dto.TokenRefreshResponse;
 import com.iotsic.ps.user.dto.UserLoginRequest;
 import com.iotsic.ps.user.dto.UserLoginResponse;
+import com.iotsic.ps.user.service.AuthService;
 import com.iotsic.ps.user.service.UserService;
 import com.iotsic.ps.user.vo.LoginUserVO;
 import com.iotsic.ps.user.vo.UserVO;
+import com.iotsic.smart.framework.common.result.RestResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -30,6 +31,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthController {
 
+    private final AuthService authService;
     private final UserService userService;
 
     /**
@@ -40,16 +42,17 @@ public class AuthController {
      */
     @PostMapping("/login")
     public RestResult<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
-        AuthResultDTO result = userService.login(
+        AuthResultDTO result = authService.login(
                 request.getUsername(),
                 request.getPassword(),
                 null
         );
 
-        UserLoginResponse response = new UserLoginResponse();
         UserVO user = userService.getUserInfo(result.getUserId());
         LoginUserVO loginUser = new LoginUserVO();
         BeanUtils.copyProperties(user, loginUser);
+
+        UserLoginResponse response = new UserLoginResponse();
         response.setUser(loginUser);
         response.setToken(result.getToken());
 
@@ -58,13 +61,12 @@ public class AuthController {
 
     /**
      * 用户登出
-     * 
-     * @param userId 用户ID
+     *
      * @return 操作结果
      */
     @PostMapping("/logout")
-    public RestResult<Void> logout(@RequestParam Long userId) {
-        userService.logout(userId);
+    public RestResult<Void> logout() {
+        authService.logout();
         return RestResult.success();
     }
 
@@ -76,7 +78,7 @@ public class AuthController {
      */
     @PostMapping("/refresh-token")
     public RestResult<TokenRefreshResponse> refreshToken(@RequestParam String refreshToken) {
-        AuthResultDTO result = userService.refreshToken(refreshToken);
+        AuthResultDTO result = authService.refreshToken(refreshToken);
         
         TokenRefreshResponse response = new TokenRefreshResponse();
         response.setAccessToken(result.getToken());

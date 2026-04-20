@@ -1,12 +1,13 @@
 package com.iotsic.ps.thirdparty.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.utils.json.JsonUtils;
 import com.iotsic.ps.thirdparty.entity.ThirdPartyCallback;
 import com.iotsic.ps.thirdparty.entity.ThirdPartyConfig;
 import com.iotsic.ps.thirdparty.mapper.CallbackMapper;
+import com.iotsic.smart.framework.common.utils.json.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,7 @@ public class CallbackServiceImpl implements CallbackService {
         callback.setPlatformCode(config.getPlatformCode());
         callback.setCallbackType(callbackType);
         callback.setExternalRecordId(externalRecordId);
-        callback.setRequestData(JsonUtils.toJson(params));
+        callback.setRequestData(JsonUtils.toJSONString(params));
         callback.setCallbackStatus(0);
         callback.setCreateTime(LocalDateTime.now());
         callback.setUpdateTime(LocalDateTime.now());
@@ -75,7 +76,7 @@ public class CallbackServiceImpl implements CallbackService {
     @Override
     public ThirdPartyCallback getCallbackById(Long id) {
         ThirdPartyCallback callback = callbackMapper.selectById(id);
-        if (callback == null || callback.getDeleted() == 1) {
+        if (callback == null || callback.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.CALLBACK_NOT_FOUND.getCode(), "回调记录不存在");
         }
         return callback;
@@ -99,9 +100,9 @@ public class CallbackServiceImpl implements CallbackService {
         callbackMapper.updateById(callback);
         
         try {
-            Map<String, Object> params = JsonUtils.fromJson(
+            Map<String, Object> params = JsonUtils.parseObject(
                     callback.getRequestData(), 
-                    new com.fasterxml.jackson.core.type.TypeReference<Map<String, Object>>() {});
+                    new TypeReference<Map<String, Object>>() {});
             
             ThirdPartyConfig config = thirdPartyConfigService.getConfigById(callback.getConfigId());
             processReportCallback(config, params);

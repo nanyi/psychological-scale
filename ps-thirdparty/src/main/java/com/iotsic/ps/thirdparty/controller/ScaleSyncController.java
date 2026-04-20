@@ -1,13 +1,18 @@
 package com.iotsic.ps.thirdparty.controller;
 
-import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.thirdparty.dto.SyncResultResponse;
 import com.iotsic.ps.thirdparty.dto.SyncStatisticsResponse;
 import com.iotsic.ps.thirdparty.entity.SyncLog;
 import com.iotsic.ps.thirdparty.service.ScaleSyncService;
+import com.iotsic.smart.framework.common.result.RestResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 

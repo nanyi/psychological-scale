@@ -1,8 +1,8 @@
 package com.iotsic.ps.report.service;
 
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.report.entity.ReportTemplate;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
 
 public interface ReportTemplateService {
 

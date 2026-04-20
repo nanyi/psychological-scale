@@ -94,7 +94,7 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteConfig(Long id) {
         ThirdPartyConfig config = getConfigById(id);
-        config.setDeleted(1);
+        config.setDeleted(true);
         config.setUpdateTime(LocalDateTime.now());
         thirdPartyConfigMapper.updateById(config);
     }
@@ -102,7 +102,7 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
     @Override
     public ThirdPartyConfig getConfigById(Long id) {
         ThirdPartyConfig config = thirdPartyConfigMapper.selectById(id);
-        if (config == null || config.getDeleted() == 1) {
+        if (config == null || config.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.CONFIG_NOT_FOUND.getCode(), "配置不存在");
         }
         return config;

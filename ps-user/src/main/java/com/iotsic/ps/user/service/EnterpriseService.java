@@ -1,9 +1,9 @@
 package com.iotsic.ps.user.service;
 
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.Enterprise;
 import com.iotsic.ps.user.dto.EnterpriseUpdateRequest;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
 
 /**
  * 企业服务接口

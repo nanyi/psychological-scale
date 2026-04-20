@@ -1,0 +1,7 @@
+# 内置配置 不允许修改 如需修改请在 业务服务配置 上写相同配置覆盖
+
+# security配置
+security:
+  # 排除路径
+  excludes:
+    - /error

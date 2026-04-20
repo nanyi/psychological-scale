@@ -5,14 +5,14 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.User;
 import com.iotsic.ps.core.entity.UserGroup;
 import com.iotsic.ps.core.entity.UserGroupMember;
 import com.iotsic.ps.user.mapper.UserGroupMapper;
 import com.iotsic.ps.user.mapper.UserGroupMemberMapper;
 import com.iotsic.ps.user.mapper.UserMapper;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class UserGroupServiceImpl implements UserGroupService {
     @Override
     public UserGroup getGroupById(Long id) {
         UserGroup group = userGroupMapper.selectById(id);
-        if (group == null || group.getDeleted() == 1) {
+        if (group == null || group.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.GROUP_NOT_FOUND.getCode(), "分组不存在");
         }
         return group;
@@ -85,7 +85,7 @@ public class UserGroupServiceImpl implements UserGroupService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteGroup(Long id) {
         UserGroup group = getGroupById(id);
-        group.setDeleted(1);
+        group.setDeleted(true);
         group.setUpdateTime(LocalDateTime.now());
         userGroupMapper.updateById(group);
 

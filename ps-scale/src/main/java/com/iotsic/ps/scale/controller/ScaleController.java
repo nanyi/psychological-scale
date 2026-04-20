@@ -1,16 +1,24 @@
 package com.iotsic.ps.scale.controller;
 
 import com.iotsic.ps.api.dto.ScaleResponse;
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
-import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.core.entity.Scale;
 import com.iotsic.ps.scale.dto.ScaleCreateRequest;
 import com.iotsic.ps.scale.dto.ScaleUpdateRequest;
 import com.iotsic.ps.scale.service.ScaleService;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.result.RestResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 量表控制器

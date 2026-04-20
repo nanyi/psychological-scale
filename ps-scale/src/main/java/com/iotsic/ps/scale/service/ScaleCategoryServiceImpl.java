@@ -2,12 +2,10 @@ package com.iotsic.ps.scale.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.core.entity.ScaleCategory;
 import com.iotsic.ps.scale.dto.ScaleCategoryRequest;
 import com.iotsic.ps.scale.dto.ScaleCategoryUpdateRequest;
 import com.iotsic.ps.scale.mapper.ScaleCategoryMapper;
-import com.iotsic.ps.scale.service.ScaleCategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

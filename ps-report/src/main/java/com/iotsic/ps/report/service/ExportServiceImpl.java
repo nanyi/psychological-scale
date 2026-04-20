@@ -1,12 +1,12 @@
 package com.iotsic.ps.report.service;
 
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.utils.json.JsonUtils;
 import com.iotsic.ps.core.entity.Report;
 import com.iotsic.ps.report.dto.ReportDownloadResponse;
 import com.iotsic.ps.report.dto.ReportExportResponse;
 import com.iotsic.ps.report.entity.ReportExport;
 import com.iotsic.ps.report.mapper.ReportExportMapper;
+import com.iotsic.smart.framework.common.utils.json.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.xwpf.usermodel.ParagraphAlignment;
@@ -146,7 +146,7 @@ public class ExportServiceImpl implements ExportService {
             suggestions.createRun().setText("【建议指导】");
             suggestions.createRun().addBreak();
             
-            List<String> suggestionList = JsonUtils.fromJsonToList(report.getSuggestions(), String.class);
+            List<String> suggestionList = JsonUtils.parseArray(report.getSuggestions(), String.class);
             if (suggestionList != null) {
                 int i = 1;
                 for (String suggestion : suggestionList) {
@@ -219,7 +219,7 @@ public class ExportServiceImpl implements ExportService {
         html.append("<p>").append(report.getConclusion() != null ? report.getConclusion() : "").append("</p>");
         
         html.append("<h2>建议指导</h2><ul>");
-        List<String> suggestionList = JsonUtils.fromJson(report.getSuggestions(), List.class);
+        List<String> suggestionList = JsonUtils.parseArray(report.getSuggestions(), String.class);
         if (suggestionList != null) {
             for (String suggestion : suggestionList) {
                 html.append("<li>").append(suggestion).append("</li>");

@@ -1,10 +1,10 @@
 package com.iotsic.ps.report.controller;
 
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
-import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.report.entity.ReportTemplate;
 import com.iotsic.ps.report.service.ReportTemplateService;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.result.RestResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

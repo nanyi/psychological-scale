@@ -38,7 +38,7 @@ public class ScoringServiceImpl implements ScoringService {
     @Transactional(rollbackFor = Exception.class)
     public ScoringRule createScoringRule(ScoringRuleCreateRequest request) {
         Scale scale = scaleMapper.selectById(request.getScaleId());
-        if (scale == null || scale.getDeleted() == 1) {
+        if (scale == null || scale.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.SCALE_NOT_FOUND.getCode(), "量表不存在");
         }
 
@@ -60,7 +60,7 @@ public class ScoringServiceImpl implements ScoringService {
     @Transactional(rollbackFor = Exception.class)
     public void updateScoringRule(Long id, ScoringRuleUpdateRequest request) {
         ScoringRule rule = scoringRuleMapper.selectById(id);
-        if (rule == null || rule.getDeleted() == 1) {
+        if (rule == null || rule.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.RULE_NOT_FOUND.getCode(), "评分规则不存在");
         }
 
@@ -85,7 +85,7 @@ public class ScoringServiceImpl implements ScoringService {
         if (rule == null) {
             throw BusinessException.of(ErrorCodeEnum.RULE_NOT_FOUND.getCode(), "评分规则不存在");
         }
-        rule.setDeleted(1);
+        rule.setDeleted(true);
         rule.setUpdateTime(LocalDateTime.now());
         scoringRuleMapper.updateById(rule);
     }
@@ -109,7 +109,7 @@ public class ScoringServiceImpl implements ScoringService {
     @Transactional(rollbackFor = Exception.class)
     public OptionScore createOptionScore(OptionScoreCreateRequest request) {
         Question question = questionMapper.selectById(request.getQuestionId());
-        if (question == null || question.getDeleted() == 1) {
+        if (question == null || question.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.QUESTION_NOT_FOUND.getCode(), "题目不存在");
         }
 
@@ -130,7 +130,7 @@ public class ScoringServiceImpl implements ScoringService {
     @Transactional(rollbackFor = Exception.class)
     public void updateOptionScore(Long id, OptionScoreUpdateRequest request) {
         OptionScore optionScore = optionScoreMapper.selectById(id);
-        if (optionScore == null || optionScore.getDeleted() == 1) {
+        if (optionScore == null || optionScore.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.OPTION_NOT_FOUND.getCode(), "选项分数不存在");
         }
 
@@ -155,7 +155,7 @@ public class ScoringServiceImpl implements ScoringService {
         if (optionScore == null) {
             throw BusinessException.of(ErrorCodeEnum.OPTION_NOT_FOUND.getCode(), "选项分数不存在");
         }
-        optionScore.setDeleted(1);
+        optionScore.setDeleted(true);
         optionScore.setUpdateTime(LocalDateTime.now());
         optionScoreMapper.updateById(optionScore);
     }

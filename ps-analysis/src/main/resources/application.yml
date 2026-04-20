@@ -46,3 +46,11 @@ jwt:
   secret: ${JWT_SECRET:psychological-scale-secret-key-2026}
   expire: ${JWT_EXPIRE:7200000}
   refresh-expire: ${JWT_REFRESH_EXPIRE:604800000}
+
+logging:
+  level:
+    root: INFO
+    # org.springframework.cloud.gateway: DEBUG
+    #　org.springframework.cloud.gateway.route: DEBUG
+    # org.springframework.cloud.gateway.handler: DEBUG
+    com.iotsic.ps.gateway: DEBUG

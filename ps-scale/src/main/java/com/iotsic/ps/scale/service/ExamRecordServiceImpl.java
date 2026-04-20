@@ -5,8 +5,6 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.ExamAnswer;
 import com.iotsic.ps.core.entity.ExamRecord;
 import com.iotsic.ps.core.entity.Question;
@@ -19,6 +17,8 @@ import com.iotsic.ps.scale.mapper.ExamAnswerMapper;
 import com.iotsic.ps.scale.mapper.ExamRecordMapper;
 import com.iotsic.ps.scale.mapper.QuestionMapper;
 import com.iotsic.ps.scale.mapper.ScaleMapper;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -46,7 +46,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
     @Override
     public ExamRecord getRecordById(Long id) {
         ExamRecord record = examRecordMapper.selectById(id);
-        if (record == null || record.getDeleted() == 1) {
+        if (record == null || record.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.RECORD_NOT_FOUND.getCode(), "答题记录不存在");
         }
         return record;
@@ -188,7 +188,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
         answerWrapper.eq(ExamAnswer::getRecordId, id);
         examAnswerMapper.delete(answerWrapper);
         
-        record.setDeleted(1);
+        record.setDeleted(true);
         record.setUpdateTime(LocalDateTime.now());
         examRecordMapper.updateById(record);
     }

@@ -1,0 +1,2 @@
+com.iotsic.smart.framework.security.config.SecurityAutoConfig
+com.iotsic.smart.framework.security.config.LoadBalancerConfig

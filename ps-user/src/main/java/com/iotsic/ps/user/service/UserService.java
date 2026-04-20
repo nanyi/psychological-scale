@@ -1,10 +1,10 @@
 package com.iotsic.ps.user.service;
 
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.User;
 import com.iotsic.ps.user.dto.AuthResultDTO;
 import com.iotsic.ps.user.vo.UserVO;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
 
 /**
  * 用户服务接口
@@ -36,31 +36,6 @@ public interface UserService {
      * @return 认证结果
      */
     AuthResultDTO register(String username, String password, String phone, String email);
-
-    /**
-     * 用户登录
-     *
-     * @param username 用户名
-     * @param password 密码
-     * @param loginIp 登录IP
-     * @return 认证结果
-     */
-    AuthResultDTO login(String username, String password, String loginIp);
-
-    /**
-     * 用户登出
-     *
-     * @param userId 用户ID
-     */
-    void logout(Long userId);
-
-    /**
-     * 刷新Token
-     *
-     * @param refreshToken 刷新令牌
-     * @return 新的认证结果
-     */
-    AuthResultDTO refreshToken(String refreshToken);
 
     /**
      * 根据ID获取用户

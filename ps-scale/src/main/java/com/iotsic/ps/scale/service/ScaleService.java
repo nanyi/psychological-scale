@@ -1,11 +1,11 @@
 package com.iotsic.ps.scale.service;
 
 import com.iotsic.ps.api.dto.ScaleResponse;
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.core.entity.Scale;
 import com.iotsic.ps.scale.dto.ScaleCreateRequest;
 import com.iotsic.ps.scale.dto.ScaleUpdateRequest;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
 
 /**
  * 量表服务接口

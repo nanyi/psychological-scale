@@ -1,17 +1,24 @@
 package com.iotsic.ps.scale.controller;
 
-import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.core.entity.Dimension;
 import com.iotsic.ps.core.entity.Question;
 import com.iotsic.ps.scale.dto.DimensionCreateRequest;
 import com.iotsic.ps.scale.dto.DimensionUpdateRequest;
 import com.iotsic.ps.scale.dto.QuestionCreateRequest;
-import com.iotsic.ps.scale.dto.QuestionUpdateRequest;
 import com.iotsic.ps.scale.dto.QuestionReorderRequest;
+import com.iotsic.ps.scale.dto.QuestionUpdateRequest;
 import com.iotsic.ps.scale.service.QuestionService;
+import com.iotsic.smart.framework.common.result.RestResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 

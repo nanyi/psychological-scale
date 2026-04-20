@@ -1,8 +1,8 @@
 package com.iotsic.ps.order.service;
 
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.order.entity.EnterpriseQuota;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
 
 import java.math.BigDecimal;
 

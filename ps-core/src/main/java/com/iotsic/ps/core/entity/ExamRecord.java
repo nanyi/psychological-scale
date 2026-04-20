@@ -1,7 +1,7 @@
 package com.iotsic.ps.core.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.Data;
+import com.iotsic.smart.framework.mybatis.entity.BaseEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

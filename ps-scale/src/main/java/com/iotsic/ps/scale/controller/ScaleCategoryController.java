@@ -1,10 +1,10 @@
 package com.iotsic.ps.scale.controller;
 
-import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.core.entity.ScaleCategory;
 import com.iotsic.ps.scale.dto.ScaleCategoryRequest;
 import com.iotsic.ps.scale.dto.ScaleCategoryUpdateRequest;
 import com.iotsic.ps.scale.service.ScaleCategoryService;
+import com.iotsic.smart.framework.common.result.RestResult;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;

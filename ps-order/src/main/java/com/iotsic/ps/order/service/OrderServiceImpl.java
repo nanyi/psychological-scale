@@ -6,13 +6,13 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.constant.BusinessConstant;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
-import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.order.dto.OrderListRequest;
 import com.iotsic.ps.order.dto.OrderStatisticsResponse;
 import com.iotsic.ps.order.entity.Order;
 import com.iotsic.ps.order.mapper.OrderMapper;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.encrypt.utils.EncryptUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
-import java.util.HashMap;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -54,7 +52,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getOrderById(Long id) {
         Order order = orderMapper.selectById(id);
-        if (order == null || order.getDeleted() == 1) {
+        if (order == null || order.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.ORDER_NOT_FOUND.getCode(), "订单不存在");
         }
         return order;
@@ -65,7 +63,7 @@ public class OrderServiceImpl implements OrderService {
         LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Order::getOrderNo, orderNo);
         Order order = orderMapper.selectOne(wrapper);
-        if (order == null || order.getDeleted() == 1) {
+        if (order == null || order.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.ORDER_NOT_FOUND.getCode(), "订单不存在");
         }
         return order;

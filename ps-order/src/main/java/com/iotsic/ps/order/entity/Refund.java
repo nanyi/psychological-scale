@@ -2,7 +2,7 @@ package com.iotsic.ps.order.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.iotsic.ps.core.entity.BaseEntity;
+import com.iotsic.smart.framework.mybatis.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 

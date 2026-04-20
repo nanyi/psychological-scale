@@ -6,8 +6,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.constant.BusinessConstant;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
 import com.iotsic.ps.order.dto.RefundCreateResponse;
 import com.iotsic.ps.order.dto.RefundListRequest;
 import com.iotsic.ps.order.entity.Order;
@@ -16,6 +14,8 @@ import com.iotsic.ps.order.entity.Refund;
 import com.iotsic.ps.order.mapper.OrderItemMapper;
 import com.iotsic.ps.order.mapper.OrderMapper;
 import com.iotsic.ps.order.mapper.RefundMapper;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -43,7 +43,7 @@ public class RefundServiceImpl implements RefundService {
             new LambdaQueryWrapper<Order>().eq(Order::getOrderNo, orderNo)
         );
         
-        if (order == null || order.getDeleted() == 1) {
+        if (order == null || order.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.ORDER_NOT_FOUND.getCode(), "订单不存在");
         }
 

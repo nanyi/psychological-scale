@@ -26,8 +26,8 @@
             <artifactId>ps-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.iotsic.ps</groupId>
-            <artifactId>ps-security</artifactId>
+            <groupId>com.iotsic.smart</groupId>
+            <artifactId>smart-framework-security</artifactId>
         </dependency>
         <dependency>
             <groupId>com.iotsic.ps</groupId>

@@ -1,8 +1,5 @@
 package com.iotsic.ps.report.controller;
 
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
-import com.iotsic.ps.common.result.RestResult;
 import com.iotsic.ps.core.entity.Report;
 import com.iotsic.ps.report.dto.ReportDownloadResponse;
 import com.iotsic.ps.report.dto.ReportExportRequest;
@@ -11,6 +8,9 @@ import com.iotsic.ps.report.dto.ReportGenerateRequest;
 import com.iotsic.ps.report.dto.ReportGenerateResponse;
 import com.iotsic.ps.report.service.ExportService;
 import com.iotsic.ps.report.service.ReportService;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.result.RestResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;

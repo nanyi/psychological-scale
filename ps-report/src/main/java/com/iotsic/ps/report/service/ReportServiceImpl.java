@@ -4,12 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
-import com.iotsic.ps.common.utils.json.JsonUtils;
 import com.iotsic.ps.core.entity.ExamRecord;
 import com.iotsic.ps.core.entity.Report;
 import com.iotsic.ps.report.mapper.ReportMapper;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.utils.json.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -83,7 +83,7 @@ public class ReportServiceImpl implements ReportService {
     private void calculateDimensionScores(Report report, ExamRecord examRecord) {
         Map<String, Object> dimensionScores = new HashMap<>();
         dimensionScores.put("totalScore", report.getTotalScore());
-        report.setDimensionScores(JsonUtils.toJson(dimensionScores));
+        report.setDimensionScores(JsonUtils.toJSONString(dimensionScores));
     }
 
     private void determineResultLevel(Report report) {
@@ -132,7 +132,7 @@ public class ReportServiceImpl implements ReportService {
         }
 
         report.setConclusion(conclusion);
-        report.setSuggestions(JsonUtils.toJson(suggestions));
+        report.setSuggestions(JsonUtils.toJSONString(suggestions));
     }
 
     private void applyTemplate(Report report, Long templateId) {
@@ -175,9 +175,9 @@ public class ReportServiceImpl implements ReportService {
         content.put("totalScore", report.getTotalScore());
         content.put("resultLevel", report.getResultLevel());
         content.put("conclusion", report.getConclusion());
-        content.put("suggestions", JsonUtils.fromJson(report.getSuggestions(), List.class));
+        content.put("suggestions", JsonUtils.parseObject(report.getSuggestions(), List.class));
         content.put("generateTime", report.getGenerateTime());
-        return JsonUtils.toJson(content);
+        return JsonUtils.toJSONString(content);
     }
 
     @Override

@@ -7,15 +7,15 @@ import com.iotsic.ps.api.dto.ScaleResponse;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.enums.StatusEnum;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.request.PageRequest;
-import com.iotsic.ps.common.response.PageResult;
-import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.core.entity.Scale;
 import com.iotsic.ps.core.entity.ScaleCategory;
 import com.iotsic.ps.scale.dto.ScaleCreateRequest;
 import com.iotsic.ps.scale.dto.ScaleUpdateRequest;
 import com.iotsic.ps.scale.mapper.ScaleCategoryMapper;
 import com.iotsic.ps.scale.mapper.ScaleMapper;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.encrypt.utils.EncryptUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -37,7 +37,7 @@ public class ScaleServiceImpl implements ScaleService {
     @Override
     public Scale getScaleById(Long id) {
         Scale scale = scaleMapper.selectById(id);
-        if (scale == null || scale.getDeleted() == 1) {
+        if (scale == null || scale.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.SCALE_NOT_FOUND.getCode(), "量表不存在");
         }
         return scale;
@@ -48,7 +48,7 @@ public class ScaleServiceImpl implements ScaleService {
         LambdaQueryWrapper<Scale> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Scale::getScaleCode, code);
         Scale scale = scaleMapper.selectOne(wrapper);
-        if (scale == null || scale.getDeleted() == 1) {
+        if (scale == null || scale.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.SCALE_NOT_FOUND.getCode(), "量表不存在");
         }
         return scale;
@@ -178,7 +178,7 @@ public class ScaleServiceImpl implements ScaleService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteScale(Long id) {
         Scale scale = getScaleById(id);
-        scale.setDeleted(1);
+        scale.setDeleted(true);
         scale.setUpdateTime(LocalDateTime.now());
         scaleMapper.updateById(scale);
     }

@@ -3,7 +3,6 @@ package com.iotsic.ps.scale.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.common.utils.EncryptUtils;
 import com.iotsic.ps.core.entity.Dimension;
 import com.iotsic.ps.core.entity.Question;
 import com.iotsic.ps.core.entity.Scale;
@@ -14,6 +13,7 @@ import com.iotsic.ps.scale.dto.QuestionUpdateRequest;
 import com.iotsic.ps.scale.mapper.DimensionMapper;
 import com.iotsic.ps.scale.mapper.QuestionMapper;
 import com.iotsic.ps.scale.mapper.ScaleMapper;
+import com.iotsic.smart.framework.encrypt.utils.EncryptUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Question getQuestionById(Long id) {
         Question question = questionMapper.selectById(id);
-        if (question == null || question.getDeleted() == 1) {
+        if (question == null || question.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.QUESTION_NOT_FOUND.getCode(), "题目不存在");
         }
         return question;
@@ -52,7 +52,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Transactional(rollbackFor = Exception.class)
     public Question createQuestion(QuestionCreateRequest request) {
         Scale scale = scaleMapper.selectById(request.getScaleId());
-        if (scale == null || scale.getDeleted() == 1) {
+        if (scale == null || scale.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.SCALE_NOT_FOUND.getCode(), "量表不存在");
         }
 
@@ -111,7 +111,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteQuestion(Long id) {
         Question question = getQuestionById(id);
-        question.setDeleted(1);
+        question.setDeleted(true);
         question.setUpdateTime(LocalDateTime.now());
         questionMapper.updateById(question);
 
@@ -138,7 +138,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Override
     public Dimension getDimensionById(Long id) {
         Dimension dimension = dimensionMapper.selectById(id);
-        if (dimension == null || dimension.getDeleted() == 1) {
+        if (dimension == null || dimension.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.DIMENSION_NOT_FOUND.getCode(), "维度不存在");
         }
         return dimension;
@@ -156,7 +156,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Transactional(rollbackFor = Exception.class)
     public Dimension createDimension(DimensionCreateRequest request) {
         Scale scale = scaleMapper.selectById(request.getScaleId());
-        if (scale == null || scale.getDeleted() == 1) {
+        if (scale == null || scale.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.SCALE_NOT_FOUND.getCode(), "量表不存在");
         }
 
@@ -200,7 +200,7 @@ public class QuestionServiceImpl implements QuestionService {
     @Transactional(rollbackFor = Exception.class)
     public void deleteDimension(Long id) {
         Dimension dimension = getDimensionById(id);
-        dimension.setDeleted(1);
+        dimension.setDeleted(true);
         dimension.setUpdateTime(LocalDateTime.now());
         dimensionMapper.updateById(dimension);
 

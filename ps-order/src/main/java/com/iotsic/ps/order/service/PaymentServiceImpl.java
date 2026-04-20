@@ -167,7 +167,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private Order getOrderForPayment(Long orderId) {
         Order order = orderMapper.selectById(orderId);
-        if (order == null || order.getDeleted() == 1) {
+        if (order == null || order.getDeleted()) {
             throw BusinessException.of(ErrorCodeEnum.ORDER_NOT_FOUND.getCode(), "订单不存在");
         }
 
