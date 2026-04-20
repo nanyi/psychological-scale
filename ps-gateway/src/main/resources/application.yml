@@ -38,11 +38,11 @@ spring:
             - Path=/api/user/**,/api/auth/**,/api/role/**,/api/permission/**,/api/enterprise/**,/api/user-group/**,/api/department/**
           filters:
             - StripPrefix=0
-        # 量表服务
+        # 量表服务（包含report和thirdparty模块）
         - id: ps-scale
           uri: http://localhost:8082
           predicates:
-            - Path=/api/scale/**,/api/scale-category/**,/api/thirdparty/**,/api/exam/**,/api/exam-record/**
+            - Path=/api/scale/**,/api/scale-category/**,/api/thirdparty/**,/api/exam/**,/api/exam-record/**,/api/report/**,/api/template/**,/api/sync/**,/api/callback/**,/api/config/**
           filters:
             - StripPrefix=0
         # 订单服务
@@ -57,20 +57,6 @@ spring:
           uri: lb://ps-payment
           predicates:
             - Path=/api/payment/**
-          filters:
-            - StripPrefix=0
-        # 报告服务
-        - id: ps-report
-          uri: http://localhost:8085
-          predicates:
-            - Path=/api/report/**
-          filters:
-            - StripPrefix=0
-        # 第三方服务
-        - id: ps-thirdparty
-          uri: lb://ps-thirdparty
-          predicates:
-            - Path=/api/thirdparty/**
           filters:
             - StripPrefix=0
         # 分析服务

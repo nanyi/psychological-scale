@@ -13,6 +13,7 @@
     <description>心理测评系统</description>
 
     <modules>
+        <module>smart-framework</module>
         <module>ps-gateway</module>
         <module>ps-common</module>
         <module>ps-core</module>

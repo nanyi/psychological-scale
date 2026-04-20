@@ -9,7 +9,7 @@ import com.google.common.cache.LoadingCache;
 import com.iotsic.ps.gateway.config.properties.SecurityProperties;
 import com.iotsic.ps.gateway.dto.LoginUser;
 import com.iotsic.ps.gateway.utils.SecurityUtils;
-import com.iotsic.smart.framework.common.exception.enums.ResultCode;
+import com.iotsic.smart.framework.common.exception.enums.GlobalResultCode;
 import com.iotsic.smart.framework.common.result.RestResult;
 import com.iotsic.smart.framework.common.utils.json.JsonUtils;
 import lombok.extern.slf4j.Slf4j;
@@ -172,7 +172,7 @@ public class TokenAuthenticationFilter implements GlobalFilter, Ordered {
         if (result == null) {
             return null;
         }
-        if (!ResultCode.SUCCESS.getCode().equals(result.getCode())) {
+        if (!GlobalResultCode.SUCCESS.getCode().equals(result.getCode())) {
             if (Objects.equals(result.getCode(), HttpStatus.UNAUTHORIZED.value())) {
                 return new LoginUser();
             }
