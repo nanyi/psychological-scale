@@ -211,4 +211,14 @@ public class ScaleSyncServiceImpl implements ScaleSyncService {
         log.info("同步量表到本地: platformCode={}, data={}", 
                 config.getPlatformCode(), scaleData);
     }
+
+    @Override
+    public void scheduleSyncTask(Long configId, Integer intervalMinutes) {
+        log.info("创建定时同步任务: configId={}, intervalMinutes={}", configId, intervalMinutes);
+    }
+
+    @Override
+    public void syncScaleQuestions(String platformCode, String scaleId) {
+        log.info("同步量表题目: platformCode={}, scaleId={}", platformCode, scaleId);
+    }
 }

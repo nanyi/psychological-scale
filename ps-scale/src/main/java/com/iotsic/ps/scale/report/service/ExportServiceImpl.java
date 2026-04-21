@@ -2,10 +2,10 @@ package com.iotsic.ps.scale.report.service;
 
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.core.entity.Report;
-import com.iotsic.ps.report.dto.ReportDownloadResponse;
-import com.iotsic.ps.report.dto.ReportExportResponse;
-import com.iotsic.ps.report.entity.ReportExport;
-import com.iotsic.ps.report.mapper.ReportExportMapper;
+import com.iotsic.ps.scale.report.dto.ReportDownloadResponse;
+import com.iotsic.ps.scale.report.dto.ReportExportResponse;
+import com.iotsic.ps.scale.report.entity.ReportExport;
+import com.iotsic.ps.scale.report.mapper.ReportExportMapper;
 import com.iotsic.smart.framework.common.utils.json.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
