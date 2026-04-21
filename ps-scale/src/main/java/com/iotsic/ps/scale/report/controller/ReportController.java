@@ -1,4 +1,4 @@
-package com.iotsic.ps.report.controller;
+package com.iotsic.ps.scale.report.controller;
 
 import com.iotsic.ps.core.entity.Report;
 import com.iotsic.ps.scale.report.dto.ReportDownloadResponse;

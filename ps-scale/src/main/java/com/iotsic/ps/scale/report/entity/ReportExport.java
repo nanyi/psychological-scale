@@ -1,4 +1,4 @@
-package com.iotsic.ps.report.entity;
+package com.iotsic.ps.scale.report.entity;
 
 import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;

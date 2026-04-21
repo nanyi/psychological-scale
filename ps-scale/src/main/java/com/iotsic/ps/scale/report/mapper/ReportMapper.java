@@ -1,4 +1,4 @@
-package com.iotsic.ps.report.mapper;
+package com.iotsic.ps.scale.report.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.iotsic.ps.core.entity.Report;

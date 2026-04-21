@@ -1,4 +1,4 @@
-package com.iotsic.ps.report.dto;
+package com.iotsic.ps.scale.report.dto;
 
 import lombok.Data;
 

@@ -1,4 +1,4 @@
-package com.iotsic.ps.report.service;
+package com.iotsic.ps.scale.report.service;
 
 import com.iotsic.ps.core.entity.Report;
 import com.iotsic.smart.framework.common.request.PageRequest;
