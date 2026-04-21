@@ -1,6 +1,7 @@
 package com.iotsic.ps.scale.thirdparty.service;
 
-import com.iotsic.ps.thirdparty.entity.ThirdPartyCallback;
+
+import com.iotsic.ps.scale.thirdparty.entity.ThirdPartyCallback;
 
 import java.util.List;
 import java.util.Map;
@@ -12,6 +13,9 @@ public interface CallbackService {
     ThirdPartyCallback getCallbackById(Long id);
 
     List<ThirdPartyCallback> getCallbacksByRecordId(String externalRecordId);
-
     void retryCallback(Long callbackId);
+
+    void saveCallbackRecord(ThirdPartyCallback callback);
+
+    void processCallback(Long configId, String callbackType, String data);
 }

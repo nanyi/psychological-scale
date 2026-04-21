@@ -1,10 +1,11 @@
 package com.iotsic.ps.scale.thirdparty.controller;
 
-import com.iotsic.ps.thirdparty.dto.ConnectionTestResponse;
-import com.iotsic.ps.thirdparty.dto.ThirdPartyConfigCreateRequest;
-import com.iotsic.ps.thirdparty.dto.ThirdPartyConfigUpdateRequest;
-import com.iotsic.ps.thirdparty.entity.ThirdPartyConfig;
-import com.iotsic.ps.thirdparty.service.ThirdPartyConfigService;
+import com.iotsic.ps.scale.thirdparty.dto.ConnectionTestResponse;
+import com.iotsic.ps.scale.thirdparty.dto.ThirdPartyConfigCreateRequest;
+import com.iotsic.ps.scale.thirdparty.dto.ThirdPartyConfigUpdateRequest;
+import com.iotsic.ps.scale.thirdparty.entity.ThirdPartyConfig;
+import com.iotsic.ps.scale.thirdparty.service.ScaleSyncService;
+import com.iotsic.ps.scale.thirdparty.service.ThirdPartyConfigService;
 import com.iotsic.smart.framework.common.result.RestResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ import java.util.Map;
  * 负责第三方平台配置的CRUD和测试请求
  * 
  * @author Ryan
- * @since 2026-03-12
+ * @since 2026-03-11
  */
 @Slf4j
 @RestController
@@ -34,6 +35,7 @@ import java.util.Map;
 public class ThirdPartyConfigController {
 
     private final ThirdPartyConfigService thirdPartyConfigService;
+    private final ScaleSyncService scaleSyncService;
 
     /**
      * 创建第三方配置
@@ -69,6 +71,11 @@ public class ThirdPartyConfigController {
     @DeleteMapping("/delete/{id}")
     public RestResult<Void> deleteConfig(@PathVariable Long id) {
         thirdPartyConfigService.deleteConfig(id);
+        return RestResult.success();
+    }
+
+    @GetMapping("/list")
+    public RestResult<?> getConfigList() {
         return RestResult.success();
     }
 
@@ -143,5 +150,11 @@ public class ThirdPartyConfigController {
         response.setMessage((String) result.get("message"));
         
         return RestResult.success(response);
+    }
+
+    @PostMapping("/{configId}/sync")
+    public RestResult<?> syncScales(@PathVariable Long configId) {
+        scaleSyncService.syncScalesFromPlatform(configId);
+        return RestResult.success();
     }
 }

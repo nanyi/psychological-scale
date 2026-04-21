@@ -1,12 +1,16 @@
 package com.iotsic.ps.scale.thirdparty.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.thirdparty.dto.ThirdPartyConfigCreateRequest;
-import com.iotsic.ps.thirdparty.dto.ThirdPartyConfigUpdateRequest;
-import com.iotsic.ps.thirdparty.entity.ThirdPartyConfig;
-import com.iotsic.ps.thirdparty.mapper.ThirdPartyConfigMapper;
+import com.iotsic.ps.scale.thirdparty.dto.ThirdPartyConfigCreateRequest;
+import com.iotsic.ps.scale.thirdparty.dto.ThirdPartyConfigUpdateRequest;
+import com.iotsic.ps.scale.thirdparty.entity.ThirdPartyConfig;
+import com.iotsic.ps.scale.thirdparty.mapper.ThirdPartyConfigMapper;
+import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.response.PageResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -58,7 +62,7 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public void updateConfig(Long id, ThirdPartyConfigUpdateRequest request) {
+    public ThirdPartyConfig updateConfig(Long id, ThirdPartyConfigUpdateRequest request) {
         ThirdPartyConfig config = getConfigById(id);
 
         if (request.getPlatformName() != null) {
@@ -88,6 +92,8 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
 
         config.setUpdateTime(LocalDateTime.now());
         thirdPartyConfigMapper.updateById(config);
+
+        return config;
     }
 
     @Override
@@ -97,6 +103,13 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
         config.setDeleted(true);
         config.setUpdateTime(LocalDateTime.now());
         thirdPartyConfigMapper.updateById(config);
+    }
+
+    @Override
+    public PageResult<ThirdPartyConfig> getConfigList(PageRequest request) {
+        Page<ThirdPartyConfig> page = new Page<>(request.getCurrent(), request.getSize());
+        IPage<ThirdPartyConfig> result = thirdPartyConfigMapper.selectPage(page, null);
+        return PageResult.of(result.getRecords(), result.getTotal());
     }
 
     @Override
@@ -143,6 +156,15 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
     public void disableConfig(Long id) {
         ThirdPartyConfig config = getConfigById(id);
         config.setStatus(0);
+        config.setUpdateTime(LocalDateTime.now());
+        thirdPartyConfigMapper.updateById(config);
+    }
+
+    @Override
+    public void updateConfigStatus(Long configId, Integer status) {
+        ThirdPartyConfig config = new ThirdPartyConfig();
+        config.setId(configId);
+        config.setStatus(status);
         config.setUpdateTime(LocalDateTime.now());
         thirdPartyConfigMapper.updateById(config);
     }

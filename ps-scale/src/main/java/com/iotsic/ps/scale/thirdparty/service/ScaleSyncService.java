@@ -1,9 +1,8 @@
 package com.iotsic.ps.scale.thirdparty.service;
 
-import com.iotsic.ps.thirdparty.dto.SyncResultResponse;
-import com.iotsic.ps.thirdparty.dto.SyncStatisticsResponse;
-import com.iotsic.ps.thirdparty.entity.SyncLog;
-import com.iotsic.ps.thirdparty.entity.ThirdPartyConfig;
+import com.iotsic.ps.scale.thirdparty.dto.SyncResultResponse;
+import com.iotsic.ps.scale.thirdparty.dto.SyncStatisticsResponse;
+import com.iotsic.ps.scale.thirdparty.entity.SyncLog;
 
 import java.util.List;
 
@@ -16,4 +15,8 @@ public interface ScaleSyncService {
     List<SyncLog> getSyncLogs(Long configId, Integer syncType);
 
     SyncStatisticsResponse getSyncStatistics(Long configId);
+
+    void syncScaleQuestions(String platformCode, String scaleId);
+
+    void scheduleSyncTask(Long configId, Integer intervalMinutes);
 }
