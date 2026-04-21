@@ -1,4 +1,4 @@
-package com.iotsic.ps.thirdparty.service;
+package com.iotsic.ps.scale.thirdparty.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;

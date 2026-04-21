@@ -1,4 +1,4 @@
-package com.iotsic.ps.thirdparty.controller;
+package com.iotsic.ps.scale.thirdparty.controller;
 
 import com.iotsic.ps.thirdparty.dto.SyncResultResponse;
 import com.iotsic.ps.thirdparty.dto.SyncStatisticsResponse;

@@ -1,4 +1,4 @@
-package com.iotsic.ps.thirdparty.entity;
+package com.iotsic.ps.scale.thirdparty.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.iotsic.smart.framework.mybatis.entity.BaseEntity;

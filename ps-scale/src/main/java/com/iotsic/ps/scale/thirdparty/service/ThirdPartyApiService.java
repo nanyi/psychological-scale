@@ -1,4 +1,4 @@
-package com.iotsic.ps.thirdparty.service;
+package com.iotsic.ps.scale.thirdparty.service;
 
 import com.iotsic.ps.thirdparty.dto.PlatformAnswerResponse;
 import com.iotsic.ps.thirdparty.dto.PlatformQuestionsResponse;
