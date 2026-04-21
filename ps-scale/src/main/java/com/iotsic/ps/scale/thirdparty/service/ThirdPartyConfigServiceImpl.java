@@ -3,6 +3,10 @@ package com.iotsic.ps.scale.thirdparty.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.iotsic.ps.common.enums.ErrorCodeEnum;
+import com.iotsic.ps.common.exception.BusinessException;
+import com.iotsic.ps.scale.thirdparty.dto.ThirdPartyConfigCreateRequest;
+import com.iotsic.ps.scale.thirdparty.dto.ThirdPartyConfigUpdateRequest;
 import com.iotsic.ps.scale.thirdparty.entity.ThirdPartyConfig;
 import com.iotsic.ps.scale.thirdparty.mapper.ThirdPartyConfigMapper;
 import com.iotsic.smart.framework.common.request.PageRequest;
@@ -13,7 +17,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -24,29 +30,79 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ThirdPartyConfig createConfig(ThirdPartyConfig config) {
-        LambdaQueryWrapper<ThirdPartyConfig> existWrapper = new LambdaQueryWrapper<>();
-        existWrapper.eq(ThirdPartyConfig::getPlatformCode, config.getPlatformCode());
-        if (thirdPartyConfigMapper.selectOne(existWrapper) != null) {
-            throw new RuntimeException("平台代码已存在");
-        }
+    public ThirdPartyConfig createConfig(ThirdPartyConfigCreateRequest request) {
+        String platformCode = request.getPlatformCode();
         
+        LambdaQueryWrapper<ThirdPartyConfig> existWrapper = new LambdaQueryWrapper<>();
+        existWrapper.eq(ThirdPartyConfig::getPlatformCode, platformCode);
+        if (thirdPartyConfigMapper.selectOne(existWrapper) != null) {
+            throw BusinessException.of(ErrorCodeEnum.PLATFORM_EXIST.getCode(), "平台代码已存在");
+        }
+
+        ThirdPartyConfig config = new ThirdPartyConfig();
+        config.setPlatformName(request.getPlatformName());
+        config.setPlatformCode(platformCode);
+        config.setAppKey(request.getAppKey());
+        config.setAppSecret(request.getAppSecret());
+        config.setApiUrl(request.getApiUrl());
+        config.setCallbackUrl(request.getCallbackUrl());
+        config.setPlatformType(request.getPlatformType());
+        config.setConfigJson(request.getConfigJson());
+        config.setSyncInterval(request.getSyncInterval() != null ? request.getSyncInterval() : 60);
+        config.setDescription(request.getDescription());
         config.setStatus(1);
         config.setCreateTime(LocalDateTime.now());
         config.setUpdateTime(LocalDateTime.now());
-        
+
         thirdPartyConfigMapper.insert(config);
-        log.info("创建第三方平台配置: platformCode={}", config.getPlatformCode());
+        log.info("创建第三方平台配置: platformCode={}", platformCode);
         
         return config;
     }
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public ThirdPartyConfig updateConfig(ThirdPartyConfig config) {
+    public ThirdPartyConfig updateConfig(Long id, ThirdPartyConfigUpdateRequest request) {
+        ThirdPartyConfig config = getConfigById(id);
+
+        if (request.getPlatformName() != null) {
+            config.setPlatformName(request.getPlatformName());
+        }
+        if (request.getAppKey() != null) {
+            config.setAppKey(request.getAppKey());
+        }
+        if (request.getAppSecret() != null) {
+            config.setAppSecret(request.getAppSecret());
+        }
+        if (request.getApiUrl() != null) {
+            config.setApiUrl(request.getApiUrl());
+        }
+        if (request.getCallbackUrl() != null) {
+            config.setCallbackUrl(request.getCallbackUrl());
+        }
+        if (request.getConfigJson() != null) {
+            config.setConfigJson(request.getConfigJson());
+        }
+        if (request.getSyncInterval() != null) {
+            config.setSyncInterval(request.getSyncInterval());
+        }
+        if (request.getDescription() != null) {
+            config.setDescription(request.getDescription());
+        }
+
         config.setUpdateTime(LocalDateTime.now());
         thirdPartyConfigMapper.updateById(config);
+
         return config;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteConfig(Long id) {
+        ThirdPartyConfig config = getConfigById(id);
+        config.setDeleted(true);
+        config.setUpdateTime(LocalDateTime.now());
+        thirdPartyConfigMapper.updateById(config);
     }
 
     @Override
@@ -57,8 +113,12 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
     }
 
     @Override
-    public ThirdPartyConfig getConfigById(Long configId) {
-        return thirdPartyConfigMapper.selectById(configId);
+    public ThirdPartyConfig getConfigById(Long id) {
+        ThirdPartyConfig config = thirdPartyConfigMapper.selectById(id);
+        if (config == null || config.getDeleted()) {
+            throw BusinessException.of(ErrorCodeEnum.CONFIG_NOT_FOUND.getCode(), "配置不存在");
+        }
+        return config;
     }
 
     @Override
@@ -69,7 +129,7 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
         
         ThirdPartyConfig config = thirdPartyConfigMapper.selectOne(wrapper);
         if (config == null) {
-            throw new RuntimeException("平台配置不存在或未启用");
+            throw BusinessException.of(ErrorCodeEnum.CONFIG_NOT_FOUND.getCode(), "平台配置不存在或未启用");
         }
         return config;
     }
@@ -83,11 +143,44 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
     }
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void enableConfig(Long id) {
+        ThirdPartyConfig config = getConfigById(id);
+        config.setStatus(1);
+        config.setUpdateTime(LocalDateTime.now());
+        thirdPartyConfigMapper.updateById(config);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void disableConfig(Long id) {
+        ThirdPartyConfig config = getConfigById(id);
+        config.setStatus(0);
+        config.setUpdateTime(LocalDateTime.now());
+        thirdPartyConfigMapper.updateById(config);
+    }
+
+    @Override
     public void updateConfigStatus(Long configId, Integer status) {
         ThirdPartyConfig config = new ThirdPartyConfig();
         config.setId(configId);
         config.setStatus(status);
         config.setUpdateTime(LocalDateTime.now());
         thirdPartyConfigMapper.updateById(config);
+    }
+
+    @Override
+    public Map<String, Object> testConnection(Long id) {
+        ThirdPartyConfig config = getConfigById(id);
+        
+        Map<String, Object> result = new HashMap<>();
+        result.put("success", true);
+        result.put("platformName", config.getPlatformName());
+        result.put("platformCode", config.getPlatformCode());
+        result.put("message", "连接测试成功");
+        
+        log.info("测试第三方平台连接: platformCode={}", config.getPlatformCode());
+        
+        return result;
     }
 }

@@ -1,4 +1,4 @@
-package com.iotsic.ps.thirdparty.dto;
+package com.iotsic.ps.scale.thirdparty.dto;
 
 import lombok.Data;
 

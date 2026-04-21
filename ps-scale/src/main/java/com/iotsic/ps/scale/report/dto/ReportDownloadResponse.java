@@ -2,8 +2,6 @@ package com.iotsic.ps.scale.report.dto;
 
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 /**
  * 报告下载响应DTO
  * 
@@ -26,5 +24,5 @@ public class ReportDownloadResponse {
     /**
      * 过期时间
      */
-    private LocalDateTime expireTime;
+    private java.time.LocalDateTime expireTime;
 }

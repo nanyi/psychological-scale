@@ -1,12 +1,12 @@
-package com.iotsic.ps.thirdparty.service;
+package com.iotsic.ps.scale.thirdparty.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.thirdparty.dto.SyncResultResponse;
-import com.iotsic.ps.thirdparty.dto.SyncStatisticsResponse;
-import com.iotsic.ps.thirdparty.entity.SyncLog;
-import com.iotsic.ps.thirdparty.entity.ThirdPartyConfig;
-import com.iotsic.ps.thirdparty.mapper.SyncLogMapper;
+import com.iotsic.ps.scale.thirdparty.dto.SyncResultResponse;
+import com.iotsic.ps.scale.thirdparty.dto.SyncStatisticsResponse;
+import com.iotsic.ps.scale.thirdparty.entity.SyncLog;
+import com.iotsic.ps.scale.thirdparty.entity.ThirdPartyConfig;
+import com.iotsic.ps.scale.thirdparty.mapper.SyncLogMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

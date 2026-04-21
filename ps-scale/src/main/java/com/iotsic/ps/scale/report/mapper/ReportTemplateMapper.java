@@ -1,7 +1,7 @@
 package com.iotsic.ps.scale.report.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
-import com.iotsic.ps.scale.report.entity.ReportTemplate;
+import com.iotsic.ps.report.entity.ReportTemplate;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper

@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.core.entity.ExamRecord;
 import com.iotsic.ps.core.entity.Report;
-import com.iotsic.ps.scale.report.mapper.ReportMapper;
+import com.iotsic.ps.report.mapper.ReportMapper;
 import com.iotsic.smart.framework.common.request.PageRequest;
 import com.iotsic.smart.framework.common.response.PageResult;
 import com.iotsic.smart.framework.common.utils.json.JsonUtils;

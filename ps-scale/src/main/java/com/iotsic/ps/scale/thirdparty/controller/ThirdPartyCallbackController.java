@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
  * @since 2026-03-11
  */
 @RestController
-@RequestMapping("/api/callback")
+@RequestMapping("/api/thirdparty/callback")
 @RequiredArgsConstructor
 public class ThirdPartyCallbackController {
 

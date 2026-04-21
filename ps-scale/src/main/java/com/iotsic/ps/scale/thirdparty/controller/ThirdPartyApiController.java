@@ -1,13 +1,13 @@
-package com.iotsic.ps.thirdparty.controller;
+package com.iotsic.ps.scale.thirdparty.controller;
 
-import com.iotsic.ps.thirdparty.dto.AnswerSubmitRequest;
-import com.iotsic.ps.thirdparty.dto.CallbackResponse;
-import com.iotsic.ps.thirdparty.dto.PlatformAnswerResponse;
-import com.iotsic.ps.thirdparty.dto.PlatformQuestionsResponse;
-import com.iotsic.ps.thirdparty.dto.PlatformReportResponse;
-import com.iotsic.ps.thirdparty.entity.ThirdPartyCallback;
-import com.iotsic.ps.thirdparty.service.CallbackService;
-import com.iotsic.ps.thirdparty.service.ThirdPartyApiService;
+import com.iotsic.ps.scale.thirdparty.dto.AnswerSubmitRequest;
+import com.iotsic.ps.scale.thirdparty.dto.CallbackResponse;
+import com.iotsic.ps.scale.thirdparty.dto.PlatformAnswerResponse;
+import com.iotsic.ps.scale.thirdparty.dto.PlatformQuestionsResponse;
+import com.iotsic.ps.scale.thirdparty.dto.PlatformReportResponse;
+import com.iotsic.ps.scale.thirdparty.entity.ThirdPartyCallback;
+import com.iotsic.ps.scale.thirdparty.service.CallbackService;
+import com.iotsic.ps.scale.thirdparty.service.ThirdPartyApiService;
 import com.iotsic.smart.framework.common.result.RestResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

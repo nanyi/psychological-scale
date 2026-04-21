@@ -1,52 +1,52 @@
 package com.iotsic.ps.scale.report.controller;
 
-import com.iotsic.ps.scale.report.entity.ReportTemplate;
-import com.iotsic.ps.scale.report.service.ReportTemplateService;
+import com.iotsic.ps.report.entity.ReportTemplate;
+import com.iotsic.ps.report.service.ReportTemplateService;
 import com.iotsic.smart.framework.common.request.PageRequest;
 import com.iotsic.smart.framework.common.response.PageResult;
 import com.iotsic.smart.framework.common.result.RestResult;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-/**
- * 报告模板控制器
- * 负责报告模板的CRUD请求
- * 
- * @author Ryan
- * @since 2026-03-11
- */
 @RestController
-@RequestMapping("/api/template")
+@RequestMapping("/api/report/template")
 @RequiredArgsConstructor
 public class ReportTemplateController {
 
     private final ReportTemplateService reportTemplateService;
 
-    @PostMapping
+    @PostMapping("/create")
     public RestResult<ReportTemplate> createTemplate(@RequestBody ReportTemplate template) {
-        return RestResult.success(reportTemplateService.createTemplate(template));
+        ReportTemplate result = reportTemplateService.createTemplate(template);
+        return RestResult.success(result);
     }
 
-    @PutMapping
+    @PutMapping("/update")
     public RestResult<ReportTemplate> updateTemplate(@RequestBody ReportTemplate template) {
-        return RestResult.success(reportTemplateService.updateTemplate(template));
+        ReportTemplate result = reportTemplateService.updateTemplate(template);
+        return RestResult.success(result);
     }
 
     @GetMapping("/list")
     public RestResult<PageResult<ReportTemplate>> getTemplateList(
             PageRequest request,
-            @RequestParam(required = false) Long scaleId,
-            @RequestParam(required = false) Integer status) {
-        return RestResult.success(reportTemplateService.getTemplateList(request, scaleId, status));
+            @RequestParam(value = "scaleId", required = false) Long scaleId,
+            @RequestParam(value = "status", required = false) Integer status) {
+
+        PageResult<ReportTemplate> result = reportTemplateService.getTemplateList(request, scaleId, status);
+        
+        return RestResult.success(result);
     }
 
-    @GetMapping("/{templateId}")
-    public RestResult<ReportTemplate> getTemplateById(@PathVariable Long templateId) {
-        return RestResult.success(reportTemplateService.getTemplateById(templateId));
-    }
-
-    @GetMapping("/default")
-    public RestResult<ReportTemplate> getDefaultTemplate(@RequestParam Long scaleId) {
-        return RestResult.success(reportTemplateService.getDefaultTemplate(scaleId));
+    @GetMapping("/detail")
+    public RestResult<ReportTemplate> getTemplateDetail(@RequestParam Long templateId) {
+        ReportTemplate template = reportTemplateService.getTemplateById(templateId);
+        return RestResult.success(template);
     }
 }

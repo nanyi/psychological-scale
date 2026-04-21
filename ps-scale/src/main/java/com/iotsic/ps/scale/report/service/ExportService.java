@@ -1,7 +1,7 @@
 package com.iotsic.ps.scale.report.service;
 
-import com.iotsic.ps.scale.report.dto.ReportDownloadResponse;
-import com.iotsic.ps.scale.report.dto.ReportExportResponse;
+import com.iotsic.ps.report.dto.ReportDownloadResponse;
+import com.iotsic.ps.report.dto.ReportExportResponse;
 
 public interface ExportService {
 

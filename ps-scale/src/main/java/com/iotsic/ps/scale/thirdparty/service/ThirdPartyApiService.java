@@ -1,12 +1,16 @@
 package com.iotsic.ps.scale.thirdparty.service;
 
+import com.iotsic.ps.scale.thirdparty.dto.PlatformAnswerResponse;
+import com.iotsic.ps.scale.thirdparty.dto.PlatformQuestionsResponse;
+import com.iotsic.ps.scale.thirdparty.dto.PlatformReportResponse;
+
 import java.util.Map;
 
 public interface ThirdPartyApiService {
 
-    Map<String, Object> callScaleListApi(String platformCode);
+    PlatformQuestionsResponse getQuestionsFromPlatform(Long configId, String externalScaleId);
 
-    Map<String, Object> callScaleDetailApi(String platformCode, String scaleId);
+    PlatformAnswerResponse submitAnswersToPlatform(Long configId, Map<String, Object> params);
 
-    Map<String, Object> callSubmitAnswerApi(String platformCode, Map<String, Object> answerData);
+    PlatformReportResponse getReportFromPlatform(Long configId, String externalRecordId);
 }

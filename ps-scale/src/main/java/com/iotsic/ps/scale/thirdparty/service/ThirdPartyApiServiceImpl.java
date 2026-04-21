@@ -1,9 +1,9 @@
-package com.iotsic.ps.thirdparty.service;
+package com.iotsic.ps.scale.thirdparty.service;
 
-import com.iotsic.ps.thirdparty.dto.PlatformAnswerResponse;
-import com.iotsic.ps.thirdparty.dto.PlatformQuestionsResponse;
-import com.iotsic.ps.thirdparty.dto.PlatformReportResponse;
-import com.iotsic.ps.thirdparty.entity.ThirdPartyConfig;
+import com.iotsic.ps.scale.thirdparty.dto.PlatformAnswerResponse;
+import com.iotsic.ps.scale.thirdparty.dto.PlatformQuestionsResponse;
+import com.iotsic.ps.scale.thirdparty.dto.PlatformReportResponse;
+import com.iotsic.ps.scale.thirdparty.entity.ThirdPartyConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
