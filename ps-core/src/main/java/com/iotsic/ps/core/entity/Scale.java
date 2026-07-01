@@ -2,6 +2,7 @@ package com.iotsic.ps.core.entity;
 
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.Version;
 import com.iotsic.smart.framework.mybatis.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -135,4 +136,11 @@ public class Scale extends BaseEntity {
      * 状态(0-草稿,1-已发布,2-已下架)
      */
     private Integer status;
+
+    /**
+     * 版本号
+     */
+    @TableField(value = "version")
+    @Version
+    private Integer version;
 }

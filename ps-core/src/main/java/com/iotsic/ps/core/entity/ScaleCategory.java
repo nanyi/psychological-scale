@@ -1,7 +1,10 @@
 package com.iotsic.ps.core.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.Version;
 import com.iotsic.smart.framework.mybatis.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -18,6 +21,9 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @TableName("ps_scale_category")
 public class ScaleCategory extends BaseEntity {
+
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     /**
      * 分类名称
@@ -52,4 +58,11 @@ public class ScaleCategory extends BaseEntity {
      */
     @TableField(exist = false)
     private List<ScaleCategory> children;
+
+    /**
+     * 版本号
+     */
+    @TableField(value = "version")
+    @Version
+    private Integer version;
 }

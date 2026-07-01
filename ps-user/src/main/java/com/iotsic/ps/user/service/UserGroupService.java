@@ -1,8 +1,8 @@
 package com.iotsic.ps.user.service;
 
 import com.iotsic.ps.core.entity.UserGroup;
-import com.iotsic.smart.framework.common.request.PageRequest;
-import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
 
 import java.util.List;
 

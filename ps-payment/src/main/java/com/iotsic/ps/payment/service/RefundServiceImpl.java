@@ -1,13 +1,13 @@
 package com.iotsic.ps.payment.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.payment.config.WxPayConfig;
 import com.iotsic.ps.payment.dto.RefundCreateResponse;
 import com.iotsic.ps.payment.entity.Payment;
 import com.iotsic.ps.payment.entity.RefundRecord;
 import com.iotsic.ps.payment.mapper.PaymentMapper;
 import com.iotsic.ps.payment.mapper.RefundRecordMapper;
+import com.iotsic.smart.framework.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,15 +38,15 @@ public class RefundServiceImpl implements RefundService {
     public RefundCreateResponse createRefund(Long paymentId, BigDecimal refundAmount, String refundReason) {
         Payment payment = paymentMapper.selectById(paymentId);
         if (payment == null) {
-            throw new BusinessException("支付记录不存在");
+            throw BusinessException.of("支付记录不存在");
         }
 
         if (payment.getStatus() != 1) {
-            throw new BusinessException("订单未支付，无法退款");
+            throw BusinessException.of("订单未支付，无法退款");
         }
 
         if (refundAmount.compareTo(payment.getPayAmount()) > 0) {
-            throw new BusinessException("退款金额超过支付金额");
+            throw BusinessException.of("退款金额超过支付金额");
         }
 
         String refundNo = "REF" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 8);
@@ -76,7 +76,7 @@ public class RefundServiceImpl implements RefundService {
             refundRecord.setRefundStatus("FAILED");
             refundRecord.setRemark(e.getMessage());
             refundRecordMapper.updateById(refundRecord);
-            throw new BusinessException("退款处理异常: " + e.getMessage());
+            throw BusinessException.of("退款处理异常: " + e.getMessage());
         }
 
         RefundCreateResponse result = new RefundCreateResponse();
@@ -123,7 +123,7 @@ public class RefundServiceImpl implements RefundService {
             }
         } catch (Exception e) {
             log.error("微信退款回调处理异常", e);
-            throw new BusinessException("微信退款回调处理异常");
+            throw BusinessException.of("微信退款回调处理异常");
         }
     }
 
@@ -154,7 +154,7 @@ public class RefundServiceImpl implements RefundService {
             }
         } catch (Exception e) {
             log.error("支付宝退款回调处理异常", e);
-            throw new BusinessException("支付宝退款回调处理异常");
+            throw BusinessException.of("支付宝退款回调处理异常");
         }
     }
 

@@ -42,6 +42,10 @@
             <groupId>com.iotsic.smart</groupId>
             <artifactId>smart-framework-mybatis</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.iotsic.smart</groupId>
+            <artifactId>smart-framework-tenant</artifactId>
+        </dependency>
     </dependencies>
 
 </project>

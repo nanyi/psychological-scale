@@ -3,12 +3,12 @@ package com.iotsic.ps.scale.report.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.core.entity.ExamRecord;
 import com.iotsic.ps.core.entity.Report;
 import com.iotsic.ps.scale.report.mapper.ReportMapper;
-import com.iotsic.smart.framework.common.request.PageRequest;
-import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.exception.BusinessException;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
 import com.iotsic.smart.framework.common.utils.json.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +36,7 @@ public class ReportServiceImpl implements ReportService {
     public Report generateReport(Long taskId, Long templateId) {
         ExamRecord examRecord = getExamRecord(taskId);
         if (examRecord == null) {
-            throw new BusinessException("测评记录不存在");
+            throw BusinessException.of("测评记录不存在");
         }
 
         Report report = new Report();

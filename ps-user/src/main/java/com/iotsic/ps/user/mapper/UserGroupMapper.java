@@ -1,9 +1,14 @@
 package com.iotsic.ps.user.mapper;
 
-import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.iotsic.ps.core.entity.UserGroup;
+import com.iotsic.smart.framework.mybatis.mapper.BaseMapperPlus;
 import org.apache.ibatis.annotations.Mapper;
 
+/**
+ * 用户组Mapper接口
+ *
+ * @author Ryan
+ */
 @Mapper
-public interface UserGroupMapper extends BaseMapper<UserGroup> {
+public interface UserGroupMapper extends BaseMapperPlus<UserGroup> {
 }

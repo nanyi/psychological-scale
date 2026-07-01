@@ -2,7 +2,6 @@ package com.iotsic.ps.scale.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
-import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.core.entity.Dimension;
 import com.iotsic.ps.core.entity.Question;
 import com.iotsic.ps.core.entity.Scale;
@@ -13,6 +12,7 @@ import com.iotsic.ps.scale.dto.QuestionUpdateRequest;
 import com.iotsic.ps.scale.mapper.DimensionMapper;
 import com.iotsic.ps.scale.mapper.QuestionMapper;
 import com.iotsic.ps.scale.mapper.ScaleMapper;
+import com.iotsic.smart.framework.common.exception.BusinessException;
 import com.iotsic.smart.framework.encrypt.utils.EncryptUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

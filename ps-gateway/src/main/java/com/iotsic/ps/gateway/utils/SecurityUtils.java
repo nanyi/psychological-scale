@@ -21,6 +21,8 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class SecurityUtils {
 
+    private static final SecurityProperties PROPERTIES = SpringUtils.getBean(SecurityProperties.class);
+
     private static final String USER_ID_HEADER = "X-User-Id";
     private static final String USER_NAME_HEADER = "X-User-Name";
     private static final String USER_TYPE_HEADER = "X-User-Type";
@@ -32,13 +34,12 @@ public class SecurityUtils {
      * @return 认证 Token
      */
     public static String obtainAuthorization(ServerWebExchange exchange) {
-        SecurityProperties properties = SpringUtils.getBean(SecurityProperties.class);
-        String authHeader = exchange.getRequest().getHeaders().getFirst(properties.getTokenHeader());
-        if (!StringUtils.hasText(authHeader) || !authHeader.startsWith(properties.getTokenPrefix())) {
+        String authHeader = exchange.getRequest().getHeaders().getFirst(PROPERTIES.getTokenHeader());
+        if (!StringUtils.hasText(authHeader) || !authHeader.startsWith(PROPERTIES.getTokenPrefix())) {
             return null;
         }
 
-        return authHeader.substring(properties.getTokenPrefix().length()).trim();
+        return authHeader.substring(PROPERTIES.getTokenPrefix().length()).trim();
     }
 
     /**
@@ -47,7 +48,7 @@ public class SecurityUtils {
      * @param exchange 请求
      * @param user 用户
      */
-    public static void setLoginUser(ServerWebExchange exchange, LoginUser user) {
+    public static void setCurrentUser(ServerWebExchange exchange, LoginUser user) {
         exchange.getAttributes().put(USER_ID_HEADER, user.getUserId());
         exchange.getAttributes().put(USER_NAME_HEADER, user.getUsername());
         exchange.getAttributes().put(USER_TYPE_HEADER, user.getUserType());
@@ -61,13 +62,13 @@ public class SecurityUtils {
      * @param user 用户
      */
     @SneakyThrows
-    public static void setLoginUserHeader(ServerHttpRequest.Builder builder, LoginUser user) {
+    public static void setCurrentUserHeader(ServerHttpRequest.Builder builder, LoginUser user) {
         try {
             builder.header(USER_ID_HEADER, URLEncoder.encode(user.getUserId().toString(), StandardCharsets.UTF_8));
             builder.header(USER_NAME_HEADER, URLEncoder.encode(user.getUsername(), StandardCharsets.UTF_8));
             builder.header(USER_TYPE_HEADER, URLEncoder.encode(user.getUserType().toString(), StandardCharsets.UTF_8));
         } catch (Exception ex) {
-            log.error("[setLoginUserHeader][序列化 user({}) 发生异常]", user, ex);
+            log.error("[setCurrentUserHeader][序列化 user({}) 发生异常]", user, ex);
             throw ex;
         }
     }

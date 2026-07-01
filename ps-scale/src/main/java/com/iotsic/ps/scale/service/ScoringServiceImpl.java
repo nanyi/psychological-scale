@@ -2,8 +2,11 @@ package com.iotsic.ps.scale.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
-import com.iotsic.ps.common.exception.BusinessException;
-import com.iotsic.ps.core.entity.*;
+import com.iotsic.ps.core.entity.Dimension;
+import com.iotsic.ps.core.entity.OptionScore;
+import com.iotsic.ps.core.entity.Question;
+import com.iotsic.ps.core.entity.Scale;
+import com.iotsic.ps.core.entity.ScoringRule;
 import com.iotsic.ps.scale.dto.OptionScoreCreateRequest;
 import com.iotsic.ps.scale.dto.OptionScoreUpdateRequest;
 import com.iotsic.ps.scale.dto.ScoreCalculateRequest;
@@ -12,7 +15,12 @@ import com.iotsic.ps.scale.dto.ScoreInterpretRequest;
 import com.iotsic.ps.scale.dto.ScoreInterpretResponse;
 import com.iotsic.ps.scale.dto.ScoringRuleCreateRequest;
 import com.iotsic.ps.scale.dto.ScoringRuleUpdateRequest;
-import com.iotsic.ps.scale.mapper.*;
+import com.iotsic.ps.scale.mapper.DimensionMapper;
+import com.iotsic.ps.scale.mapper.OptionScoreMapper;
+import com.iotsic.ps.scale.mapper.QuestionMapper;
+import com.iotsic.ps.scale.mapper.ScaleMapper;
+import com.iotsic.ps.scale.mapper.ScoringRuleMapper;
+import com.iotsic.smart.framework.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,7 +29,9 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service

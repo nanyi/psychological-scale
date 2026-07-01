@@ -1,16 +1,28 @@
 package com.iotsic.ps.core.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.iotsic.smart.framework.mybatis.entity.BaseEntity;
+import com.iotsic.smart.framework.tenant.dal.entity.TenantBaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
+/**
+ * 用户 实体
+ *
+ * @author Ryan
+ */
 @Data
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_user")
-public class User extends BaseEntity {
+public class User extends TenantBaseEntity {
+
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     private String username;
 

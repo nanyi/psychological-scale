@@ -1,7 +1,7 @@
 package com.iotsic.ps.scale.thirdparty.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.iotsic.ps.common.exception.BusinessException;
+
 import com.iotsic.ps.scale.thirdparty.dto.SyncResultResponse;
 import com.iotsic.ps.scale.thirdparty.dto.SyncStatisticsResponse;
 import com.iotsic.ps.scale.thirdparty.entity.SyncLog;

@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
-import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.core.entity.Role;
 import com.iotsic.ps.core.entity.User;
 import com.iotsic.ps.core.entity.UserRole;
@@ -12,20 +11,27 @@ import com.iotsic.ps.core.enums.UserTypeEnum;
 import com.iotsic.ps.user.dto.AuthResultDTO;
 import com.iotsic.ps.user.mapper.UserMapper;
 import com.iotsic.ps.user.mapper.UserRoleMapper;
+import com.iotsic.ps.user.service.permission.RoleService;
 import com.iotsic.ps.user.vo.UserVO;
-import com.iotsic.smart.framework.common.request.PageRequest;
-import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.exception.BusinessException;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
+import com.iotsic.smart.framework.common.utils.web.ServletUtils;
 import com.iotsic.smart.framework.encrypt.utils.EncryptUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+/**
+ * @author Ryan
+ */
 @Slf4j
 @Service
 public class UserServiceImpl implements UserService {
@@ -55,7 +61,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public AuthResultDTO register(String username, String password, String phone, String email) {
+    @Transactional
+    public AuthResultDTO register(String tenantId, String username, String password, String phone, String email) {
         if (getUserByUsername(username) != null) {
             throw BusinessException.of(ErrorCodeEnum.USER_EXIST.getCode(), "用户名已存在");
         }
@@ -70,16 +77,17 @@ public class UserServiceImpl implements UserService {
         user.setNickname(username);
         user.setPhone(phone);
         user.setEmail(email);
-        user.setUserType(UserTypeEnum.PERSONAL.getCode());
+        user.setUserType(UserTypeEnum.MEMBER.getCode());
         user.setStatus(0);
         user.setCreateTime(LocalDateTime.now());
         user.setUpdateTime(LocalDateTime.now());
+        user.setTenantId(tenantId);
 
         userMapper.insert(user);
 
         String deviceId = UUID.randomUUID().toString();
 
-        return authService.generateAuthResult(user, deviceId);
+        return authService.loginAfterRegister(tenantId, username, password, ServletUtils.getClientIP(), deviceId);
     }
 
     @Override

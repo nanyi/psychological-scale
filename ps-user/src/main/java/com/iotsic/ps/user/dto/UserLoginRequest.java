@@ -12,6 +12,11 @@ import lombok.Data;
 public class UserLoginRequest {
 
     /**
+     * 租户ID
+     */
+    private String tenantId;
+
+    /**
      * 用户名或手机号
      */
     private String username;

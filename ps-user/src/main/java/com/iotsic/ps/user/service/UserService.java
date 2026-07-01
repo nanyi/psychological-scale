@@ -3,8 +3,8 @@ package com.iotsic.ps.user.service;
 import com.iotsic.ps.core.entity.User;
 import com.iotsic.ps.user.dto.AuthResultDTO;
 import com.iotsic.ps.user.vo.UserVO;
-import com.iotsic.smart.framework.common.request.PageRequest;
-import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
 
 /**
  * 用户服务接口
@@ -29,13 +29,14 @@ public interface UserService {
     /**
      * 用户注册
      *
+     * @param tenantId 租户ID
      * @param username 用户名
      * @param password 密码
      * @param phone 手机号
      * @param email 邮箱
      * @return 认证结果
      */
-    AuthResultDTO register(String username, String password, String phone, String email);
+    AuthResultDTO register(String tenantId, String username, String password, String phone, String email);
 
     /**
      * 根据ID获取用户

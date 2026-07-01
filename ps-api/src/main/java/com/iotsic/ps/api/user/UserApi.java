@@ -13,6 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * 用户服务接口
+ *
+ * @author Ryan
+ */
 @FeignClient(name = "ps-user", contextId = "userApi", configuration = FeignConfig.class)
 public interface UserApi {
 

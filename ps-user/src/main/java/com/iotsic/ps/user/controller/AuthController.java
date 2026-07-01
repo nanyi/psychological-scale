@@ -1,22 +1,33 @@
 package com.iotsic.ps.user.controller;
 
+import com.iotsic.ps.core.entity.OAuth2AccessToken;
 import com.iotsic.ps.user.dto.AuthResultDTO;
+import com.iotsic.ps.user.dto.OAuth2AccessTokenResponse;
 import com.iotsic.ps.user.dto.TokenRefreshResponse;
 import com.iotsic.ps.user.dto.UserLoginRequest;
 import com.iotsic.ps.user.dto.UserLoginResponse;
 import com.iotsic.ps.user.service.AuthService;
 import com.iotsic.ps.user.service.UserService;
+import com.iotsic.ps.user.service.oauth2.OAuth2TokenService;
 import com.iotsic.ps.user.vo.LoginUserVO;
 import com.iotsic.ps.user.vo.UserVO;
 import com.iotsic.smart.framework.common.result.RestResult;
+import com.iotsic.smart.framework.common.utils.BeanUtils;
+import com.iotsic.smart.framework.common.utils.http.HttpUtils;
+import com.iotsic.smart.framework.common.utils.web.ServletUtils;
+import com.iotsic.smart.framework.tenant.constant.TenantConstants;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.UUID;
 
 /**
  * 认证控制器
@@ -33,6 +44,7 @@ public class AuthController {
 
     private final AuthService authService;
     private final UserService userService;
+    private final OAuth2TokenService oauth2TokenService;
 
     /**
      * 用户登录
@@ -42,10 +54,14 @@ public class AuthController {
      */
     @PostMapping("/login")
     public RestResult<UserLoginResponse> login(@RequestBody UserLoginRequest request) {
+        String deviceId = UUID.randomUUID().toString();
+
         AuthResultDTO result = authService.login(
+                request.getTenantId() == null ? TenantConstants.DEFAULT_TENANT_ID : request.getTenantId(),
                 request.getUsername(),
                 request.getPassword(),
-                null
+                ServletUtils.getClientIP(),
+                deviceId
         );
 
         UserVO user = userService.getUserInfo(result.getUserId());
@@ -86,5 +102,13 @@ public class AuthController {
         response.setExpiresIn(result.getExpiresIn());
         
         return RestResult.success(response);
+    }
+
+    @GetMapping("/check-token")
+    @Operation(summary = "校验访问令牌")
+    @Parameter(name = "accessToken", description = "访问令牌", required = true)
+    public RestResult<OAuth2AccessTokenResponse> checkAccessToken(@RequestParam("accessToken") String accessToken) {
+        OAuth2AccessToken response = oauth2TokenService.checkAccessToken(accessToken);
+        return RestResult.success(BeanUtils.toBean(response, OAuth2AccessTokenResponse.class));
     }
 }

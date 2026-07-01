@@ -6,8 +6,8 @@ import com.iotsic.ps.api.dto.PurchaseCheckResponse;
 import com.iotsic.ps.api.dto.QuestionListResponse;
 import com.iotsic.ps.api.dto.ScaleListResponse;
 import com.iotsic.ps.api.dto.ScaleResponse;
-import com.iotsic.smart.framework.common.request.PageRequest;
-import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
 import com.iotsic.smart.framework.common.result.RestResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * 量表服务接口
+ *
+ * @author Ryan
+ */
 @FeignClient(name = "ps-scale", contextId = "scaleApi", configuration = FeignConfig.class)
 public interface ScaleApi {
 

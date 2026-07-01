@@ -3,6 +3,11 @@ package com.iotsic.ps.common.enums;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+/**
+ * 角色状态枚举
+ *
+ * @author Ryan
+ */
 @Getter
 @AllArgsConstructor
 public enum StatusEnum {

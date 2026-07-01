@@ -5,8 +5,8 @@ import com.iotsic.ps.core.entity.ExamRecord;
 import com.iotsic.ps.scale.dto.ExamRecordListRequest;
 import com.iotsic.ps.scale.dto.RecordDetailResponse;
 import com.iotsic.ps.scale.dto.RecordStatisticsResponse;
-import com.iotsic.smart.framework.common.request.PageRequest;
-import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
 
 import java.util.List;
 

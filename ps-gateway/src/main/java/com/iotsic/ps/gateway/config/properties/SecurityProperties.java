@@ -4,6 +4,7 @@ import com.iotsic.smart.framework.common.factory.YmlPropertySourceFactory;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.validation.annotation.Validated;
 
@@ -13,15 +14,22 @@ import org.springframework.validation.annotation.Validated;
  * @author Ryan
  */
 @Data
+@Configuration
 @Validated
 @PropertySource(value = "classpath:security.yml", factory = YmlPropertySourceFactory.class)
-@ConfigurationProperties(prefix = "security")
+@ConfigurationProperties(prefix = "smart.security")
 public class SecurityProperties {
 
     /**
      * 是否启用
      */
     private boolean enabled = true;
+
+    /**
+     * 验证 URL
+     */
+    @NotEmpty(message = "Check Url 不能为空")
+    private String checkUrl;
 
     /**
      * Token 存储在 Header 中的名称

@@ -10,14 +10,14 @@ Psychological Scale 心理测评系统 - 后端服务，基于 Spring Boot 3.2.2
 
 ## 技术架构
 
-| 技术 | 版本 | 说明 |
-|------|------|------|
-| Spring Boot | 3.2.2 | 后端框架 |
-| Java | 21 | 编程语言 |
-| Spring Cloud | 2023.0.0 | 微服务治理 |
-| MyBatis-Plus | 3.5.5 | ORM框架 |
-| MySQL | 8.0 | 关系型数据库 |
-| Redis | 7.0 | 缓存数据库 |
+| 技术 | 版本       | 说明 |
+|------|----------|------|
+| Spring Boot | 3.5.9    | 后端框架 |
+| Java | 21       | 编程语言 |
+| Spring Cloud | 2025.0.1 | 微服务治理 |
+| MyBatis-Plus | 3.5.11   | ORM框架 |
+| MySQL | 8.0      | 关系型数据库 |
+| Redis | 7.0      | 缓存数据库 |
 
 ## 模块结构
 

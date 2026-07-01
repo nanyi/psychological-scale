@@ -2,8 +2,8 @@ package com.iotsic.ps.scale.report.controller;
 
 import com.iotsic.ps.scale.report.entity.ReportTemplate;
 import com.iotsic.ps.scale.report.service.ReportTemplateService;
-import com.iotsic.smart.framework.common.request.PageRequest;
-import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
 import com.iotsic.smart.framework.common.result.RestResult;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +14,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * 报表模板控制器
+ * 创建、更新、查询报表模板
+ *
+ * @author Ryan
+ */
 @RestController
 @RequestMapping("/api/report/template")
 @RequiredArgsConstructor

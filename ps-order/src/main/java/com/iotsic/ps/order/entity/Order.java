@@ -1,5 +1,7 @@
 package com.iotsic.ps.order.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.iotsic.smart.framework.mybatis.entity.BaseEntity;
 import lombok.Data;
@@ -12,6 +14,9 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @TableName("ps_order")
 public class Order extends BaseEntity {
+
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     private String orderNo;
 

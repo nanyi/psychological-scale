@@ -2,10 +2,10 @@ package com.iotsic.ps.order.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
-import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.order.dto.PaymentResponse;
 import com.iotsic.ps.order.entity.Order;
 import com.iotsic.ps.order.mapper.OrderMapper;
+import com.iotsic.smart.framework.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

@@ -4,8 +4,8 @@ import com.iotsic.ps.api.dto.ScaleResponse;
 import com.iotsic.ps.core.entity.Scale;
 import com.iotsic.ps.scale.dto.ScaleCreateRequest;
 import com.iotsic.ps.scale.dto.ScaleUpdateRequest;
-import com.iotsic.smart.framework.common.request.PageRequest;
-import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
 
 /**
  * 量表服务接口

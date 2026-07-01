@@ -1,8 +1,8 @@
 package com.iotsic.ps.scale.report.service;
 
 import com.iotsic.ps.core.entity.Report;
-import com.iotsic.smart.framework.common.request.PageRequest;
-import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
 
 public interface ReportService {
 

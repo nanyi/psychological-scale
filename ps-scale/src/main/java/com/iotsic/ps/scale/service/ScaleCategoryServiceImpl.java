@@ -1,11 +1,11 @@
 package com.iotsic.ps.scale.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.core.entity.ScaleCategory;
 import com.iotsic.ps.scale.dto.ScaleCategoryRequest;
 import com.iotsic.ps.scale.dto.ScaleCategoryUpdateRequest;
 import com.iotsic.ps.scale.mapper.ScaleCategoryMapper;
+import com.iotsic.smart.framework.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,7 +44,7 @@ public class ScaleCategoryServiceImpl implements ScaleCategoryService {
     public void updateCategory(ScaleCategoryUpdateRequest request) {
         ScaleCategory category = scaleCategoryMapper.selectById(request.getId());
         if (category == null) {
-            throw new BusinessException("分类不存在");
+            throw BusinessException.of("分类不存在");
         }
         category.setCategoryName(request.getCategoryName());
         if (request.getParentId() != null) {
@@ -69,7 +69,7 @@ public class ScaleCategoryServiceImpl implements ScaleCategoryService {
                         .eq(ScaleCategory::getParentId, id)
         );
         if (childCount > 0) {
-            throw new BusinessException("该分类下有子分类，无法删除");
+            throw BusinessException.of("该分类下有子分类，无法删除");
         }
         scaleCategoryMapper.deleteById(id);
     }
@@ -79,7 +79,7 @@ public class ScaleCategoryServiceImpl implements ScaleCategoryService {
     public void enableCategory(Long id) {
         ScaleCategory category = scaleCategoryMapper.selectById(id);
         if (category == null) {
-            throw new BusinessException("分类不存在");
+            throw BusinessException.of("分类不存在");
         }
         category = new ScaleCategory();
         category.setId(id);
@@ -92,7 +92,7 @@ public class ScaleCategoryServiceImpl implements ScaleCategoryService {
     public void disableCategory(Long id) {
         ScaleCategory category = scaleCategoryMapper.selectById(id);
         if (category == null) {
-            throw new BusinessException("分类不存在");
+            throw BusinessException.of("分类不存在");
         }
         category = new ScaleCategory();
         category.setId(id);

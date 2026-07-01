@@ -2,8 +2,8 @@ package com.iotsic.ps.user.controller;
 
 import com.iotsic.ps.core.entity.Department;
 import com.iotsic.ps.user.service.DepartmentService;
-import com.iotsic.smart.framework.common.request.PageRequest;
-import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
 import com.iotsic.smart.framework.common.result.RestResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

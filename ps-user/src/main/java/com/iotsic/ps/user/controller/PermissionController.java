@@ -12,6 +12,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * 权限控制器
+ * 获取权限列表、权限详情、权限树结构
+ *
+ * @author Ryan
+ */
 @Slf4j
 @RestController
 @RequestMapping("/api/permission")

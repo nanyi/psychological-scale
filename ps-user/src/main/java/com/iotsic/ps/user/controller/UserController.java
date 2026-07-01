@@ -6,9 +6,10 @@ import com.iotsic.ps.user.dto.UserRegisterRequest;
 import com.iotsic.ps.user.dto.UserRegisterResponse;
 import com.iotsic.ps.user.service.UserService;
 import com.iotsic.ps.user.vo.UserVO;
-import com.iotsic.smart.framework.common.request.PageRequest;
-import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
 import com.iotsic.smart.framework.common.result.RestResult;
+import com.iotsic.smart.framework.tenant.constant.TenantConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -95,6 +96,7 @@ public class UserController {
     @PostMapping("/register")
     public RestResult<UserRegisterResponse> register(@RequestBody UserRegisterRequest request) {
         AuthResultDTO result = userService.register(
+                request.getTenantId() == null ? TenantConstants.DEFAULT_TENANT_ID : request.getTenantId(),
                 request.getUsername(),
                 request.getPassword(),
                 request.getPhone(),

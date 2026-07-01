@@ -6,6 +6,9 @@ import com.iotsic.ps.scale.thirdparty.entity.ThirdPartyCallback;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * @author Ryan
+ */
 public interface CallbackService {
 
     Map<String, Object> handleReportCallback(Long configId, Map<String, Object> params);

@@ -9,7 +9,7 @@ import com.iotsic.ps.api.dto.PayOrderRequest;
 import com.iotsic.ps.api.dto.PayOrderResponse;
 import com.iotsic.ps.api.dto.RefundOrderRequest;
 import com.iotsic.ps.api.dto.RefundOrderResponse;
-import com.iotsic.smart.framework.common.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
 import com.iotsic.smart.framework.common.result.RestResult;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,6 +18,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+/**
+ * 订单服务接口
+ *
+ * @author Ryan
+ */
 @FeignClient(name = "ps-order", contextId = "orderApi", configuration = FeignConfig.class)
 public interface OrderApi {
 

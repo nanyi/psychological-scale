@@ -1,2 +1,3 @@
-com.iotsic.smart.framework.security.config.SecurityAutoConfig
-com.iotsic.smart.framework.security.config.LoadBalancerConfig
+com.iotsic.ps.gateway.config.SecurityAutoConfig
+com.iotsic.ps.gateway.config.LoadBalancerConfig
+com.iotsic.ps.gateway.config.WebAutoConfiguration

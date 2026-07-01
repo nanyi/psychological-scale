@@ -69,6 +69,7 @@ public class ThirdPartyApiServiceImpl implements ThirdPartyApiService {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public PlatformAnswerResponse submitAnswersToPlatform(Long configId, Map<String, Object> params) {
         ThirdPartyConfig config = thirdPartyConfigService.getConfigById(configId);
         

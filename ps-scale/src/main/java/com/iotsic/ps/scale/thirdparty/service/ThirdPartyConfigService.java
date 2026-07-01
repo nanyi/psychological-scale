@@ -3,8 +3,8 @@ package com.iotsic.ps.scale.thirdparty.service;
 import com.iotsic.ps.scale.thirdparty.dto.ThirdPartyConfigCreateRequest;
 import com.iotsic.ps.scale.thirdparty.dto.ThirdPartyConfigUpdateRequest;
 import com.iotsic.ps.scale.thirdparty.entity.ThirdPartyConfig;
-import com.iotsic.smart.framework.common.request.PageRequest;
-import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
 
 import java.util.List;
 import java.util.Map;

@@ -42,10 +42,33 @@ mybatis-plus:
   type-aliases-package: com.iotsic.ps.**.entity
   mapper-locations: classpath*:/mapper/**/*.xml
 
-jwt:
-  secret: ${JWT_SECRET:psychological-scale-secret-key-2026}
-  expire: ${JWT_EXPIRE:7200000}
-  refresh-expire: ${JWT_REFRESH_EXPIRE:604800000}
+# Swagger3 配置项
+springdoc:
+  api-docs:
+    # 是否开启接口文档
+    enabled: true
+  #  swagger-ui:
+  #    # 持久化认证数据
+  #    persistAuthorization: true
+  info:
+    # 标题
+    title: '标题：多租户管理系统_接口文档'
+    # 描述
+    description: '描述：用于管理集团旗下公司的人员信息,具体包括XXX,XXX模块...'
+    # 版本
+    version: '版本号: ${smart.info.version}'
+    # 作者信息
+    contact:
+      name: Sugela Team
+      email: tech@sugela.cn
+      url: https://gitee.com/sugela/iotsic-smart
+  components:
+    # 鉴权方式配置
+    security-schemes:
+      apiKey:
+        type: APIKEY
+        in: HEADER
+        name: ${smart.security.token-name}
 
 logging:
   level:
@@ -54,3 +77,16 @@ logging:
     #　org.springframework.cloud.gateway.route: DEBUG
     # org.springframework.cloud.gateway.handler: DEBUG
     com.iotsic.ps.gateway: DEBUG
+
+smart:
+  info:
+    version: 1.0.0
+  # security配置
+  security:
+    secret: ${JWT_SECRET:psychological-scale-secret-key-2026}
+    expire: ${JWT_EXPIRE:7200000}
+    refresh-expire: ${JWT_REFRESH_EXPIRE:604800000}
+    # 排除路径
+    excludes:
+      - /error
+    token-name: token

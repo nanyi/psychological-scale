@@ -1,11 +1,11 @@
 package com.iotsic.ps.payment.service;
 
 import com.github.wxpay.sdk.WXPay;
-import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.payment.config.WxPayConfig;
 import com.iotsic.ps.payment.dto.PaymentCreateResponse;
 import com.iotsic.ps.payment.entity.Payment;
 import com.iotsic.ps.payment.mapper.PaymentMapper;
+import com.iotsic.smart.framework.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -66,11 +66,11 @@ public class PaymentServiceImpl implements PaymentService {
                 return result;
             } else {
                 log.error("微信支付下单失败: {}", response);
-                throw new BusinessException("微信支付下单失败: " + response.get("return_msg"));
+                throw BusinessException.of("微信支付下单失败: " + response.get("return_msg"));
             }
         } catch (Exception e) {
             log.error("微信支付创建订单异常", e);
-            throw new BusinessException("微信支付创建订单异常: " + e.getMessage());
+            throw BusinessException.of("微信支付创建订单异常: " + e.getMessage());
         }
     }
 
@@ -112,7 +112,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
         } catch (Exception e) {
             log.error("微信支付回调处理异常", e);
-            throw new BusinessException("微信支付回调处理异常");
+            throw BusinessException.of("微信支付回调处理异常");
         }
     }
 
@@ -145,7 +145,7 @@ public class PaymentServiceImpl implements PaymentService {
             }
         } catch (Exception e) {
             log.error("支付宝回调处理异常", e);
-            throw new BusinessException("支付宝回调处理异常");
+            throw BusinessException.of("支付宝回调处理异常");
         }
     }
 

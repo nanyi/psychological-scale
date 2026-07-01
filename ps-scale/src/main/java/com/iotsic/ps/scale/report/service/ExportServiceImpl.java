@@ -1,11 +1,12 @@
 package com.iotsic.ps.scale.report.service;
 
-import com.iotsic.ps.common.exception.BusinessException;
+
 import com.iotsic.ps.core.entity.Report;
 import com.iotsic.ps.scale.report.dto.ReportDownloadResponse;
 import com.iotsic.ps.scale.report.dto.ReportExportResponse;
 import com.iotsic.ps.scale.report.entity.ReportExport;
 import com.iotsic.ps.scale.report.mapper.ReportExportMapper;
+import com.iotsic.smart.framework.common.exception.BusinessException;
 import com.iotsic.smart.framework.common.utils.json.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -41,7 +42,7 @@ public class ExportServiceImpl implements ExportService {
     public ReportExportResponse exportWord(Long reportId, Long templateId, String watermark) {
         Report report = reportService.getReportDetail(reportId);
         if (report == null) {
-            throw new BusinessException("报告不存在");
+            throw BusinessException.of("报告不存在");
         }
 
         try {
@@ -66,7 +67,7 @@ public class ExportServiceImpl implements ExportService {
             return result;
         } catch (Exception e) {
             log.error("Word导出失败", e);
-            throw new BusinessException("Word导出失败: " + e.getMessage());
+            throw BusinessException.of("Word导出失败: " + e.getMessage());
         }
     }
 
@@ -75,7 +76,7 @@ public class ExportServiceImpl implements ExportService {
     public ReportExportResponse exportPdf(Long reportId, Long templateId, String pageSize, String orientation, String watermark) {
         Report report = reportService.getReportDetail(reportId);
         if (report == null) {
-            throw new BusinessException("报告不存在");
+            throw BusinessException.of("报告不存在");
         }
 
         try {
@@ -100,7 +101,7 @@ public class ExportServiceImpl implements ExportService {
             return result;
         } catch (Exception e) {
             log.error("PDF导出失败", e);
-            throw new BusinessException("PDF导出失败: " + e.getMessage());
+            throw BusinessException.of("PDF导出失败: " + e.getMessage());
         }
     }
 

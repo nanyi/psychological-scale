@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
-import com.iotsic.ps.common.exception.BusinessException;
 import com.iotsic.ps.core.entity.ExamAnswer;
 import com.iotsic.ps.core.entity.ExamRecord;
 import com.iotsic.ps.core.entity.Question;
@@ -17,14 +16,16 @@ import com.iotsic.ps.scale.mapper.ExamAnswerMapper;
 import com.iotsic.ps.scale.mapper.ExamRecordMapper;
 import com.iotsic.ps.scale.mapper.QuestionMapper;
 import com.iotsic.ps.scale.mapper.ScaleMapper;
-import com.iotsic.smart.framework.common.request.PageRequest;
-import com.iotsic.smart.framework.common.response.PageResult;
+import com.iotsic.smart.framework.common.exception.BusinessException;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -77,7 +78,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
         
         Map<Long, Question> questionMap = new HashMap<>();
         if (!questionIds.isEmpty()) {
-            List<Question> questions = questionMapper.selectBatchIds(questionIds);
+            List<Question> questions = questionMapper.selectByIds(questionIds);
             questionMap = questions.stream()
                     .collect(Collectors.toMap(Question::getId, q -> q));
         }
@@ -169,11 +170,11 @@ public class ExamRecordServiceImpl implements ExamRecordService {
         statistics.setTotalExams(totalExams);
         statistics.setCompletedExams(completedExams);
         if (totalExams > 0) {
-            statistics.setCompletionRate(BigDecimal.valueOf(completedExams * 100.0 / totalExams).setScale(2, BigDecimal.ROUND_HALF_UP));
+            statistics.setCompletionRate(BigDecimal.valueOf(completedExams * 100.0 / totalExams).setScale(2, RoundingMode.HALF_UP));
         } else {
             statistics.setCompletionRate(BigDecimal.ZERO);
         }
-        statistics.setAvgScore(BigDecimal.valueOf(avgScoreVal).setScale(2, BigDecimal.ROUND_HALF_UP));
+        statistics.setAvgScore(BigDecimal.valueOf(avgScoreVal).setScale(2, RoundingMode.HALF_UP));
         statistics.setScaleCount(scaleCountMap.size());
         
         return statistics;

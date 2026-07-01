@@ -1,6 +1,8 @@
 package com.iotsic.ps.core.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.iotsic.smart.framework.mybatis.entity.BaseEntity;
 import lombok.Data;
@@ -18,6 +20,9 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_department")
 public class Department extends BaseEntity {
+
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     /**
      * 部门名称
