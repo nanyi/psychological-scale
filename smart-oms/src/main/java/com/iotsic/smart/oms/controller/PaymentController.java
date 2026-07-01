@@ -1,0 +1,120 @@
+package com.iotsic.smart.oms.controller;
+
+import com.iotsic.smart.oms.dto.PaymentCancelRequest;
+import com.iotsic.smart.oms.dto.PaymentCreateRequest;
+import com.iotsic.smart.oms.dto.PaymentResponse;
+import com.iotsic.smart.oms.dto.PaymentStatusResponse;
+import com.iotsic.smart.oms.service.PaymentService;
+import com.iotsic.smart.framework.common.result.RestResult;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
+
+/**
+ * 支付控制器
+ * 负责支付订单创建、查询、取消等请求
+ * 
+ * @author Ryan
+ * @since 2026-03-12
+ */
+@Slf4j
+@RestController
+@RequestMapping("/api/payment")
+@RequiredArgsConstructor
+public class PaymentController {
+
+    private final PaymentService paymentService;
+
+    /**
+     * 创建微信支付订单
+     * 
+     * @param request 支付创建请求
+     * @return 支付结果
+     */
+    @PostMapping("/wechat/create")
+    public RestResult<PaymentResponse> createWechatPayOrder(@RequestBody PaymentCreateRequest request) {
+        PaymentResponse result = paymentService.createWechatPayOrder(
+                request.getOrderId(),
+                request.getReturnUrl() != null ? request.getReturnUrl() : ""
+        );
+        return RestResult.success("微信支付订单创建成功", result);
+    }
+
+    /**
+     * 创建支付宝订单
+     * 
+     * @param request 支付创建请求
+     * @return 支付结果
+     */
+    @PostMapping("/alipay/create")
+    public RestResult<PaymentResponse> createAlipayOrder(@RequestBody PaymentCreateRequest request) {
+        PaymentResponse result = paymentService.createAlipayOrder(
+                request.getOrderId(),
+                request.getReturnUrl() != null ? request.getReturnUrl() : ""
+        );
+        return RestResult.success("支付宝订单创建成功", result);
+    }
+
+    /**
+     * 处理微信支付回调
+     * 
+     * @param params 回调参数
+     * @return 处理结果
+     */
+    @PostMapping("/wechat/callback")
+    public RestResult<String> handleWechatPayCallback(@RequestBody Map<String, Object> params) {
+        log.info("收到微信支付回调: {}", params);
+        paymentService.handleWechatPayCallback(params);
+        return RestResult.success("success");
+    }
+
+    /**
+     * 处理支付宝回调
+     * 
+     * @param params 回调参数
+     * @return 处理结果
+     */
+    @PostMapping("/alipay/callback")
+    public RestResult<String> handleAlipayCallback(@RequestBody Map<String, Object> params) {
+        log.info("收到支付宝回调: {}", params);
+        paymentService.handleAlipayCallback(params);
+        return RestResult.success("success");
+    }
+
+    /**
+     * 查询支付状态
+     * 
+     * @param orderId 订单ID
+     * @return 支付状态
+     */
+    @GetMapping("/status/{orderId}")
+    public RestResult<PaymentStatusResponse> queryPaymentStatus(@PathVariable Long orderId) {
+        Map<String, Object> result = paymentService.queryPaymentStatus(orderId);
+        
+        PaymentStatusResponse response = new PaymentStatusResponse();
+        response.setOrderId(orderId);
+        response.setStatus((Integer) result.get("status"));
+        response.setStatusDesc((String) result.get("statusDesc"));
+        
+        return RestResult.success(response);
+    }
+
+    /**
+     * 取消支付
+     * 
+     * @param request 取消请求
+     * @return 操作结果
+     */
+    @PostMapping("/cancel")
+    public RestResult<Void> cancelPayment(@RequestBody PaymentCancelRequest request) {
+        paymentService.cancelPayment(request.getOrderId());
+        return RestResult.success();
+    }
+}

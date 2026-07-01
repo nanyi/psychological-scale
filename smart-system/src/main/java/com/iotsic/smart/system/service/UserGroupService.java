@@ -1,0 +1,28 @@
+package com.iotsic.smart.system.service;
+
+import com.iotsic.ps.core.entity.UserGroup;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
+
+import java.util.List;
+
+public interface UserGroupService {
+
+    UserGroup getGroupById(Long id);
+
+    List<UserGroup> getEnterpriseGroups(Long enterpriseId);
+
+    UserGroup createGroup(String name, String code, String description, Long enterpriseId);
+
+    void updateGroup(Long id, String name, String description);
+
+    void deleteGroup(Long id);
+
+    void addMember(Long groupId, Long userId);
+
+    void removeMember(Long groupId, Long userId);
+
+    List<Long> getGroupMembers(Long groupId);
+
+    PageResult<UserGroup> getGroupList(PageRequest request, Long enterpriseId);
+}

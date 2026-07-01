@@ -18,10 +18,10 @@
         <module>ps-common</module>
         <module>ps-core</module>
         <module>ps-api</module>
-        <module>ps-user</module>
+        <module>smart-system</module>
         <module>ps-scale</module>
-        <module>ps-order</module>
-        <module>ps-payment</module>
+        <module>smart-oms</module>
+        <module>smart-payment</module>
         <module>ps-analysis</module>
     </modules>
 

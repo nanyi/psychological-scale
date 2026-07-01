@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.iotsic.ps</groupId>
+        <artifactId>psychological-scale</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>smart-system</artifactId>
+    <packaging>jar</packaging>
+
+    <name>smart-system</name>
+    <description>系统服务 - 用户认证、权限管理</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.iotsic.ps</groupId>
+            <artifactId>ps-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.iotsic.ps</groupId>
+            <artifactId>ps-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.iotsic.smart</groupId>
+            <artifactId>smart-framework-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.iotsic.ps</groupId>
+            <artifactId>ps-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.iotsic.smart</groupId>
+            <artifactId>smart-framework-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-openfeign</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-loadbalancer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.iotsic.smart</groupId>
+            <artifactId>smart-framework-encrypt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.iotsic.smart</groupId>
+            <artifactId>smart-framework-tenant</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

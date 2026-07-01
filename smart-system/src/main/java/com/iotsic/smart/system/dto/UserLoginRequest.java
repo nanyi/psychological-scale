@@ -1,0 +1,28 @@
+package com.iotsic.smart.system.dto;
+
+import lombok.Data;
+
+/**
+ * 用户登录请求DTO
+ * 
+ * @author Ryan
+ * @since 2026-03-12
+ */
+@Data
+public class UserLoginRequest {
+
+    /**
+     * 租户ID
+     */
+    private String tenantId;
+
+    /**
+     * 用户名或手机号
+     */
+    private String username;
+
+    /**
+     * 密码
+     */
+    private String password;
+}

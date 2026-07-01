@@ -1,0 +1,33 @@
+package com.iotsic.smart.oms.entity;
+
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.iotsic.smart.framework.mybatis.entity.BaseEntity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
+@Data
+@EqualsAndHashCode(callSuper = true)
+@TableName("enterprise_quota")
+public class EnterpriseQuota extends BaseEntity {
+
+    private Long enterpriseId;
+
+    private Long scaleId;
+
+    private String scaleName;
+
+    private Integer totalQuota;
+
+    private Integer usedQuota;
+
+    private Integer remainingQuota;
+
+    private BigDecimal price;
+
+    private LocalDateTime expireTime;
+
+    private Integer status;
+}
