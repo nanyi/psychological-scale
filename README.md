@@ -33,18 +33,17 @@ backend/
 │   ├── entity/                # 实体类
 │   ├── dto/                   # 数据传输对象
 │   └── enums/                 # 核心枚举
-├── ps-api/                   # API接口模块
-│   ├── user/                  # 用户服务API
+├── smart-scale/               # 量表服务
 │   ├── scale/                 # 量表服务API
-│   └── order/                 # 订单服务API
-├── ps-scale/                  # 量表服务
 │   ├── analysis/              # 分析模块
 │   ├── report/                # 报告模块
 │   └── thirdparty/            # 第三方服务模块
 ├── smart-analysis/            # 分析服务
 ├── smart-oms/                 # 订单服务
+│   └── order/                 # 订单服务API
 ├── smart-payment/             # 支付服务
 └── smart-system/              # 系统服务
+│   └── user/                  # 用户服务API
 ```
 
 ## 快速开始

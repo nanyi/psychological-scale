@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author Ryan
  */
-@FeignClient(name = "ps-scale", contextId = "scaleApi", configuration = FeignConfig.class)
+@FeignClient(name = "smart-scale", contextId = "scaleApi", configuration = FeignConfig.class)
 public interface ScaleApi {
 
     @GetMapping("/api/scale/{id}")
