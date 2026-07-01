@@ -23,7 +23,7 @@ Psychological Scale 心理测评系统 - 后端服务，基于 Spring Boot 3.2.2
 
 ```
 backend/
-├── ps-common/                  # 公共模块
+├── ps-common/                 # 公共模块
 │   ├── constant/              # 常量定义
 │   ├── exception/             # 异常定义
 │   ├── enums/                 # 枚举定义
@@ -33,22 +33,18 @@ backend/
 │   ├── entity/                # 实体类
 │   ├── dto/                   # 数据传输对象
 │   └── enums/                 # 核心枚举
-├── ps-security/               # 安全模块
-│   ├── aspect/                # 安全切面
-│   ├── annotation/            # 安全注解
-│   ├── filter/               # 安全过滤器
-│   └── service/               # 安全服务
 ├── ps-api/                   # API接口模块
 │   ├── user/                  # 用户服务API
 │   ├── scale/                 # 量表服务API
 │   └── order/                 # 订单服务API
-├── ps-user/                   # 用户服务
 ├── ps-scale/                  # 量表服务
-├── ps-order/                  # 订单服务
-├── ps-payment/                # 支付服务
-├── ps-report/                 # 报告服务
-├── ps-thirdparty/             # 第三方服务
-└── ps-analysis/               # 分析服务
+│   ├── analysis/              # 分析模块
+│   ├── report/                # 报告模块
+│   └── thirdparty/            # 第三方服务模块
+├── smart-analysis/            # 分析服务
+├── smart-oms/                 # 订单服务
+├── smart-payment/             # 支付服务
+└── smart-system/              # 系统服务
 ```
 
 ## 快速开始
@@ -95,9 +91,9 @@ mvn test
 - `POST /api/order/refund` - 申请退款
 
 #### 报告模块
-- `POST /api/report/generate` - 生成报告
-- `POST /api/report/export/word` - 导出Word
-- `POST /api/report/export/pdf` - 导出PDF
+- `POST /api/scale/report/generate` - 生成报告
+- `POST /api/scale/report/export/word` - 导出Word
+- `POST /api/scale/report/export/pdf` - 导出PDF
 
 详细API文档请参考 [API设计文档](../docs/design/api-design.md)。
 

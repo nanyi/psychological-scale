@@ -14,15 +14,15 @@
 
     <modules>
         <module>smart-framework</module>
-        <module>ps-gateway</module>
+        <module>smart-gateway</module>
         <module>ps-common</module>
         <module>ps-core</module>
         <module>ps-api</module>
         <module>smart-system</module>
-        <module>ps-scale</module>
+        <module>smart-scale</module>
         <module>smart-oms</module>
         <module>smart-payment</module>
-        <module>ps-analysis</module>
+        <module>smart-analysis</module>
     </modules>
 
     <properties>

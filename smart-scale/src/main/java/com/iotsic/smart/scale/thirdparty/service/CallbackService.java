@@ -1,0 +1,24 @@
+package com.iotsic.smart.scale.thirdparty.service;
+
+
+import com.iotsic.smart.scale.thirdparty.entity.ThirdPartyCallback;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @author Ryan
+ */
+public interface CallbackService {
+
+    Map<String, Object> handleReportCallback(Long configId, Map<String, Object> params);
+
+    ThirdPartyCallback getCallbackById(Long id);
+
+    List<ThirdPartyCallback> getCallbacksByRecordId(String externalRecordId);
+    void retryCallback(Long callbackId);
+
+    void saveCallbackRecord(ThirdPartyCallback callback);
+
+    void processCallback(Long configId, String callbackType, String data);
+}
