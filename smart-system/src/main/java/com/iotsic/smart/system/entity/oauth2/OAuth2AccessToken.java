@@ -1,4 +1,4 @@
-package com.iotsic.ps.core.entity;
+package com.iotsic.smart.system.entity.oauth2;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;

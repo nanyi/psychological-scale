@@ -1,4 +1,4 @@
-package com.iotsic.ps.core.entity;
+package com.iotsic.smart.system.entity.oauth2;
 
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
 import com.iotsic.smart.framework.tenant.dal.entity.TenantBaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,6 +22,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "sys_oauth2_refresh_token", autoResultMap = true)
+@ToString(callSuper = true)
 public class OAuth2RefreshToken extends TenantBaseEntity {
 
     @TableId(value = "id", type = IdType.AUTO)

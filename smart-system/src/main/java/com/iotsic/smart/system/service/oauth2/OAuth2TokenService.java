@@ -1,6 +1,6 @@
 package com.iotsic.smart.system.service.oauth2;
 
-import com.iotsic.ps.core.entity.OAuth2AccessToken;
+import com.iotsic.smart.system.entity.oauth2.OAuth2AccessToken;
 
 import java.util.List;
 

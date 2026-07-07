@@ -6,6 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.iotsic.smart.framework.tenant.dal.entity.TenantBaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ import java.time.LocalDateTime;
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_user")
+@ToString(callSuper = true)
 public class User extends TenantBaseEntity {
 
     @TableId(value = "id", type = IdType.AUTO)

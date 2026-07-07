@@ -1,23 +1,31 @@
 package com.iotsic.smart.system.service;
 
-import com.alibaba.nacos.plugin.auth.api.AuthResult;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
-import com.iotsic.ps.core.entity.OAuth2AccessToken;
+import com.iotsic.ps.common.enums.LoginLogTypeEnum;
+import com.iotsic.ps.common.enums.LoginResultEnum;
+import com.iotsic.smart.framework.common.utils.DateUtils;
+import com.iotsic.smart.system.entity.oauth2.OAuth2AccessToken;
 import com.iotsic.ps.core.entity.User;
+import com.iotsic.ps.core.enums.UserTypeEnum;
 import com.iotsic.smart.framework.security.utils.JwtTokenUtils;
+import com.iotsic.smart.framework.common.utils.web.ServletUtils;
 import com.iotsic.smart.system.dto.AuthResultDTO;
+import com.iotsic.smart.system.dto.LoginLogCreateRequest;
+import com.iotsic.smart.system.enums.oauth2.OAuth2ClientConstants;
 import com.iotsic.smart.system.service.oauth2.OAuth2TokenService;
 import com.iotsic.smart.framework.common.exception.BusinessException;
 import com.iotsic.smart.framework.encrypt.utils.EncryptUtils;
 import com.iotsic.smart.framework.security.dto.LoginResult;
 import com.iotsic.smart.framework.security.dto.LoginUser;
 import com.iotsic.smart.framework.security.utils.SecurityUtils;
-import com.iotsic.smart.framework.tenant.constant.TenantConstants;
 import com.iotsic.smart.framework.tenant.utils.TenantUtils;
 import io.jsonwebtoken.Claims;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -34,6 +42,7 @@ public class AuthService {
 
     private final UserService userService;
     private final OAuth2TokenService oAuth2TokenService;
+    private final LoginLogService loginLogService;
 
     /**
      * 认证
@@ -74,20 +83,26 @@ public class AuthService {
      */
     @Transactional
     public AuthResultDTO login(String tenantId, String username, String password, String loginIp, String deviceId) {
-        // 1. 执行认证
-        User user = authenticate(tenantId, username, password);
+        try {
+            // 1. 执行认证
+            User user = authenticate(tenantId, username, password);
 
-        // 2. 更新用户登录信息
-        User updateUser = new User();
-        updateUser.setId(user.getId());
-        updateUser.setLastLoginIp(loginIp)
-                .setLastLoginTime(LocalDateTime.now())
-                .setLoginFailCount(0);
-        userService.updateUser(user.getId(), updateUser);
+            // 2. 更新用户登录信息
+            User updateUser = new User()
+                    .setId(user.getId())
+                    .setLastLoginIp(loginIp)
+                    .setLastLoginTime(LocalDateTime.now());
+            userService.updateUser(user.getId(), updateUser);
 
-        // 3. TODO: 记录登录日志
+            // 3. 记录成功登录日志
+            logLoginSuccess(tenantId, user, loginIp, deviceId);
 
-        return generateAuthResult(user, deviceId);
+            return generateAuthResult(user, deviceId);
+        } catch (BusinessException e) {
+            // 记录失败登录日志
+            logLoginFailure(tenantId, username, loginIp, deviceId, e.getMessage());
+            throw e;
+        }
     }
 
     @Transactional
@@ -96,12 +111,15 @@ public class AuthService {
         User user = authenticate(tenantId, username, password);
 
         // 2. 更新用户登录信息
-        User updateUser = new User();
-        updateUser.setId(user.getId());
-        updateUser.setLastLoginIp(loginIp)
+        User updateUser = new User()
+                .setId(user.getId())
+                .setLastLoginIp(loginIp)
                 .setLastLoginTime(LocalDateTime.now())
                 .setLoginFailCount(0);
         userService.updateUser(user.getId(), updateUser);
+
+        // 3. 记录成功登录日志
+        logLoginSuccess(tenantId, user, loginIp, deviceId);
 
         return generateAuthResult(user, deviceId);
     }
@@ -111,9 +129,10 @@ public class AuthService {
      */
     public void logout() {
         LoginUser loginUser = SecurityUtils.getCurrentUser();
-
-        // TODO: 记录登出日志
-
+        if (loginUser != null) {
+            // 记录登出日志
+            logLogout(loginUser);
+        }
         SecurityUtils.logout();
     }
 
@@ -133,15 +152,21 @@ public class AuthService {
                 .setEnterpriseId(user.getEnterpriseId())
                 .setDeviceId(deviceId);
 
+        OAuth2AccessToken oAuth2AccessToken = oAuth2TokenService.createAccessToken(user.getId(), UserTypeEnum.ADMIN.getCode(), OAuth2ClientConstants.CLIENT_ID_DEFAULT, null);
+
         // 2. 生成 Token
-        Map<String, Object> extra = new HashMap<>();
+        Map<String, String> extra = new HashMap<>();
         extra.put("tenantId", loginUser.getTenantId());
         extra.put("username", loginUser.getUsername());
-        extra.put("userType", loginUser.getUserType());
+        extra.put("userType", loginUser.getUserType().toString());
         extra.put("deviceId", loginUser.getDeviceId());
         LoginResult loginResult = SecurityUtils.login(loginUser.getUserId(), extra);
 
-        // OAuth2AccessToken oAuth2AccessToken = oAuth2TokenService.createAccessToken();
+        oAuth2AccessToken.setAccessToken(loginResult.getAccessToken())
+                .setRefreshToken(loginResult.getRefreshToken())
+                .setUserInfo(extra)
+                .setExpiresTime(DateUtils.parseDateTime(loginResult.getExpiresIn()))
+                .setUserType(user.getUserType());
 
         // 3. 构建返回结果
         return new AuthResultDTO()
@@ -176,8 +201,115 @@ public class AuthService {
 
         String deviceId = UUID.randomUUID().toString();
 
-        // 3. 重新生成 Token
+        // 3. 记录刷新Token日志
+        logRefreshToken(user, deviceId);
+
+        // 4. 重新生成 Token
         return generateAuthResult(user, deviceId);
+    }
+
+    /**
+     * 记录成功登录日志
+     */
+    private void logLoginSuccess(String tenantId, User user, String loginIp, String deviceId) {
+        LoginLogCreateRequest request = new LoginLogCreateRequest();
+        request.setLogType(LoginLogTypeEnum.LOGIN.getCode());
+        request.setUserId(user.getId());
+        request.setUserType(user.getUserType());
+        request.setUsername(user.getUsername());
+        request.setResult(LoginResultEnum.SUCCESS.getCode());
+        request.setUserIp(loginIp);
+        request.setUserAgent(getUserAgent());
+        request.setDeviceId(deviceId);
+        if (user.getTenantId() != null) {
+            request.setTenantId(Long.parseLong(user.getTenantId()));
+        }
+        loginLogService.logLogin(request);
+    }
+
+    /**
+     * 记录失败登录日志
+     */
+    private void logLoginFailure(String tenantId, String username, String loginIp, String deviceId, String failReason) {
+        LoginLogCreateRequest request = new LoginLogCreateRequest();
+        request.setLogType(LoginLogTypeEnum.LOGIN.getCode());
+        request.setUsername(username);
+        request.setResult(LoginResultEnum.FAILURE.getCode());
+        request.setFailReason(failReason);
+        request.setUserIp(loginIp);
+        request.setUserAgent(getUserAgent());
+        request.setDeviceId(deviceId);
+        request.setTenantId(Long.parseLong(tenantId));
+        loginLogService.logLogin(request);
+    }
+
+    /**
+     * 记录登出日志
+     */
+    private void logLogout(LoginUser loginUser) {
+        LoginLogCreateRequest request = new LoginLogCreateRequest();
+        request.setLogType(LoginLogTypeEnum.LOGOUT.getCode());
+        request.setUserId(loginUser.getUserId());
+        request.setUserType(loginUser.getUserType());
+        request.setUsername(loginUser.getUsername());
+        request.setResult(LoginResultEnum.SUCCESS.getCode());
+        request.setUserIp(getClientIP());
+        request.setUserAgent(getUserAgent());
+        request.setDeviceId(loginUser.getDeviceId());
+        if (loginUser.getTenantId() != null) {
+            request.setTenantId(Long.parseLong(loginUser.getTenantId()));
+        }
+        loginLogService.logLogin(request);
+    }
+
+    /**
+     * 记录刷新Token日志
+     */
+    private void logRefreshToken(User user, String deviceId) {
+        LoginLogCreateRequest request = new LoginLogCreateRequest();
+        request.setLogType(LoginLogTypeEnum.REFRESH_TOKEN.getCode());
+        request.setUserId(user.getId());
+        request.setUserType(user.getUserType());
+        request.setUsername(user.getUsername());
+        request.setResult(LoginResultEnum.SUCCESS.getCode());
+        request.setUserIp(getClientIP());
+        request.setUserAgent(getUserAgent());
+        request.setDeviceId(deviceId);
+        if (user.getTenantId() != null) {
+            request.setTenantId(Long.parseLong(user.getTenantId()));
+        }
+        loginLogService.logLogin(request);
+    }
+
+    /**
+     * 获取客户端IP
+     */
+    private String getClientIP() {
+        HttpServletRequest request = getHttpServletRequest();
+        if (request != null) {
+            return ServletUtils.getClientIP();
+        }
+        return "unknown";
+    }
+
+    /**
+     * 获取User-Agent
+     */
+    private String getUserAgent() {
+        HttpServletRequest request = getHttpServletRequest();
+        if (request != null) {
+            String userAgent = request.getHeader("User-Agent");
+            return userAgent != null && userAgent.length() > 512 ? userAgent.substring(0, 512) : userAgent;
+        }
+        return "unknown";
+    }
+
+    /**
+     * 获取HttpServletRequest
+     */
+    private HttpServletRequest getHttpServletRequest() {
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+        return attributes != null ? attributes.getRequest() : null;
     }
 
 

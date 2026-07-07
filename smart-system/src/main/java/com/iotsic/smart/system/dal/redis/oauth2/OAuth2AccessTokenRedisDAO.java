@@ -1,8 +1,8 @@
-package com.iotsic.ps.core.dal.redis.oauth2;
+package com.iotsic.smart.system.dal.redis.oauth2;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
 import com.iotsic.ps.common.constant.RedisKeyConstants;
-import com.iotsic.ps.core.entity.OAuth2AccessToken;
+import com.iotsic.smart.system.entity.oauth2.OAuth2AccessToken;
 import com.iotsic.smart.framework.cache.utils.RedisUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
@@ -10,7 +10,6 @@ import org.springframework.stereotype.Repository;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 访问令牌 Redis DAO

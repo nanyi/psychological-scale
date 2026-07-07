@@ -47,6 +47,14 @@ public interface RedisKeyConstants {
     String PERMISSION_MENU_ID_LIST = "permission_menu_ids";
 
     /**
+     * OAuth2 客户端的缓存
+     * <p>
+     * KEY 格式：oauth_client:{id}
+     * VALUE 数据类型：String 客户端信息
+     */
+    String OAUTH_CLIENT = "oauth_client";
+
+    /**
      * 会话缓存 Key
      * <p>
      * KEY 格式：security:session:{userId}:{deviceType}:{deviceId}

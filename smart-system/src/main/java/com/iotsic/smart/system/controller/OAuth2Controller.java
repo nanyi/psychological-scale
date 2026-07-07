@@ -1,15 +1,11 @@
 package com.iotsic.smart.system.controller;
 
-import com.iotsic.ps.core.entity.OAuth2AccessToken;
 import com.iotsic.ps.core.entity.User;
 import com.iotsic.smart.framework.common.result.RestResult;
-import com.iotsic.smart.framework.common.utils.BeanUtils;
-import com.iotsic.smart.framework.encrypt.utils.EncryptUtils;
 import com.iotsic.smart.framework.security.dto.LoginResult;
 import com.iotsic.smart.framework.security.dto.LoginUser;
 import com.iotsic.smart.framework.security.utils.SecurityUtils;
 import com.iotsic.smart.framework.tenant.constant.TenantConstants;
-import com.iotsic.smart.framework.tenant.utils.TenantUtils;
 import com.iotsic.smart.system.dto.AuthResultDTO;
 import com.iotsic.smart.system.dto.OAuth2TokenRequest;
 import com.iotsic.smart.system.entity.OnlineSession;

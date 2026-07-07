@@ -1,6 +1,6 @@
 package com.iotsic.smart.system.controller;
 
-import com.iotsic.ps.core.entity.OAuth2AccessToken;
+import com.iotsic.smart.system.entity.oauth2.OAuth2AccessToken;
 import com.iotsic.smart.framework.common.result.RestResult;
 import com.iotsic.smart.framework.common.utils.BeanUtils;
 import com.iotsic.smart.framework.common.utils.web.ServletUtils;
@@ -64,8 +64,7 @@ public class AuthController {
         );
 
         UserVO user = userService.getUserInfo(result.getUserId());
-        LoginUserVO loginUser = new LoginUserVO();
-        BeanUtils.copyProperties(user, loginUser);
+        LoginUserVO loginUser = BeanUtils.toBean(user, LoginUserVO.class);
 
         UserLoginResponse response = new UserLoginResponse();
         response.setUser(loginUser);
