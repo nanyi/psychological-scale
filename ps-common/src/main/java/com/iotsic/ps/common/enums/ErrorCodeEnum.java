@@ -7,6 +7,7 @@ public interface ErrorCodeEnum {
     ResultCode SYSTEM_ERROR = new ResultCode(1000, "System error");
     ResultCode TOKEN_EXPIRED = new ResultCode(1005, "Token expired");
     ResultCode TOKEN_INVALID = new ResultCode(1006, "Token invalid");
+    ResultCode REFRESH_TOKEN_FAILED = new ResultCode(1007, "Refresh token failed");
 
     ResultCode USER_NOT_FOUND = new ResultCode(2000, "User not found");
     ResultCode USER_EXIST = new ResultCode(2001, "User already exists");
@@ -61,4 +62,17 @@ public interface ErrorCodeEnum {
     ResultCode REPORT_GENERATING = new ResultCode(6001, "Report is generating");
     ResultCode REPORT_EXPIRED = new ResultCode(6002, "Report expired");
     ResultCode CALLBACK_NOT_FOUND = new ResultCode(6003, "Callback not found");
+
+    ResultCode SESSION_NOT_FOUND = new ResultCode(1100, "Session not found");
+    ResultCode SESSION_KICK_FAILED = new ResultCode(1101, "Kick session failed");
+    ResultCode SESSION_NO_PERMISSION = new ResultCode(1102, "No permission to kick session");
+    ResultCode SESSION_OFFLINE = new ResultCode(1103, "Session already offline");
+    ResultCode SESSION_EXPIRED = new ResultCode(1104, "Session expired");
+
+    ResultCode STRATEGY_NOT_FOUND = new ResultCode(1200, "Login strategy not found");
+    ResultCode STRATEGY_UPDATE_FAILED = new ResultCode(1201, "Update login strategy failed");
+    ResultCode STRATEGY_NO_PERMISSION = new ResultCode(1202, "No permission to modify strategy");
+
+    ResultCode LOG_NOT_FOUND = new ResultCode(1300, "Login log not found");
+    ResultCode LOG_QUERY_FAILED = new ResultCode(1301, "Query login log failed");
 }
