@@ -152,13 +152,13 @@ public class UserGroupServiceImpl implements UserGroupService {
 
     @Override
     public PageResult<UserGroup> getGroupList(PageRequest request, Long enterpriseId) {
-        Page<UserGroup> page = new Page<>(request.getCurrent(), request.getSize());
+        Page<UserGroup> page = new Page<>(request.getPage(), request.getPageSize());
         LambdaQueryWrapper<UserGroup> wrapper = new LambdaQueryWrapper<>();
         if (enterpriseId != null) {
             wrapper.eq(UserGroup::getEnterpriseId, enterpriseId);
         }
         wrapper.orderByAsc(UserGroup::getSort);
         IPage<UserGroup> result = userGroupMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal());
+        return PageResult.of(result.getRecords(), result.getTotal(), request);
     }
 }

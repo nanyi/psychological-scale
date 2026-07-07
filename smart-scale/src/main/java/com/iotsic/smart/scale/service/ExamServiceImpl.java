@@ -211,12 +211,12 @@ public class ExamServiceImpl implements ExamService {
 
     @Override
     public PageResult<ExamRecord> getUserExamRecords(PageRequest request, Long userId) {
-        Page<ExamRecord> page = new Page<>(request.getCurrent(), request.getSize());
+        Page<ExamRecord> page = new Page<>(request.getPage(), request.getPageSize());
         LambdaQueryWrapper<ExamRecord> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(ExamRecord::getUserId, userId)
                 .orderByDesc(ExamRecord::getCreateTime);
         IPage<ExamRecord> result = examRecordMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal());
+        return PageResult.of(result.getRecords(), result.getTotal(), request);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.iotsic.ps.core.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.Version;
 import com.iotsic.smart.framework.mybatis.entity.BaseEntity;
@@ -21,6 +23,9 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = true)
 @TableName("sys_user")
 public class AdminUser extends TenantBaseEntity {
+
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     private String username;
 

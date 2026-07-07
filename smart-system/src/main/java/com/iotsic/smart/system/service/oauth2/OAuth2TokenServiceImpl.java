@@ -7,6 +7,10 @@ import com.iotsic.ps.core.entity.AdminUser;
 import com.iotsic.ps.core.entity.OAuth2AccessToken;
 import com.iotsic.ps.core.entity.OAuth2RefreshToken;
 import com.iotsic.ps.core.enums.UserTypeEnum;
+import com.iotsic.smart.framework.common.utils.CollectionUtils;
+import com.iotsic.smart.framework.common.utils.ConvertUtils;
+import com.iotsic.smart.framework.security.utils.JwtTokenUtils;
+import com.iotsic.smart.framework.security.utils.SecurityUtils;
 import com.iotsic.smart.system.mapper.oauth2.OAuth2AccessTokenMapper;
 import com.iotsic.smart.system.mapper.oauth2.OAuth2RefreshTokenMapper;
 import com.iotsic.smart.system.service.AdminUserService;
@@ -15,13 +19,17 @@ import com.iotsic.smart.framework.common.exception.enums.GlobalResultCode;
 import com.iotsic.smart.framework.common.utils.BeanUtils;
 import com.iotsic.smart.framework.common.utils.DateUtils;
 import com.iotsic.smart.framework.tenant.utils.TenantUtils;
+import io.jsonwebtoken.Claims;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * 访问令牌服务实现类
@@ -47,13 +55,17 @@ public class OAuth2TokenServiceImpl implements OAuth2TokenService {
     private OAuth2AccessToken convertToAccessToken(OAuth2RefreshToken refreshToken) {
         OAuth2AccessToken accessToken = BeanUtils.toBean(refreshToken, OAuth2AccessToken.class);
         accessToken.setAccessToken(refreshToken.getRefreshToken());
-        TenantUtils.execute(refreshToken.getTenantId(), () -> accessToken.setUserInfo(buildUserInfo(refreshToken.getUserId(), refreshToken.getUserType())));
+        TenantUtils.execute(refreshToken.getTenantId(), (Supplier<OAuth2AccessToken>) () -> accessToken.setUserInfo(buildUserInfo(refreshToken.getUserId(), refreshToken.getUserType())));
         return accessToken;
     }
 
     @Override
     public OAuth2AccessToken createAccessToken(Long userId, Integer userType, String clientId, List<String> scopes) {
-        return null;
+        return new OAuth2AccessToken()
+                .setUserId(userId)
+                .setUserType(userType)
+                .setClientId(clientId)
+                .setScopes(scopes);
     }
 
     @Override
@@ -75,6 +87,25 @@ public class OAuth2TokenServiceImpl implements OAuth2TokenService {
             }
         }
 
+        if (accessTokenDO == null) {
+            Claims extraClaims = JwtTokenUtils.parseToken(accessToken);
+            if (extraClaims != null) {
+                accessTokenDO = createAccessToken(SecurityUtils.getUserIdFromToken(accessToken),
+                        ConvertUtils.toInt(extraClaims.get("userType")),
+                        extraClaims.get("clientId", String.class),
+                        Collections.singletonList(extraClaims.get("scopes", String.class))
+                );
+                accessTokenDO.setUserId(Long.parseLong(extraClaims.getSubject()));
+                accessTokenDO.setUserType(ConvertUtils.toInt(extraClaims.get("userType")));
+                accessTokenDO.setClientId(extraClaims.get("clientId", String.class));
+                Map<String, String> userInfo = new HashMap<>();
+                extraClaims.forEach((k, v) -> userInfo.put(k, v.toString()));
+                userInfo.putIfAbsent("username", "admin");
+                accessTokenDO.setUserInfo(userInfo);
+                accessTokenDO.setAccessToken(accessToken);
+                accessTokenDO.setExpiresTime(DateUtils.parseDateTime(ConvertUtils.toLong(extraClaims.get("exp"))));
+            }
+        }
         // 如果在 MySQL 存在，则往 Redis 中写入
         if (accessTokenDO != null && !DateUtils.isExpired(accessTokenDO.getExpiresTime())) {
             oauth2AccessTokenRedisDAO.set(accessTokenDO);

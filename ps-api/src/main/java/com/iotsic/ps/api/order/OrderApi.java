@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author Ryan
  */
-@FeignClient(name = "ps-order", contextId = "orderApi", configuration = FeignConfig.class)
+@FeignClient(name = "smart-oms", contextId = "orderApi", configuration = FeignConfig.class)
 public interface OrderApi {
 
     @GetMapping("/api/order/detail/{id}")

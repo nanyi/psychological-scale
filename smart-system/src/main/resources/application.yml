@@ -31,6 +31,10 @@ spring:
       port: ${REDIS_PORT:6379}
       password: ${REDIS_PASSWORD:redis123}
       database: 0
+      # 读超时
+      timeout: 5s
+      # 连接超时
+      connect-timeout: 5s
 
 mybatis-plus:
   configuration:

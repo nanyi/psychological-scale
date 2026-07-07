@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  *
  * @author Ryan
  */
-@FeignClient(name = "ps-user", contextId = "userApi", configuration = FeignConfig.class)
+@FeignClient(name = "smart-system", contextId = "userApi", configuration = FeignConfig.class)
 public interface UserApi {
 
     @GetMapping("/api/user/info/{id}")

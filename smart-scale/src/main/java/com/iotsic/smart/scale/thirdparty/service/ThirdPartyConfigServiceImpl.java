@@ -107,9 +107,9 @@ public class ThirdPartyConfigServiceImpl implements ThirdPartyConfigService {
 
     @Override
     public PageResult<ThirdPartyConfig> getConfigList(PageRequest request) {
-        Page<ThirdPartyConfig> page = new Page<>(request.getCurrent(), request.getSize());
+        Page<ThirdPartyConfig> page = new Page<>(request.getPage(), request.getPageSize());
         IPage<ThirdPartyConfig> result = thirdPartyConfigMapper.selectPage(page, null);
-        return PageResult.of(result.getRecords(), result.getTotal());
+        return PageResult.of(result.getRecords(), result.getTotal(), request);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.iotsic.ps.core.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.iotsic.smart.framework.mybatis.entity.BaseEntity;
 import lombok.Data;
@@ -11,6 +13,9 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = true)
 @TableName("enterprise_info")
 public class Enterprise extends BaseEntity {
+
+    @TableId(value = "id", type = IdType.AUTO)
+    private Long id;
 
     private String enterpriseName;
 

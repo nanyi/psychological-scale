@@ -86,17 +86,17 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public PageResult<Order> getUserOrders(PageRequest request, Long userId) {
-        Page<Order> page = new Page<>(request.getCurrent(), request.getSize());
+        Page<Order> page = new Page<>(request.getPage(), request.getPageSize());
         LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
         wrapper.eq(Order::getUserId, userId)
                 .orderByDesc(Order::getCreateTime);
         IPage<Order> result = orderMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal());
+        return PageResult.of(result.getRecords(), result.getTotal(), request);
     }
 
     @Override
     public PageResult<Order> getOrderList(PageRequest request, OrderListRequest params) {
-        Page<Order> page = new Page<>(request.getCurrent(), request.getSize());
+        Page<Order> page = new Page<>(request.getPage(), request.getPageSize());
         LambdaQueryWrapper<Order> wrapper = new LambdaQueryWrapper<>();
         
         if (params != null) {
@@ -113,7 +113,7 @@ public class OrderServiceImpl implements OrderService {
         
         wrapper.orderByDesc(Order::getCreateTime);
         IPage<Order> result = orderMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal());
+        return PageResult.of(result.getRecords(), result.getTotal(), request);
     }
 
     @Override

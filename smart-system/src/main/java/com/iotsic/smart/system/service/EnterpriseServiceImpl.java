@@ -124,8 +124,8 @@ public class EnterpriseServiceImpl implements EnterpriseService {
 
     @Override
     public PageResult<Enterprise> getEnterpriseList(PageRequest request) {
-        Page<Enterprise> page = new Page<>(request.getCurrent(), request.getSize());
+        Page<Enterprise> page = new Page<>(request.getPage(), request.getPageSize());
         IPage<Enterprise> result = enterpriseMapper.selectPage(page, null);
-        return PageResult.of(result.getRecords(), result.getTotal());
+        return PageResult.of(result.getRecords(), result.getTotal(), request);
     }
 }

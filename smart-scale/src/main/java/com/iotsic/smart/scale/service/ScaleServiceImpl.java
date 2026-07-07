@@ -185,7 +185,7 @@ public class ScaleServiceImpl implements ScaleService {
 
     @Override
     public PageResult<ScaleResponse> getScaleList(PageRequest request, Long categoryId, Integer status) {
-        Page<Scale> page = new Page<>(request.getCurrent(), request.getSize());
+        Page<Scale> page = new Page<>(request.getPage(), request.getPageSize());
         LambdaQueryWrapper<Scale> wrapper = new LambdaQueryWrapper<>();
         
         if (categoryId != null) {
@@ -209,7 +209,7 @@ public class ScaleServiceImpl implements ScaleService {
             return response;
         }).toList();
 
-        return PageResult.of(responseList, result.getTotal());
+        return PageResult.of(responseList, result.getTotal(), request);
     }
 
     @Override

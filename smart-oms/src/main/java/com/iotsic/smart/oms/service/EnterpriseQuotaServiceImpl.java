@@ -130,7 +130,7 @@ public class EnterpriseQuotaServiceImpl implements EnterpriseQuotaService {
 
     @Override
     public PageResult<EnterpriseQuota> getEnterpriseQuotas(PageRequest request, Long enterpriseId) {
-        Page<EnterpriseQuota> page = new Page<>(request.getCurrent(), request.getSize());
+        Page<EnterpriseQuota> page = new Page<>(request.getPage(), request.getPageSize());
         LambdaQueryWrapper<EnterpriseQuota> wrapper = new LambdaQueryWrapper<>();
         
         if (enterpriseId != null) {
@@ -139,7 +139,7 @@ public class EnterpriseQuotaServiceImpl implements EnterpriseQuotaService {
         
         wrapper.orderByDesc(EnterpriseQuota::getCreateTime);
         IPage<EnterpriseQuota> result = enterpriseQuotaMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal());
+        return PageResult.of(result.getRecords(), result.getTotal(), request);
     }
     /**
      * 停用企业配额

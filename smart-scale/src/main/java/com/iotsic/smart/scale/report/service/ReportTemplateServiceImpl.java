@@ -41,7 +41,7 @@ public class ReportTemplateServiceImpl implements ReportTemplateService {
 
     @Override
     public PageResult<ReportTemplate> getTemplateList(PageRequest request, Long scaleId, Integer status) {
-        Page<ReportTemplate> page= new Page<>(request.getCurrent(), request.getSize());
+        Page<ReportTemplate> page= new Page<>(request.getPage(), request.getPageSize());
         LambdaQueryWrapper<ReportTemplate> wrapper = new LambdaQueryWrapper<>();
         if (scaleId != null) {
             wrapper.eq(ReportTemplate::getScaleId, scaleId);
@@ -51,7 +51,7 @@ public class ReportTemplateServiceImpl implements ReportTemplateService {
         }
         wrapper.orderByDesc(ReportTemplate::getCreateTime);
         IPage<ReportTemplate> result = reportTemplateMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal());
+        return PageResult.of(result.getRecords(), result.getTotal(), request);
     }
 
     @Override

@@ -1,3 +1,3 @@
-com.iotsic.ps.gateway.config.SecurityAutoConfig
-com.iotsic.ps.gateway.config.LoadBalancerConfig
-com.iotsic.ps.gateway.config.WebAutoConfiguration
+com.iotsic.smart.gateway.config.GatewayGrayLoadBalancerClientConfiguration
+com.iotsic.smart.gateway.config.GatewayAutoConfiguration
+com.iotsic.smart.gateway.config.SecurityAutoConfig

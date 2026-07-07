@@ -43,8 +43,7 @@ public class RoleController {
     public RestResult<IPage<Role>> getRoleList(PageRequest request,
                                                 @RequestParam(value = "roleName", required = false) String roleName,
                                                 @RequestParam(value = "status", required = false) Integer status) {
-        Page<Role> page = new Page<>(request.getCurrent() != null ? request.getCurrent() : 1, 
-                                     request.getSize() != null ? request.getSize() : 10);
+        Page<Role> page = new Page<>(request.getPage(), request.getPageSize());
         IPage<Role> result = roleService.getRolePage(page, roleName, status);
         return RestResult.success(result);
     }

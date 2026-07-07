@@ -1,11 +1,9 @@
 package com.iotsic.smart.gateway.config.properties;
 
-import com.iotsic.smart.framework.common.factory.YmlPropertySourceFactory;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.validation.annotation.Validated;
 
 /**
@@ -16,7 +14,6 @@ import org.springframework.validation.annotation.Validated;
 @Data
 @Configuration
 @Validated
-@PropertySource(value = "classpath:security.yml", factory = YmlPropertySourceFactory.class)
 @ConfigurationProperties(prefix = "smart.security")
 public class SecurityProperties {
 
@@ -46,8 +43,8 @@ public class SecurityProperties {
      * Token 参数名称
      * <p>HTTP 请求时，访问令牌的请求参数。解决 WebSocket 无法通过 header 传参，只能通过 token 参数拼接</p>
      */
-    @NotEmpty(message = "Token Parameter 不能为空")
-    private String tokenParameter = "token";
+    @NotEmpty(message = "Token Name 不能为空")
+    private String tokenName = "token";
 
     /**
      * 密钥
@@ -91,5 +88,9 @@ public class SecurityProperties {
 
     public String[] getExcludes() {
         return excludes == null ? excludes = new String[0] : excludes;
+    }
+
+    public void setExcludes(String[] excludes) {
+        this.excludes = excludes == null ? new String[0] : excludes;
     }
 }

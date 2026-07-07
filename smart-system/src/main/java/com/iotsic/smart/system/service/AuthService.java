@@ -4,6 +4,7 @@ import com.alibaba.nacos.plugin.auth.api.AuthResult;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.core.entity.OAuth2AccessToken;
 import com.iotsic.ps.core.entity.User;
+import com.iotsic.smart.framework.security.utils.JwtTokenUtils;
 import com.iotsic.smart.system.dto.AuthResultDTO;
 import com.iotsic.smart.system.service.oauth2.OAuth2TokenService;
 import com.iotsic.smart.framework.common.exception.BusinessException;
@@ -13,11 +14,14 @@ import com.iotsic.smart.framework.security.dto.LoginUser;
 import com.iotsic.smart.framework.security.utils.SecurityUtils;
 import com.iotsic.smart.framework.tenant.constant.TenantConstants;
 import com.iotsic.smart.framework.tenant.utils.TenantUtils;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -130,7 +134,12 @@ public class AuthService {
                 .setDeviceId(deviceId);
 
         // 2. 生成 Token
-        LoginResult loginResult = SecurityUtils.login(loginUser, null);
+        Map<String, Object> extra = new HashMap<>();
+        extra.put("tenantId", loginUser.getTenantId());
+        extra.put("username", loginUser.getUsername());
+        extra.put("userType", loginUser.getUserType());
+        extra.put("deviceId", loginUser.getDeviceId());
+        LoginResult loginResult = SecurityUtils.login(loginUser.getUserId(), extra);
 
         // OAuth2AccessToken oAuth2AccessToken = oAuth2TokenService.createAccessToken();
 
@@ -160,8 +169,8 @@ public class AuthService {
         }
 
         // 2. 获取用户名
-        Long userId = SecurityUtils.getUserId(refreshToken);
-        String username = SecurityUtils.getUsername(refreshToken);
+        Long userId = SecurityUtils.getUserIdFromToken(refreshToken);
+        String username = getUsername(refreshToken);
 
         User user = userService.getUserByUsername(username);
 
@@ -171,4 +180,17 @@ public class AuthService {
         return generateAuthResult(user, deviceId);
     }
 
+
+    /**
+     * 从 Token 中获取用户名
+     * @param token 待解析的 Token
+     * @return 用户名
+     */
+    public String getUsername(String token) {
+        Claims claims = JwtTokenUtils.parseToken(token);
+        if (claims == null) {
+            return null;
+        }
+        return claims.get("username", String.class);
+    }
 }

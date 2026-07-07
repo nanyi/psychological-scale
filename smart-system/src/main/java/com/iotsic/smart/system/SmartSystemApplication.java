@@ -12,7 +12,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
  */
 @SpringBootApplication(scanBasePackages = {"com.iotsic"})
 @EnableDiscoveryClient
-@EnableFeignClients(basePackages = {"com.iotsic.smart.api"})
+@EnableFeignClients(basePackages = {"com.iotsic.smart.*.api", "com.iotsic.smart.*.*.api"})
 public class SmartSystemApplication {
 
     public static void main(String[] args) {

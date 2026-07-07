@@ -17,7 +17,7 @@ import reactor.core.publisher.Mono;
  */
 @Slf4j
 @Component
-public class RequestLogFilter implements GlobalFilter, Ordered {
+public class RequestLogFilter extends FilterStatus implements GlobalFilter {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -48,6 +48,6 @@ public class RequestLogFilter implements GlobalFilter, Ordered {
 
     @Override
     public int getOrder() {
-        return -200;
+        return LOWEST_PRECEDENCE - 200;
     }
 }

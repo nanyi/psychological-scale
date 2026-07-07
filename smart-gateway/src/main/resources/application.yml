@@ -4,6 +4,30 @@ server:
 spring:
   application:
     name: smart-gateway
+
+  profiles:
+    active: local
+
+  http:
+    codecs:
+      max-in-memory-size: 10MB
+
+  # Jackson 配置项
+  jackson:
+    serialization:
+      write-dates-as-timestamps: true
+      write-date-timestamps-as-nanoseconds: false
+      write-durations-as-timestamps: true
+      fail-on-empty-beans: false
+    deserialization:
+      fail-on-unknown-properties: true
+      fail-on-null-for-primitives: false
+
+  config:
+    import:
+      - optional:classpath:application-${spring.profiles.active}.yml
+      - optional:nacos:${spring.application.name}-${spring.profiles.active}.yml
+
   cloud:
     nacos:
       # 服务发现配置
@@ -34,43 +58,52 @@ spring:
               lower-case-service-id: true
           routes:
             # 系统服务
-                    - id: smart-system
-                      uri: http://localhost:8081
-                      predicates:
-                        - Path=/api/user/**,/api/auth/**,/api/role/**,/api/permission/**,/api/enterprise/**,/api/user-group/**,/api/department/**
-                      filters:
-                        - StripPrefix=0
-                    # 量表服务（包含report和thirdparty模块）
-                    - id: smart-scale
-                      uri: http://localhost:8082
-                      predicates:
-                        - Path=/api/scale/**,/api/scale-category/**,/api/scale/thirdparty/**,/api/exam/**,/api/exam-record/**,/api/scale/report/**,/api/template/**,/api/sync/**,/api/callback/**,/api/config/**
-                      filters:
-                        - StripPrefix=0
-                    # 订单服务
-                    - id: smart-oms
-                      uri: http://localhost:8084
-                      predicates:
-                        - Path=/api/order/**,/api/cart/**,/api/enterprise-quota/**
-                      filters:
-                        - StripPrefix=0
-                    # 支付服务
-                    - id: smart-payment
-                      uri: lb://smart-payment
-                      predicates:
-                        - Path=/api/payment/**
-                      filters:
-                        - StripPrefix=0
-                    # 分析服务
-                    - id: smart-analysis
-                      uri: http://localhost:8083
-                      predicates:
-                        - Path=/api/analysis/**
-                      filters:
-                        - StripPrefix=0
-  config:
-    import:
-      optional: nacos
+            - id: smart-user-api
+              uri: lb://smart-system
+              predicates:
+                - Path=/api/user/**,/api/enterprise/**,/api/user-group/**,/api/department/**
+              filters:
+                - StripPrefix=0
+                - RewritePath=/api/user/v3/api-docs, /v3/api-docs
+            - id: smart-auth-api
+              uri: lb://smart-system
+              predicates:
+                - Path=/api/auth/**,/api/role/**,/api/permission/**
+              filters:
+                - StripPrefix=0
+                - RewritePath=/api/auth/v3/api-docs, /v3/api-docs
+            # 订单服务
+            - id: smart-oms-api
+              uri: lb://smart-oms
+              predicates:
+                - Path=/api/order/**,/api/cart/**,/api/enterprise-quota/**
+              filters:
+                - StripPrefix=0
+                - RewritePath=/api/oms/v3/api-docs, /v3/api-docs
+            # 支付服务
+            - id: smart-payment-api
+              uri: lb://smart-payment
+              predicates:
+                - Path=/api/payment/**
+              filters:
+                - StripPrefix=0
+                - RewritePath=/api/payment/v3/api-docs, /v3/api-docs
+            # 分析服务
+            - id: smart-analysis-api
+              uri: lb://smart-analysis
+              predicates:
+                - Path=/api/analysis/**
+              filters:
+                - StripPrefix=0
+                - RewritePath=/api/analysis/v3/api-docs, /v3/api-docs
+            # 量表服务（包含report和thirdparty模块）
+            - id: smart-scale-api
+              uri: lb://smart-scale
+              predicates:
+                - Path=/api/scale/**,/api/scale-category/**,/api/scale/thirdparty/**,/api/exam/**,/api/exam-record/**,/api/scale/report/**,/api/template/**,/api/sync/**,/api/callback/**,/api/config/**
+              filters:
+                - StripPrefix=0
+                - RewritePath=/api/scale/v3/api-docs, /v3/api-docs
   data:
     redis:
       host: ${REDIS_HOST:127.0.0.1}
@@ -105,3 +138,15 @@ logging:
     com.iotsic.smart.gateway: DEBUG
     # com.alibaba.cloud.nacos: DEBUG
     # org.springframework.cloud.loadbalancer: DEBUG
+
+smart:
+  # security配置
+  security:
+    check-url: http://smart-system/api/auth/check-token
+    secret: ${JWT_SECRET:psychological-scale-secret-key-2026}
+    expire: ${JWT_EXPIRE:7200000}
+    refresh-expire: ${JWT_REFRESH_EXPIRE:604800000}
+    # 排除路径
+    excludes:
+      - /error
+      - /api/auth/**

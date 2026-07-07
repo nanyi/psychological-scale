@@ -190,7 +190,7 @@ public class ReportServiceImpl implements ReportService {
 
     @Override
     public PageResult<Report> getReportList(PageRequest request, Long userId, Long scaleId, Integer status) {
-        Page<Report> page = new Page<>(request.getCurrent(), request.getSize());
+        Page<Report> page = new Page<>(request.getPage(), request.getPageSize());
         LambdaQueryWrapper<Report> wrapper = new LambdaQueryWrapper<>();
         if (userId != null) {
             wrapper.eq(Report::getUserId, userId);
@@ -203,7 +203,7 @@ public class ReportServiceImpl implements ReportService {
         }
         wrapper.orderByDesc(Report::getCreateTime);
         IPage<Report> result = reportMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal());
+        return PageResult.of(result.getRecords(), result.getTotal(), request);
     }
 
     @Override

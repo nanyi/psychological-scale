@@ -4,7 +4,7 @@ import cn.hutool.core.date.LocalDateTimeUtil;
 import com.iotsic.ps.common.constant.RedisKeyConstants;
 import com.iotsic.ps.core.entity.OAuth2AccessToken;
 import com.iotsic.smart.framework.cache.utils.RedisUtils;
-import com.iotsic.smart.framework.common.utils.json.JsonUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.time.Duration;
@@ -17,6 +17,7 @@ import java.time.temporal.ChronoUnit;
  * @author Ryan
  * @since 2026-04-27 22:24
  */
+@Slf4j
 @Repository
 public class OAuth2AccessTokenRedisDAO {
 
@@ -36,7 +37,7 @@ public class OAuth2AccessTokenRedisDAO {
                     .setCreateTime(null)
                     .setDeleted(null);
 
-            RedisUtils.set(redisKey, JsonUtils.toJSONString(accessToken), Duration.ofSeconds(time));
+            RedisUtils.set(redisKey, accessToken, Duration.ofSeconds(time));
         } else {
             RedisUtils.delete(redisKey);
         }

@@ -1,5 +1,6 @@
 package com.iotsic.smart.gateway.config;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.cors.CorsConfiguration;
@@ -13,7 +14,8 @@ import org.springframework.web.cors.reactive.UrlBasedCorsConfigurationSource;
  * @since 2026-03-12
  */
 @Configuration
-public class WebAutoConfiguration {
+@Slf4j
+public class GatewayAutoConfiguration {
 
     @Bean
     public CorsWebFilter corsWebFilter() {

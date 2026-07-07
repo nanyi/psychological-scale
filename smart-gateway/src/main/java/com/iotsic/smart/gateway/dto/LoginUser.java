@@ -9,7 +9,7 @@ import java.util.List;
  * 登录用户信息
  *
  * @author Ryan
- * @date 2026-04-13 15:40
+ * @since 2026-04-13 15:40
  */
 @Data
 @Accessors(chain = true)

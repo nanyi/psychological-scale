@@ -50,14 +50,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public PageResult<User> getUserList(PageRequest request, String username, String phone, Integer status) {
-        Page<User> page = new Page<>(request.getCurrent(), request.getSize());
+        Page<User> page = new Page<>(request.getPage(), request.getPageSize());
         LambdaQueryWrapper<User> wrapper = new LambdaQueryWrapper<>();
         wrapper.like(username != null, User::getUsername, username)
                 .like(phone != null, User::getPhone, phone)
                 .eq(status != null, User::getStatus, status)
                 .orderByDesc(User::getCreateTime);
         IPage<User> result = userMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal());
+        return PageResult.of(result.getRecords(), result.getTotal(), request);
     }
 
     @Override

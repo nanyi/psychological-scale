@@ -219,11 +219,11 @@ public class RefundServiceImpl implements RefundService {
         wrapper.orderByDesc(Refund::getCreateTime);
         
         IPage<Refund> page = refundMapper.selectPage(
-            new Page<>(request.getCurrent(), request.getSize()),
+            new Page<>(request.getPage(), request.getPageSize()),
             wrapper
         );
         
-        return PageResult.of(page.getRecords(), page.getTotal());
+        return PageResult.of(page.getRecords(), page.getTotal(), request);
     }
 
     @Override

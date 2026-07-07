@@ -42,8 +42,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public PageResult<Department> getDepartmentPage(PageRequest request, String departmentName, Integer status) {
-        Page<Department> page = new Page<>(request.getCurrent() != null ? request.getCurrent() : 1,
-                request.getSize() != null ? request.getSize() : 10);
+        Page<Department> page = new Page<>(request.getPage(), request.getPageSize());
         
         LambdaQueryWrapper<Department> wrapper = new LambdaQueryWrapper<>();
         if (departmentName != null && !departmentName.isEmpty()) {
@@ -55,7 +54,7 @@ public class DepartmentServiceImpl implements DepartmentService {
         wrapper.orderByAsc(Department::getSortOrder);
         
         IPage<Department> result = departmentMapper.selectPage(page, wrapper);
-        return PageResult.of(result.getRecords(), result.getTotal());
+        return PageResult.of(result.getRecords(), result.getTotal(), request);
     }
 
     @Override

@@ -116,7 +116,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
 
     @Override
     public PageResult<ExamRecord> getRecordList(PageRequest request, ExamRecordListRequest examRecordListRequest) {
-        Page<ExamRecord> page = new Page<>(request.getCurrent(), request.getSize());
+        Page<ExamRecord> page = new Page<>(request.getPage(), request.getPageSize());
         LambdaQueryWrapper<ExamRecord> wrapper = new LambdaQueryWrapper<>();
         
         if (examRecordListRequest != null) {
@@ -141,7 +141,7 @@ public class ExamRecordServiceImpl implements ExamRecordService {
             }
         }
         
-        return PageResult.of(result.getRecords(), result.getTotal());
+        return PageResult.of(result.getRecords(), result.getTotal(), request);
     }
 
     @Override

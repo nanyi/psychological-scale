@@ -1,22 +1,25 @@
 package com.iotsic.smart.gateway.utils;
 
+import com.iotsic.smart.framework.common.utils.ConvertUtils;
+import com.iotsic.smart.framework.common.utils.StringUtils;
+import com.iotsic.smart.framework.common.utils.web.ServletUtils;
 import com.iotsic.smart.gateway.config.properties.SecurityProperties;
 import com.iotsic.smart.gateway.dto.LoginUser;
 import com.iotsic.smart.framework.common.utils.SpringUtils;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.server.reactive.ServerHttpRequest;
-import org.springframework.util.StringUtils;
 import org.springframework.web.server.ServerWebExchange;
 
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Objects;
 
 /**
  * 安全服务工具类
  *
  * @author Ryan
- * @date 2026-04-13 15:38
+ * @since 2026-04-13 15:38
  */
 @Slf4j
 public class SecurityUtils {
@@ -33,13 +36,23 @@ public class SecurityUtils {
      * @param exchange 请求
      * @return 认证 Token
      */
-    public static String obtainAuthorization(ServerWebExchange exchange) {
-        String authHeader = exchange.getRequest().getHeaders().getFirst(PROPERTIES.getTokenHeader());
-        if (!StringUtils.hasText(authHeader) || !authHeader.startsWith(PROPERTIES.getTokenPrefix())) {
-            return null;
+    public static String getToken(ServerWebExchange exchange) {
+        // 1.先尝试从 Header 中获取
+        String token = exchange.getRequest().getHeaders().getFirst(PROPERTIES.getTokenHeader());
+        // 2.再尝试从 参数 中获取
+        if (StringUtils.isBlank(token)) {
+            token = exchange.getRequest().getQueryParams().getFirst(PROPERTIES.getTokenName());
+            // 3.如果为空，则返回 null
+            if (StringUtils.isBlank(token)) {
+                return null;
+            }
         }
 
-        return authHeader.substring(PROPERTIES.getTokenPrefix().length()).trim();
+        // 去除 Token 中带的 Bearer
+        if (token.startsWith(PROPERTIES.getTokenPrefix())) {
+            token = token.substring(PROPERTIES.getTokenPrefix().length()).trim();
+        }
+        return token;
     }
 
     /**
@@ -49,11 +62,15 @@ public class SecurityUtils {
      * @param user 用户
      */
     public static void setCurrentUser(ServerWebExchange exchange, LoginUser user) {
-        exchange.getAttributes().put(USER_ID_HEADER, user.getUserId());
-        exchange.getAttributes().put(USER_NAME_HEADER, user.getUsername());
-        exchange.getAttributes().put(USER_TYPE_HEADER, user.getUserType());
+        try {
+            exchange.getAttributes().put(USER_ID_HEADER, user.getUserId());
+            exchange.getAttributes().put(USER_NAME_HEADER, user.getUsername());
+            exchange.getAttributes().put(USER_TYPE_HEADER, user.getUserType());
+        } catch (Exception ex) {
+            log.error("[setCurrentUser][设置登录 user({}) 发生异常]", user, ex);
+            throw ex;
+        }
     }
-
 
     /**
      * 将 user 设置到 请求头
