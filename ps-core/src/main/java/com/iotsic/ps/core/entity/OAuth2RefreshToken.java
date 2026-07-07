@@ -57,4 +57,24 @@ public class OAuth2RefreshToken extends TenantBaseEntity {
      */
     private LocalDateTime expiresTime;
 
+    /**
+     * 设备类型: web,app,miniprogram,pc
+     */
+    private String deviceType;
+
+    /**
+     * 设备唯一标识
+     */
+    private String deviceId;
+
+    /**
+     * Token版本号
+     */
+    private Integer tokenVersion;
+
+    /**
+     * 是否记住我
+     */
+    private Boolean rememberMe;
+
 }

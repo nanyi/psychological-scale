@@ -72,4 +72,34 @@ public class OAuth2AccessToken extends BaseEntity {
      * 过期时间
      */
     private LocalDateTime expiresTime;
+
+    /**
+     * 设备类型: web,app,miniprogram,pc
+     */
+    private String deviceType;
+
+    /**
+     * 设备唯一标识
+     */
+    private String deviceId;
+
+    /**
+     * Token版本号
+     */
+    private Integer tokenVersion;
+
+    /**
+     * 登录时间
+     */
+    private LocalDateTime loginTime;
+
+    /**
+     * 最后访问时间
+     */
+    private LocalDateTime lastAccessTime;
+
+    /**
+     * 状态: 1-正常, 2-离线, 3-已注销, 4-被踢出
+     */
+    private Integer status;
 }

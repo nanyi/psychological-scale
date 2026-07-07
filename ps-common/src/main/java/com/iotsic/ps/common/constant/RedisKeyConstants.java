@@ -45,4 +45,28 @@ public interface RedisKeyConstants {
      * VALUE 数据类型：String 菜单编号数组
      */
     String PERMISSION_MENU_ID_LIST = "permission_menu_ids";
+
+    /**
+     * 会话缓存 Key
+     * <p>
+     * KEY 格式：security:session:{userId}:{deviceType}:{deviceId}
+     * VALUE 数据类型：JSON LoginUser对象
+     */
+    String SESSION = "security:session:%s:%s:%s";
+
+    /**
+     * 用户所有会话 Hash
+     * <p>
+     * KEY 格式：security:user:sessions:{userId}
+     * VALUE 数据类型：Hash {deviceType:deviceId → sessionJson}
+     */
+    String USER_SESSIONS = "security:user:sessions:%s";
+
+    /**
+     * 设备类型下所有会话 Hash
+     * <p>
+     * KEY 格式：security:device:sessions:{deviceType}
+     * VALUE 数据类型：Hash {userId:deviceId → sessionJson}
+     */
+    String DEVICE_SESSIONS = "security:device:sessions:%s";
 }
