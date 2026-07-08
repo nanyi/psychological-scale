@@ -2,8 +2,11 @@ package com.iotsic.smart.system.controller;
 
 import com.iotsic.ps.core.entity.User;
 import com.iotsic.smart.framework.common.result.RestResult;
+import com.iotsic.smart.framework.common.utils.http.HttpUtils;
+import com.iotsic.smart.framework.common.utils.web.NetUtils;
 import com.iotsic.smart.framework.security.dto.LoginResult;
 import com.iotsic.smart.framework.security.dto.LoginUser;
+import com.iotsic.smart.framework.security.utils.JwtTokenUtils;
 import com.iotsic.smart.framework.security.utils.SecurityUtils;
 import com.iotsic.smart.framework.tenant.constant.TenantConstants;
 import com.iotsic.smart.system.dto.AuthResultDTO;
@@ -146,8 +149,7 @@ public class OAuth2Controller {
         String deviceId = request.getDeviceId() != null ? request.getDeviceId() : UUID.randomUUID().toString();
         Boolean rememberMe = request.getRememberMe() != null ? request.getRememberMe() : false;
 
-        AuthResultDTO authResult = authService.login(tenantId, username, password,
-                "127.0.0.1", deviceId);
+        AuthResultDTO authResult = authService.login(tenantId, username, password, NetUtils.getClientIP(), deviceId);
 
         if (authResult == null) {
             return RestResult.fail(401, "用户名或密码错误");
@@ -207,14 +209,14 @@ public class OAuth2Controller {
                 .setDeviceType(deviceType)
                 .setRememberMe(rememberMe);
 
-        Map<String, Object> extra = new HashMap<>();
+        Map<String, String> extra = new HashMap<>();
         extra.put("tenantId", loginUser.getTenantId());
         extra.put("username", loginUser.getUsername());
-        extra.put("userType", loginUser.getUserType());
+        extra.put("userType", loginUser.getUserType().toString());
         extra.put("deviceId", loginUser.getDeviceId());
         extra.put("deviceType", loginUser.getDeviceType());
 
-        LoginResult loginResult = SecurityUtils.login(loginUser.getUserId(), extra);
+        LoginResult loginResult = SecurityUtils.login(JwtTokenUtils.generateToken(loginUser.getUserId(), extra), loginUser.getUserId(), extra);
 
         saveOnlineSession(user, deviceType, deviceId, "oauth2_authorization_code", rememberMe);
 

@@ -1,15 +1,15 @@
 package com.iotsic.smart.system.controller;
 
-import com.iotsic.smart.system.entity.oauth2.OAuth2AccessToken;
 import com.iotsic.smart.framework.common.result.RestResult;
 import com.iotsic.smart.framework.common.utils.BeanUtils;
-import com.iotsic.smart.framework.common.utils.web.ServletUtils;
+import com.iotsic.smart.framework.common.utils.web.NetUtils;
 import com.iotsic.smart.framework.tenant.constant.TenantConstants;
 import com.iotsic.smart.system.dto.AuthResultDTO;
 import com.iotsic.smart.system.dto.OAuth2AccessTokenResponse;
 import com.iotsic.smart.system.dto.TokenRefreshResponse;
 import com.iotsic.smart.system.dto.UserLoginRequest;
 import com.iotsic.smart.system.dto.UserLoginResponse;
+import com.iotsic.smart.system.entity.oauth2.OAuth2AccessToken;
 import com.iotsic.smart.system.service.AuthService;
 import com.iotsic.smart.system.service.UserService;
 import com.iotsic.smart.system.service.oauth2.OAuth2TokenService;
@@ -59,7 +59,7 @@ public class AuthController {
                 request.getTenantId() == null ? TenantConstants.DEFAULT_TENANT_ID : request.getTenantId(),
                 request.getUsername(),
                 request.getPassword(),
-                ServletUtils.getClientIP(),
+                NetUtils.getClientIP(),
                 deviceId
         );
 

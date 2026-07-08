@@ -10,6 +10,7 @@ import lombok.Data;
 import com.iotsic.smart.system.enums.oauth2.OAuth2GrantTypeEnum;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.util.List;
 
@@ -20,6 +21,7 @@ import java.util.List;
  * @since 2026-04-27 22:21
  */
 @Data
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "sys_oauth2_client", autoResultMap = true)
 @ToString(callSuper = true)
@@ -80,13 +82,13 @@ public class OAuth2Client extends TenantBaseEntity {
      * 枚举 {@link OAuth2GrantTypeEnum}
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<String> authorizedGrantTypes;
+    private List<String> allowedGrantTypes;
 
     /**
      * 授权范围
      */
     @TableField(typeHandler = JacksonTypeHandler.class)
-    private List<String> scopes;
+    private List<String> allowedScopes;
 
     /**
      * 自动授权的 Scope

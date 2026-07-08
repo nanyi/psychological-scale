@@ -2,24 +2,26 @@ package com.iotsic.smart.system.service.oauth2;
 
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
-import com.iotsic.smart.system.dal.redis.oauth2.OAuth2AccessTokenRedisDAO;
 import com.iotsic.ps.core.entity.AdminUser;
-import com.iotsic.smart.system.entity.oauth2.OAuth2AccessToken;
-import com.iotsic.smart.system.entity.oauth2.OAuth2Client;
-import com.iotsic.smart.system.entity.oauth2.OAuth2RefreshToken;
 import com.iotsic.ps.core.enums.UserTypeEnum;
-import com.iotsic.smart.system.mapper.oauth2.OAuth2AccessTokenMapper;
-import com.iotsic.smart.system.mapper.oauth2.OAuth2RefreshTokenMapper;
-import com.iotsic.smart.system.service.AdminUserService;
 import com.iotsic.smart.framework.common.exception.BusinessException;
 import com.iotsic.smart.framework.common.exception.enums.GlobalResultCode;
 import com.iotsic.smart.framework.common.utils.BeanUtils;
 import com.iotsic.smart.framework.common.utils.DateUtils;
+import com.iotsic.smart.framework.security.utils.JwtTokenUtils;
 import com.iotsic.smart.framework.tenant.utils.TenantUtils;
+import com.iotsic.smart.system.dal.redis.oauth2.OAuth2AccessTokenRedisDAO;
+import com.iotsic.smart.system.entity.oauth2.OAuth2AccessToken;
+import com.iotsic.smart.system.entity.oauth2.OAuth2Client;
+import com.iotsic.smart.system.entity.oauth2.OAuth2RefreshToken;
+import com.iotsic.smart.system.mapper.oauth2.OAuth2AccessTokenMapper;
+import com.iotsic.smart.system.mapper.oauth2.OAuth2RefreshTokenMapper;
+import com.iotsic.smart.system.service.AdminUserService;
 import jakarta.annotation.Resource;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +50,39 @@ public class OAuth2TokenServiceImpl implements OAuth2TokenService {
     @Lazy
     private AdminUserService adminUserService;
 
+    private OAuth2AccessToken createOAuth2AccessToken(OAuth2RefreshToken refreshToken, OAuth2Client client) {
+        OAuth2AccessToken accessTokenDO = new OAuth2AccessToken()
+                .setAccessToken(JwtTokenUtils.generateToken(refreshToken.getUserId(), null))
+                .setUserId(refreshToken.getUserId())
+                .setUserType(refreshToken.getUserType())
+                .setUserInfo(buildUserInfo(refreshToken.getUserId(), refreshToken.getUserType()))
+                .setClientId(client.getClientId())
+                .setScopes(refreshToken.getScopes())
+                .setRefreshToken(refreshToken.getRefreshToken())
+                .setExpiresTime(refreshToken.getExpiresTime());
+        // 优先从 refreshToken 获取租户编号，避免 ThreadLocal 被污染时导致 tenantId 为 null
+        String tenantId = refreshToken.getTenantId();
+        if (tenantId == null) {
+            tenantId = TenantUtils.getTenantId();
+        }
+        accessTokenDO.setTenantId(tenantId);
+        oauth2AccessTokenMapper.insert(accessTokenDO);
+        // 记录到 Redis 中
+        oauth2AccessTokenRedisDAO.set(accessTokenDO);
+        return accessTokenDO;
+    }
+
+    private OAuth2RefreshToken createOAuth2RefreshToken(Long userId, Integer userType, OAuth2Client client, List<String> scopes) {
+        OAuth2RefreshToken refreshToken = new OAuth2RefreshToken()
+                .setRefreshToken(JwtTokenUtils.generateRefreshToken(userId, null))
+                .setUserId(userId)
+                .setUserType(userType)
+                .setClientId(client.getClientId()).setScopes(scopes)
+                .setExpiresTime(LocalDateTime.now().plusSeconds(client.getRefreshTokenValiditySeconds()));
+        oauth2RefreshTokenMapper.insert(refreshToken);
+        return refreshToken;
+    }
+
     private OAuth2AccessToken convertToAccessToken(OAuth2RefreshToken refreshToken) {
         OAuth2AccessToken accessToken = BeanUtils.toBean(refreshToken, OAuth2AccessToken.class);
         accessToken.setAccessToken(refreshToken.getRefreshToken());
@@ -58,12 +93,10 @@ public class OAuth2TokenServiceImpl implements OAuth2TokenService {
     @Override
     public OAuth2AccessToken createAccessToken(Long userId, Integer userType, String clientId, List<String> scopes) {
         OAuth2Client clientDO = oauth2ClientService.validOAuthClientFromCache(clientId);
-
-        return new OAuth2AccessToken()
-                .setUserId(userId)
-                .setUserType(userType)
-                .setClientId(clientId)
-                .setScopes(scopes);
+        // 创建刷新令牌
+        OAuth2RefreshToken refreshTokenDO = createOAuth2RefreshToken(userId, userType, clientDO, scopes);
+        // 创建访问令牌
+        return createOAuth2AccessToken(refreshTokenDO, clientDO);
     }
 
     @Override

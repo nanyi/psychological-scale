@@ -8,16 +8,16 @@ import com.iotsic.ps.core.entity.Role;
 import com.iotsic.ps.core.entity.User;
 import com.iotsic.ps.core.entity.UserRole;
 import com.iotsic.ps.core.enums.UserTypeEnum;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
+import com.iotsic.smart.framework.common.exception.BusinessException;
+import com.iotsic.smart.framework.common.utils.web.NetUtils;
+import com.iotsic.smart.framework.encrypt.utils.EncryptUtils;
 import com.iotsic.smart.system.dto.AuthResultDTO;
 import com.iotsic.smart.system.mapper.UserMapper;
 import com.iotsic.smart.system.mapper.UserRoleMapper;
 import com.iotsic.smart.system.service.permission.RoleService;
 import com.iotsic.smart.system.vo.UserVO;
-import com.iotsic.smart.framework.common.exception.BusinessException;
-import com.iotsic.smart.framework.common.dto.request.PageRequest;
-import com.iotsic.smart.framework.common.dto.response.PageResult;
-import com.iotsic.smart.framework.common.utils.web.ServletUtils;
-import com.iotsic.smart.framework.encrypt.utils.EncryptUtils;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
@@ -87,7 +87,7 @@ public class UserServiceImpl implements UserService {
 
         String deviceId = UUID.randomUUID().toString();
 
-        return authService.loginAfterRegister(tenantId, username, password, ServletUtils.getClientIP(), deviceId);
+        return authService.loginAfterRegister(tenantId, username, password, NetUtils.getClientIP(), deviceId);
     }
 
     @Override

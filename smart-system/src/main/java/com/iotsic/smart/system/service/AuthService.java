@@ -3,29 +3,26 @@ package com.iotsic.smart.system.service;
 import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.common.enums.LoginLogTypeEnum;
 import com.iotsic.ps.common.enums.LoginResultEnum;
-import com.iotsic.smart.framework.common.utils.DateUtils;
-import com.iotsic.smart.system.entity.oauth2.OAuth2AccessToken;
 import com.iotsic.ps.core.entity.User;
 import com.iotsic.ps.core.enums.UserTypeEnum;
-import com.iotsic.smart.framework.security.utils.JwtTokenUtils;
-import com.iotsic.smart.framework.common.utils.web.ServletUtils;
-import com.iotsic.smart.system.dto.AuthResultDTO;
-import com.iotsic.smart.system.dto.LoginLogCreateRequest;
-import com.iotsic.smart.system.enums.oauth2.OAuth2ClientConstants;
-import com.iotsic.smart.system.service.oauth2.OAuth2TokenService;
 import com.iotsic.smart.framework.common.exception.BusinessException;
+import com.iotsic.smart.framework.common.utils.DateUtils;
+import com.iotsic.smart.framework.common.utils.web.NetUtils;
 import com.iotsic.smart.framework.encrypt.utils.EncryptUtils;
 import com.iotsic.smart.framework.security.dto.LoginResult;
 import com.iotsic.smart.framework.security.dto.LoginUser;
+import com.iotsic.smart.framework.security.utils.JwtTokenUtils;
 import com.iotsic.smart.framework.security.utils.SecurityUtils;
 import com.iotsic.smart.framework.tenant.utils.TenantUtils;
+import com.iotsic.smart.system.dto.AuthResultDTO;
+import com.iotsic.smart.system.dto.LoginLogCreateRequest;
+import com.iotsic.smart.system.entity.oauth2.OAuth2AccessToken;
+import com.iotsic.smart.system.enums.oauth2.OAuth2ClientConstants;
+import com.iotsic.smart.system.service.oauth2.OAuth2TokenService;
 import io.jsonwebtoken.Claims;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -160,18 +157,16 @@ public class AuthService {
         extra.put("username", loginUser.getUsername());
         extra.put("userType", loginUser.getUserType().toString());
         extra.put("deviceId", loginUser.getDeviceId());
-        LoginResult loginResult = SecurityUtils.login(loginUser.getUserId(), extra);
+        LoginResult loginResult = SecurityUtils.login(oAuth2AccessToken.getAccessToken(), loginUser.getUserId(), extra);
 
-        oAuth2AccessToken.setAccessToken(loginResult.getAccessToken())
-                .setRefreshToken(loginResult.getRefreshToken())
-                .setUserInfo(extra)
+        oAuth2AccessToken
                 .setExpiresTime(DateUtils.parseDateTime(loginResult.getExpiresIn()))
                 .setUserType(user.getUserType());
 
         // 3. 构建返回结果
         return new AuthResultDTO()
-                .setToken(loginResult.getAccessToken())
-                .setRefreshToken(loginResult.getRefreshToken())
+                .setToken(oAuth2AccessToken.getAccessToken())
+                .setRefreshToken(oAuth2AccessToken.getRefreshToken())
                 .setExpiresIn(loginResult.getExpiresIn())
                 .setUserId(loginUser.getUserId())
                 .setUsername(loginUser.getUsername());
@@ -219,7 +214,7 @@ public class AuthService {
         request.setUsername(user.getUsername());
         request.setResult(LoginResultEnum.SUCCESS.getCode());
         request.setUserIp(loginIp);
-        request.setUserAgent(getUserAgent());
+        request.setUserAgent(NetUtils.getUserAgent());
         request.setDeviceId(deviceId);
         if (user.getTenantId() != null) {
             request.setTenantId(Long.parseLong(user.getTenantId()));
@@ -237,7 +232,7 @@ public class AuthService {
         request.setResult(LoginResultEnum.FAILURE.getCode());
         request.setFailReason(failReason);
         request.setUserIp(loginIp);
-        request.setUserAgent(getUserAgent());
+        request.setUserAgent(NetUtils.getUserAgent());
         request.setDeviceId(deviceId);
         request.setTenantId(Long.parseLong(tenantId));
         loginLogService.logLogin(request);
@@ -253,8 +248,8 @@ public class AuthService {
         request.setUserType(loginUser.getUserType());
         request.setUsername(loginUser.getUsername());
         request.setResult(LoginResultEnum.SUCCESS.getCode());
-        request.setUserIp(getClientIP());
-        request.setUserAgent(getUserAgent());
+        request.setUserIp(NetUtils.getClientIP());
+        request.setUserAgent(NetUtils.getUserAgent());
         request.setDeviceId(loginUser.getDeviceId());
         if (loginUser.getTenantId() != null) {
             request.setTenantId(Long.parseLong(loginUser.getTenantId()));
@@ -272,46 +267,14 @@ public class AuthService {
         request.setUserType(user.getUserType());
         request.setUsername(user.getUsername());
         request.setResult(LoginResultEnum.SUCCESS.getCode());
-        request.setUserIp(getClientIP());
-        request.setUserAgent(getUserAgent());
+        request.setUserIp(NetUtils.getClientIP());
+        request.setUserAgent(NetUtils.getUserAgent());
         request.setDeviceId(deviceId);
         if (user.getTenantId() != null) {
             request.setTenantId(Long.parseLong(user.getTenantId()));
         }
         loginLogService.logLogin(request);
     }
-
-    /**
-     * 获取客户端IP
-     */
-    private String getClientIP() {
-        HttpServletRequest request = getHttpServletRequest();
-        if (request != null) {
-            return ServletUtils.getClientIP();
-        }
-        return "unknown";
-    }
-
-    /**
-     * 获取User-Agent
-     */
-    private String getUserAgent() {
-        HttpServletRequest request = getHttpServletRequest();
-        if (request != null) {
-            String userAgent = request.getHeader("User-Agent");
-            return userAgent != null && userAgent.length() > 512 ? userAgent.substring(0, 512) : userAgent;
-        }
-        return "unknown";
-    }
-
-    /**
-     * 获取HttpServletRequest
-     */
-    private HttpServletRequest getHttpServletRequest() {
-        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        return attributes != null ? attributes.getRequest() : null;
-    }
-
 
     /**
      * 从 Token 中获取用户名

@@ -64,7 +64,7 @@ public class SecurityUtils {
     public static void setCurrentUser(ServerWebExchange exchange, LoginUser user) {
         try {
             exchange.getAttributes().put(USER_ID_HEADER, user.getUserId());
-            exchange.getAttributes().put(USER_NAME_HEADER, user.getUsername());
+            // exchange.getAttributes().put(USER_NAME_HEADER, user.getUsername());
             exchange.getAttributes().put(USER_TYPE_HEADER, user.getUserType());
         } catch (Exception ex) {
             log.error("[setCurrentUser][设置登录 user({}) 发生异常]", user, ex);
@@ -82,7 +82,7 @@ public class SecurityUtils {
     public static void setCurrentUserHeader(ServerHttpRequest.Builder builder, LoginUser user) {
         try {
             builder.header(USER_ID_HEADER, URLEncoder.encode(user.getUserId().toString(), StandardCharsets.UTF_8));
-            builder.header(USER_NAME_HEADER, URLEncoder.encode(user.getUsername(), StandardCharsets.UTF_8));
+            // builder.header(USER_NAME_HEADER, URLEncoder.encode(user.getUsername(), StandardCharsets.UTF_8));
             builder.header(USER_TYPE_HEADER, URLEncoder.encode(user.getUserType().toString(), StandardCharsets.UTF_8));
         } catch (Exception ex) {
             log.error("[setCurrentUserHeader][序列化 user({}) 发生异常]", user, ex);

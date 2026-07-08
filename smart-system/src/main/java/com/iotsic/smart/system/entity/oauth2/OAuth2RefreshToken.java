@@ -9,6 +9,7 @@ import com.iotsic.smart.framework.tenant.dal.entity.TenantBaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,7 @@ import java.util.List;
  * @since 2026-04-27 22:21
  */
 @Data
+@Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
 @TableName(value = "sys_oauth2_refresh_token", autoResultMap = true)
 @ToString(callSuper = true)

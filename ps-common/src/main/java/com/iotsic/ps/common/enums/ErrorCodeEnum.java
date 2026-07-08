@@ -75,4 +75,23 @@ public interface ErrorCodeEnum {
 
     ResultCode LOG_NOT_FOUND = new ResultCode(1300, "Login log not found");
     ResultCode LOG_QUERY_FAILED = new ResultCode(1301, "Query login log failed");
+
+    // ========== OAuth2 客户端 1-002-020-000 =========
+    ResultCode OAUTH2_CLIENT_NOT_EXISTS = new ResultCode(1_002_020_000, "OAuth2 客户端不存在");
+    ResultCode OAUTH2_CLIENT_EXISTS = new ResultCode(1_002_020_001, "OAuth2 客户端编号已存在");
+    ResultCode OAUTH2_CLIENT_DISABLE = new ResultCode(1_002_020_002, "OAuth2 客户端已禁用");
+    ResultCode OAUTH2_CLIENT_AUTHORIZED_GRANT_TYPE_NOT_EXISTS = new ResultCode(1_002_020_003, "不支持该授权类型");
+    ResultCode OAUTH2_CLIENT_SCOPE_OVER = new ResultCode(1_002_020_004, "授权范围过大");
+    ResultCode OAUTH2_CLIENT_REDIRECT_URI_NOT_MATCH = new ResultCode(1_002_020_005, "无效 redirect_uri: {}");
+    ResultCode OAUTH2_CLIENT_CLIENT_SECRET_ERROR = new ResultCode(1_002_020_006, "无效 client_secret: {}");
+
+    // ========== OAuth2 授权 1-002-021-000 =========
+    ResultCode OAUTH2_GRANT_CLIENT_ID_MISMATCH = new ResultCode(1_002_021_000, "client_id 不匹配");
+    ResultCode OAUTH2_GRANT_REDIRECT_URI_MISMATCH = new ResultCode(1_002_021_001, "redirect_uri 不匹配");
+    ResultCode OAUTH2_GRANT_STATE_MISMATCH = new ResultCode(1_002_021_002, "state 不匹配");
+
+    // ========== OAuth2 授权 1-002-022-000 =========
+    ResultCode OAUTH2_CODE_NOT_EXISTS = new ResultCode(1_002_022_000, "code 不存在");
+    ResultCode OAUTH2_CODE_EXPIRE = new ResultCode(1_002_022_001, "code 已过期");
+
 }

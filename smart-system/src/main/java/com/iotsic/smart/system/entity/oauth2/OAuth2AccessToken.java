@@ -5,10 +5,9 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.extension.handlers.JacksonTypeHandler;
-import com.iotsic.smart.framework.mybatis.entity.BaseEntity;
+import com.iotsic.smart.framework.tenant.dal.entity.TenantBaseEntity;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
@@ -20,14 +19,14 @@ import java.util.Map;
  * 访问令牌表
  *
  * @author Ryan
+ * @since 2026-04-27 22:21
  */
-@Getter
-@Setter
-@TableName(value = "sys_oauth2_access_token", autoResultMap = true)
+@Data
 @Accessors(chain = true)
 @EqualsAndHashCode(callSuper = true)
+@TableName(value = "sys_oauth2_access_token", autoResultMap = true)
 @ToString(callSuper = true)
-public class OAuth2AccessToken extends BaseEntity {
+public class OAuth2AccessToken extends TenantBaseEntity {
 
     @TableId(value = "id", type = IdType.AUTO)
     private Long id;

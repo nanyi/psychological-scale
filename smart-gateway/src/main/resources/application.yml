@@ -72,6 +72,13 @@ spring:
               filters:
                 - StripPrefix=0
                 - RewritePath=/api/auth/v3/api-docs, /v3/api-docs
+            - id: smart-system-api
+              uri: lb://smart-system
+              predicates:
+                - Path=/api/system/**
+              filters:
+                - StripPrefix=0
+                - RewritePath=/api/system/v3/api-docs, /v3/api-docs
             # 订单服务
             - id: smart-oms-api
               uri: lb://smart-oms
