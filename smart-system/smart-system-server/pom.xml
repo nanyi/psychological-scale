@@ -3,20 +3,22 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>com.iotsic.smart</groupId>
-        <artifactId>psychological-scale</artifactId>
+        <artifactId>smart-system</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>smart-analysis</artifactId>
+    <artifactId>smart-system-server</artifactId>
     <packaging>jar</packaging>
-
     <name>${project.artifactId}-${project.version}</name>
-    <description>分析服务</description>
+    <description>系统服务 - 用户认证、权限管理、数据字典</description>
 
     <dependencies>
+        <dependency>
+            <groupId>com.iotsic.smart</groupId>
+            <artifactId>smart-system-api</artifactId>
+        </dependency>
         <dependency>
             <groupId>com.iotsic.smart</groupId>
             <artifactId>ps-common</artifactId>
@@ -31,36 +33,24 @@
         </dependency>
         <dependency>
             <groupId>com.iotsic.smart</groupId>
-            <artifactId>smart-system-api</artifactId>
+            <artifactId>ps-api</artifactId>
         </dependency>
         <dependency>
             <groupId>com.iotsic.smart</groupId>
-            <artifactId>smart-framework-feign</artifactId>
+            <artifactId>smart-framework-web</artifactId>
         </dependency>
         <dependency>
             <groupId>com.iotsic.smart</groupId>
-            <artifactId>smart-framework-loadbalance</artifactId>
+            <artifactId>smart-framework-encrypt</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
-        <!-- SpringDoc -->
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-annotations-jakarta</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.poi</groupId>
-            <artifactId>poi-ooxml</artifactId>
+            <groupId>com.iotsic.smart</groupId>
+            <artifactId>smart-framework-tenant</artifactId>
         </dependency>
     </dependencies>
 
     <build>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -72,5 +62,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

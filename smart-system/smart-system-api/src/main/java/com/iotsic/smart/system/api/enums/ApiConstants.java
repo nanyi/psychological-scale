@@ -1,4 +1,4 @@
-package com.iotsic.ps.api.enums;
+package com.iotsic.smart.system.api.enums;
 
 import com.iotsic.ps.common.constant.RpcConstants;
 

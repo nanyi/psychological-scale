@@ -1,6 +1,5 @@
 package com.iotsic.smart.system.api.permission;
 
-import com.iotsic.ps.api.permission.PermissionApi;
 import com.iotsic.smart.system.service.permission.PermissionService;
 import com.iotsic.smart.framework.common.result.RestResult;
 import com.iotsic.smart.framework.security.dto.LoginUser;

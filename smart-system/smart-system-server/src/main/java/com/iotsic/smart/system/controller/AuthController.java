@@ -3,6 +3,7 @@ package com.iotsic.smart.system.controller;
 import com.iotsic.smart.framework.common.result.RestResult;
 import com.iotsic.smart.framework.common.utils.BeanUtils;
 import com.iotsic.smart.framework.common.utils.web.NetUtils;
+import com.iotsic.smart.framework.security.utils.SecurityUtils;
 import com.iotsic.smart.framework.tenant.constant.TenantConstants;
 import com.iotsic.smart.system.dto.AuthResultDTO;
 import com.iotsic.smart.system.dto.OAuth2AccessTokenResponse;
@@ -17,6 +18,7 @@ import com.iotsic.smart.system.vo.LoginUserVO;
 import com.iotsic.smart.system.vo.UserVO;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -80,7 +82,8 @@ public class AuthController {
      */
     @PostMapping("/logout")
     public RestResult<Void> logout() {
-        authService.logout();
+        String token = SecurityUtils.getToken();
+        authService.logout(token);
         return RestResult.success();
     }
 

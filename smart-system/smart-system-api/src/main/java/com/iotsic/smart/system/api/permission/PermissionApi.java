@@ -1,12 +1,12 @@
-package com.iotsic.ps.api.permission;
+package com.iotsic.smart.system.api.permission;
 
 import com.iotsic.ps.api.config.FeignConfig;
-import com.iotsic.ps.api.enums.ApiConstants;
 import com.iotsic.smart.framework.common.result.RestResult;
 import com.iotsic.smart.framework.security.api.RemoteSecurityApi;
 import com.iotsic.smart.framework.security.dto.LoginUser;
-import org.springframework.cloud.openfeign.FeignClient;
+import com.iotsic.smart.system.api.enums.ApiConstants;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 

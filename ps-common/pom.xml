@@ -7,13 +7,13 @@
     <parent>
         <groupId>com.iotsic.smart</groupId>
         <artifactId>psychological-scale</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>ps-common</artifactId>
     <packaging>jar</packaging>
 
-    <name>ps-common</name>
+    <name>${project.artifactId}-${project.version}</name>
     <description>公共模块 - 工具类、异常定义、枚举</description>
 
     <dependencies>
@@ -40,15 +40,6 @@
         <dependency>
             <groupId>com.mysql</groupId>
             <artifactId>mysql-connector-j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>cn.hutool</groupId>
-            <artifactId>hutool-all</artifactId>
         </dependency>
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>

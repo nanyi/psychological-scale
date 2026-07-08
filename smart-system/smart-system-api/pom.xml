@@ -3,44 +3,41 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>com.iotsic.smart</groupId>
-        <artifactId>psychological-scale</artifactId>
+        <artifactId>smart-system</artifactId>
         <version>${revision}</version>
     </parent>
 
-    <artifactId>ps-core</artifactId>
+    <artifactId>smart-system-api</artifactId>
     <packaging>jar</packaging>
-
-    <name>${project.artifactId}-${project.version}</name>
-    <description>核心模块 - 实体、DTO、VO</description>
+    <name>${project.artifactId}</name>
+    <description>
+        system 模块 API，暴露给其它模块调用
+    </description>
 
     <dependencies>
+        <dependency>
+            <groupId>com.iotsic.smart</groupId>
+            <artifactId>smart-framework-feign</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.iotsic.smart</groupId>
+            <artifactId>smart-framework-apidoc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.iotsic.smart</groupId>
+            <artifactId>smart-framework-security</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>com.iotsic.smart</groupId>
             <artifactId>ps-common</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.baomidou</groupId>
-            <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.iotsic.smart</groupId>
-            <artifactId>smart-framework-mybatis</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iotsic.smart</groupId>
-            <artifactId>smart-framework-tenant</artifactId>
+            <artifactId>ps-api</artifactId>
         </dependency>
     </dependencies>
-
 </project>

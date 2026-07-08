@@ -124,13 +124,13 @@ public class AuthService {
     /**
      * 退出登录
      */
-    public void logout() {
-        LoginUser loginUser = SecurityUtils.getCurrentUser();
+    public void logout(String token) {
+        LoginUser loginUser = SecurityUtils.getUserFromToken(token);
         if (loginUser != null) {
             // 记录登出日志
             logLogout(loginUser);
         }
-        SecurityUtils.logout();
+        SecurityUtils.logout(token);
     }
 
     /**

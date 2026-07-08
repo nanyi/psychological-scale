@@ -7,70 +7,17 @@
     <parent>
         <groupId>com.iotsic.smart</groupId>
         <artifactId>psychological-scale</artifactId>
-        <version>1.0.0-SNAPSHOT</version>
+        <version>${revision}</version>
     </parent>
 
     <artifactId>smart-system</artifactId>
-    <packaging>jar</packaging>
+    <packaging>pom</packaging>
+    <name>${project.artifactId}-${project.version}</name>
+    <description>系统服务 - 用户认证、权限管理、数据字典</description>
 
-    <name>smart-system</name>
-    <description>系统服务 - 用户认证、权限管理</description>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.iotsic.smart</groupId>
-            <artifactId>ps-common</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iotsic.smart</groupId>
-            <artifactId>ps-core</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iotsic.smart</groupId>
-            <artifactId>smart-framework-security</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iotsic.smart</groupId>
-            <artifactId>ps-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iotsic.smart</groupId>
-            <artifactId>smart-framework-feign</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iotsic.smart</groupId>
-            <artifactId>smart-framework-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iotsic.smart</groupId>
-            <artifactId>smart-framework-loadbalance</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.iotsic.smart</groupId>
-            <artifactId>smart-framework-encrypt</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.iotsic.smart</groupId>
-            <artifactId>smart-framework-tenant</artifactId>
-        </dependency>
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-compiler-plugin</artifactId>
-            </plugin>
-        </plugins>
-    </build>
+    <modules>
+        <module>smart-system-api</module>
+        <module>smart-system-server</module>
+    </modules>
 
 </project>
