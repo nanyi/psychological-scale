@@ -1,10 +1,12 @@
 package com.iotsic.smart.scale.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.core.entity.Dimension;
 import com.iotsic.ps.core.entity.Question;
 import com.iotsic.ps.core.entity.Scale;
+import com.iotsic.smart.common.enums.ErrorCodeEnum;
+import com.iotsic.smart.framework.common.exception.BusinessException;
+import com.iotsic.smart.framework.encrypt.utils.EncryptUtils;
 import com.iotsic.smart.scale.dto.DimensionCreateRequest;
 import com.iotsic.smart.scale.dto.DimensionUpdateRequest;
 import com.iotsic.smart.scale.dto.QuestionCreateRequest;
@@ -12,8 +14,6 @@ import com.iotsic.smart.scale.dto.QuestionUpdateRequest;
 import com.iotsic.smart.scale.mapper.DimensionMapper;
 import com.iotsic.smart.scale.mapper.QuestionMapper;
 import com.iotsic.smart.scale.mapper.ScaleMapper;
-import com.iotsic.smart.framework.common.exception.BusinessException;
-import com.iotsic.smart.framework.encrypt.utils.EncryptUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

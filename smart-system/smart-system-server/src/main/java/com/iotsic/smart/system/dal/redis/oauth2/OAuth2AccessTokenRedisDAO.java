@@ -1,9 +1,9 @@
 package com.iotsic.smart.system.dal.redis.oauth2;
 
 import cn.hutool.core.date.LocalDateTimeUtil;
-import com.iotsic.ps.common.constant.RedisKeyConstants;
-import com.iotsic.smart.system.entity.oauth2.OAuth2AccessToken;
+import com.iotsic.smart.common.constant.RedisKeyConstants;
 import com.iotsic.smart.framework.cache.utils.RedisUtils;
+import com.iotsic.smart.system.entity.oauth2.OAuth2AccessToken;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 

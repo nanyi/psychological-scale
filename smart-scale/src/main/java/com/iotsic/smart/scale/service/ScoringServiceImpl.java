@@ -1,12 +1,13 @@
 package com.iotsic.smart.scale.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
-import com.iotsic.ps.common.enums.ErrorCodeEnum;
 import com.iotsic.ps.core.entity.Dimension;
 import com.iotsic.ps.core.entity.OptionScore;
 import com.iotsic.ps.core.entity.Question;
 import com.iotsic.ps.core.entity.Scale;
 import com.iotsic.ps.core.entity.ScoringRule;
+import com.iotsic.smart.common.enums.ErrorCodeEnum;
+import com.iotsic.smart.framework.common.exception.BusinessException;
 import com.iotsic.smart.scale.dto.OptionScoreCreateRequest;
 import com.iotsic.smart.scale.dto.OptionScoreUpdateRequest;
 import com.iotsic.smart.scale.dto.ScoreCalculateRequest;
@@ -20,7 +21,6 @@ import com.iotsic.smart.scale.mapper.OptionScoreMapper;
 import com.iotsic.smart.scale.mapper.QuestionMapper;
 import com.iotsic.smart.scale.mapper.ScaleMapper;
 import com.iotsic.smart.scale.mapper.ScoringRuleMapper;
-import com.iotsic.smart.framework.common.exception.BusinessException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

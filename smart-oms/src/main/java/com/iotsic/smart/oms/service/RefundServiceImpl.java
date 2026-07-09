@@ -3,8 +3,11 @@ package com.iotsic.smart.oms.service;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.iotsic.ps.common.constant.BusinessConstant;
-import com.iotsic.ps.common.enums.ErrorCodeEnum;
+import com.iotsic.smart.common.enums.ErrorCodeEnum;
+import com.iotsic.smart.framework.common.constant.BusinessConstants;
+import com.iotsic.smart.framework.common.dto.request.PageRequest;
+import com.iotsic.smart.framework.common.dto.response.PageResult;
+import com.iotsic.smart.framework.common.exception.BusinessException;
 import com.iotsic.smart.oms.dto.RefundCreateResponse;
 import com.iotsic.smart.oms.dto.RefundListRequest;
 import com.iotsic.smart.oms.entity.Order;
@@ -13,9 +16,6 @@ import com.iotsic.smart.oms.entity.Refund;
 import com.iotsic.smart.oms.mapper.OrderItemMapper;
 import com.iotsic.smart.oms.mapper.OrderMapper;
 import com.iotsic.smart.oms.mapper.RefundMapper;
-import com.iotsic.smart.framework.common.exception.BusinessException;
-import com.iotsic.smart.framework.common.dto.request.PageRequest;
-import com.iotsic.smart.framework.common.dto.response.PageResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -71,8 +71,8 @@ public class RefundServiceImpl implements RefundService {
         if (order.getPayTime() != null) {
             daysSincePay = java.time.Duration.between(order.getPayTime(), LocalDateTime.now()).toDays();
         }
-        if (daysSincePay > BusinessConstant.REFUND_DAYS) {
-            throw BusinessException.of(ErrorCodeEnum.REFUND_EXCEED.getCode(), "已超过退款时限（" + BusinessConstant.REFUND_DAYS + "天）");
+        if (daysSincePay > BusinessConstants.REFUND_DAYS) {
+            throw BusinessException.of(ErrorCodeEnum.REFUND_EXCEED.getCode(), "已超过退款时限（" + BusinessConstants.REFUND_DAYS + "天）");
         }
 
         String refundNo = "REF" + System.currentTimeMillis() + UUID.randomUUID().toString().substring(0, 8);

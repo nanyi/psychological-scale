@@ -1,6 +1,8 @@
-package com.iotsic.ps.common.constant;
+package com.iotsic.smart.common.constant;
 
-public class BusinessConstant {
+import com.iotsic.smart.framework.common.constant.BusinessConstants;
+
+public class BusinessConstant extends BusinessConstants {
 
     public static final String SCALE_CACHE_PREFIX = "ps:scale:";
     public static final String ORDER_CACHE_PREFIX = "ps:order:";

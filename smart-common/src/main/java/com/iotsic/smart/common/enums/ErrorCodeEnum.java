@@ -1,4 +1,4 @@
-package com.iotsic.ps.common.enums;
+package com.iotsic.smart.common.enums;
 
 import com.iotsic.smart.framework.common.exception.enums.ResultCode;
 

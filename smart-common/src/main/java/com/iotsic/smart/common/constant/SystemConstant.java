@@ -1,4 +1,4 @@
-package com.iotsic.ps.common.constant;
+package com.iotsic.smart.common.constant;
 
 public class SystemConstant {
 

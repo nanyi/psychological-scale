@@ -1,4 +1,4 @@
-package com.iotsic.ps.common.constant;
+package com.iotsic.smart.common.constant;
 
 import cn.hutool.core.lang.RegexPool;
 

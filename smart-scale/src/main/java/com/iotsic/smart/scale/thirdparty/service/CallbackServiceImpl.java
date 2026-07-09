@@ -2,12 +2,12 @@ package com.iotsic.smart.scale.thirdparty.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.iotsic.ps.common.enums.ErrorCodeEnum;
+import com.iotsic.smart.common.enums.ErrorCodeEnum;
+import com.iotsic.smart.framework.common.exception.BusinessException;
+import com.iotsic.smart.framework.common.utils.json.JsonUtils;
 import com.iotsic.smart.scale.thirdparty.entity.ThirdPartyCallback;
 import com.iotsic.smart.scale.thirdparty.entity.ThirdPartyConfig;
 import com.iotsic.smart.scale.thirdparty.mapper.CallbackMapper;
-import com.iotsic.smart.framework.common.exception.BusinessException;
-import com.iotsic.smart.framework.common.utils.json.JsonUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

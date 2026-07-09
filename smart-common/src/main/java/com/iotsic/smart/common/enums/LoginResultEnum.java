@@ -1,4 +1,4 @@
-package com.iotsic.ps.common.enums;
+package com.iotsic.smart.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

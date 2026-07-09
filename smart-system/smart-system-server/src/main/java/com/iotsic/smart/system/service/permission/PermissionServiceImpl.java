@@ -1,18 +1,17 @@
 package com.iotsic.smart.system.service.permission;
 
 import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.extra.spring.SpringUtil;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Sets;
-import com.iotsic.ps.common.constant.RedisKeyConstants;
 import com.iotsic.ps.core.entity.Permission;
 import com.iotsic.ps.core.entity.Role;
 import com.iotsic.ps.core.entity.RolePermission;
-import com.iotsic.smart.system.mapper.PermissionMapper;
-import com.iotsic.smart.system.mapper.RolePermissionMapper;
+import com.iotsic.smart.common.constant.RedisKeyConstants;
 import com.iotsic.smart.framework.common.enums.CommonStatusEnum;
 import com.iotsic.smart.framework.common.utils.CollectionUtils;
+import com.iotsic.smart.system.mapper.PermissionMapper;
+import com.iotsic.smart.system.mapper.RolePermissionMapper;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;

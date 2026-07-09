@@ -1,7 +1,7 @@
 package com.iotsic.smart.system.service.oauth2;
 
-import com.iotsic.ps.common.constant.RedisKeyConstants;
-import com.iotsic.ps.common.enums.ErrorCodeEnum;
+import com.iotsic.smart.common.constant.RedisKeyConstants;
+import com.iotsic.smart.common.enums.ErrorCodeEnum;
 import com.iotsic.smart.framework.common.enums.CommonStatusEnum;
 import com.iotsic.smart.framework.common.exception.BusinessException;
 import com.iotsic.smart.framework.common.utils.CollectionUtils;

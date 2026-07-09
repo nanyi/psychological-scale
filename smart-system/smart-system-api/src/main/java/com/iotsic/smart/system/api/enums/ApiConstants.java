@@ -1,6 +1,6 @@
 package com.iotsic.smart.system.api.enums;
 
-import com.iotsic.ps.common.constant.RpcConstants;
+import com.iotsic.smart.common.constant.RpcConstants;
 
 /**
  * API 相关的枚举

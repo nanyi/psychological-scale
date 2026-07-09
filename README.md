@@ -23,7 +23,7 @@ Psychological Scale 心理测评系统 - 后端服务，基于 Spring Boot 3.2.2
 
 ```
 backend/
-├── ps-common/                 # 公共模块
+├── smart-common/                 # 公共模块
 │   ├── constant/              # 常量定义
 │   ├── exception/             # 异常定义
 │   ├── enums/                 # 枚举定义
