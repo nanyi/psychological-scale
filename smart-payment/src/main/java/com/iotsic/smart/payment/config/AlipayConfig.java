@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "alipay")
+@ConfigurationProperties(prefix = "smart.alipay")
 public class AlipayConfig {
 
     private String appId;

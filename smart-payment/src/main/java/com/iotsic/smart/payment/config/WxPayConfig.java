@@ -9,7 +9,7 @@ import java.io.InputStream;
 
 @Data
 @Configuration
-@ConfigurationProperties(prefix = "wxpay")
+@ConfigurationProperties(prefix = "smart.wxpay")
 public class WxPayConfig implements WXPayConfig {
 
     private String appId;
