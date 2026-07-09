@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * 权限 API
@@ -22,13 +23,13 @@ public interface PermissionApi extends RemoteSecurityApi {
 
     @Override
     @PostMapping(ApiConstants.PREFIX + "/security/token-user")
-    RestResult<LoginUser> getUserByToken(String token);
+    RestResult<LoginUser> getUserByToken(@RequestParam("token") String token);
 
     @Override
     @GetMapping(ApiConstants.PREFIX + "/security/has-any-permissions")
-    RestResult<Boolean> hasAnyPermissions(Long userId, String... permissions) ;
+    RestResult<Boolean> hasAnyPermissions(@RequestParam("userId") Long userId, @RequestParam("permissions") String... permissions);
 
     @Override
-    @GetMapping( ApiConstants.PREFIX + "/security/has-any-roles")
-    RestResult<Boolean> hasAnyRoles(Long userId, String... roles);
+    @GetMapping(ApiConstants.PREFIX + "/security/has-any-roles")
+    RestResult<Boolean> hasAnyRoles(@RequestParam("userId") Long userId, @RequestParam("roles") String... roles);
 }

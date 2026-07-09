@@ -106,7 +106,7 @@ public class TokenAuthenticationFilter extends FilterStatus implements GlobalFil
         }
 
         try {
-            return getCurrentUser(token)
+            return getUserByToken(token)
                     .defaultIfEmpty(new LoginUser()).flatMap(user -> {
                         // 1. 无用户，直接 filter 继续请求
                         if (user.getUserId() == null || user.getUserId() <= 0) {
@@ -137,7 +137,7 @@ public class TokenAuthenticationFilter extends FilterStatus implements GlobalFil
         return response.writeWith(Mono.just(response.bufferFactory().wrap(body.getBytes(StandardCharsets.UTF_8))));
     }
 
-    private Mono<LoginUser> getCurrentUser(String token) {
+    private Mono<LoginUser> getUserByToken(String token) {
         // 从缓存中，获取 LoginUser
         LoginUser localUser = loginUserCache.getIfPresent(token);
         if (localUser != null) {

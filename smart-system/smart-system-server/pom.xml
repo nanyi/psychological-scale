@@ -21,7 +21,7 @@
         </dependency>
         <dependency>
             <groupId>com.iotsic.smart</groupId>
-            <artifactId>ps-common</artifactId>
+            <artifactId>smart-common</artifactId>
         </dependency>
         <dependency>
             <groupId>com.iotsic.smart</groupId>

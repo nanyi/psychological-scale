@@ -15,7 +15,7 @@
 
     <modules>
         <module>smart-framework</module>
-        <module>ps-common</module>
+        <module>smart-common</module>
         <module>ps-core</module>
         <module>ps-api</module>
         <module>smart-gateway</module>
@@ -189,7 +189,7 @@
             </dependency>
             <dependency>
                 <groupId>com.iotsic.smart</groupId>
-                <artifactId>ps-common</artifactId>
+                <artifactId>smart-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

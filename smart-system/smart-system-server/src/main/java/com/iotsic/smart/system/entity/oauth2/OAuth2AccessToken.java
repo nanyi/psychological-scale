@@ -50,6 +50,7 @@ public class OAuth2AccessToken extends TenantBaseEntity {
      * 用户类型
      */
     private Integer userType;
+
     /**
      * 用户信息
      */

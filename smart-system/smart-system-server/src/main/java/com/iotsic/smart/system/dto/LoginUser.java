@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
-import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
@@ -54,7 +53,7 @@ public class LoginUser extends com.iotsic.smart.framework.security.dto.LoginUser
     /**
      * 访问的租户编号（切换租户时使用）
      */
-    private Long visitTenantId;
+    private String visitTenantId;
 
     /**
      * 设备标识

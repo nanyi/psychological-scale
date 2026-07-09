@@ -1,6 +1,7 @@
 package com.iotsic.smart.system.service.oauth2;
 
 import com.iotsic.smart.system.entity.oauth2.OAuth2AccessToken;
+import com.iotsic.smart.system.entity.oauth2.OAuth2RefreshToken;
 
 import java.util.List;
 
@@ -38,4 +39,8 @@ public interface OAuth2TokenService {
      * @return 访问令牌的信息
      */
     OAuth2AccessToken checkAccessToken(String accessToken);
+
+    default OAuth2RefreshToken getRefreshToken(String token) {
+        return new OAuth2RefreshToken();
+    }
 }
