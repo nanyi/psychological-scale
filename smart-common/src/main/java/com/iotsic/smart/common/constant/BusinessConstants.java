@@ -1,8 +1,11 @@
 package com.iotsic.smart.common.constant;
 
-import com.iotsic.smart.framework.common.constant.BusinessConstants;
-
-public class BusinessConstant extends BusinessConstants {
+/**
+ * 业务常量
+ *
+ * @author Ryan
+ */
+public class BusinessConstants {
 
     public static final String SCALE_CACHE_PREFIX = "ps:scale:";
     public static final String ORDER_CACHE_PREFIX = "ps:order:";
@@ -28,7 +31,4 @@ public class BusinessConstant extends BusinessConstants {
 
     public static final String AVATAR_ALLOWED_TYPES = "jpg,jpeg,png,gif";
     public static final Long AVATAR_MAX_SIZE = 5242880L;
-
-    private BusinessConstant() {
-    }
 }
