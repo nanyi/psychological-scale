@@ -5,6 +5,9 @@ spring:
   application:
     name: smart-system
   cloud:
+    openfeign:
+      cache:
+        enabled: false
     nacos:
       discovery:
         server-addr: ${NACOS_SERVER:127.0.0.1:8848}
@@ -92,6 +95,7 @@ smart:
       - /error
   #    - /*/api-docs
   #    - /*/api-docs/**
+      - /rpc-api/security/**
       - /api/auth/**
       - /security/**
       - /api/public/**
